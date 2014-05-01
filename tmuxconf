@@ -1,0 +1,191 @@
+set-option -g status on
+set-option -g status-interval 1
+set-option -g status-utf8 on
+
+set -g set-titles on
+set -g set-titles-string "#T"
+
+# https://github.com/ChrisJohnsen/tmux-MacOSX-pasteboard
+set-option -g default-command "reattach-to-user-namespace -l zsh"
+
+# set scrollback history to 10000 (10k)
+set -g history-limit 10000
+
+set -g base-index 1
+set -g pane-base-index 0
+
+# http://mutelight.org/practical-tmux
+set -s escape-time 0
+
+#set -g visual-content on
+set -g display-panes-time 2000
+
+set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+
+# vim compability
+setw -g xterm-keys on
+
+set -g default-terminal "screen-256color"
+
+# setw -g automatic-rename on
+
+# command prefix (like screen)
+set -g prefix C-f
+bind C-f send-prefix
+
+bind-key C-u clear-history
+
+# Move to last-window
+bind-key C-f last-window
+
+bind-key k confirm-before kill-window
+bind-key r source-file ~/.tmux.conf
+bind-key v split-window -h #similar to vim's vsplit
+bind-key s split-window
+
+bind-key X new-window -n kontrol "ssh kontrol0.sj.koding.com\n"
+
+bind-key / command-prompt "split-window 'exec man %%'"
+bind-key S command-prompt "new-window -n %1 'ssh %1.sj.koding.com'"
+
+bind m set-window-option synchronize-panes
+
+##### Hex codes are used for iterm2
+
+#0x06 0x68   select leftward
+#0x06 0x6A   select downward
+#0x06 0x6B   select upward
+#0x06 0x6C   select rightward
+# bind h select-pane -L
+# bind j select-pane -D
+# bind k select-pane -U
+# bind l select-pane -R
+
+# Smart pane switching with awareness of vim splits
+bind -n C-h run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-h) || tmux select-pane -L"
+bind -n C-j run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-j) || tmux select-pane -D"
+bind -n C-k run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-k) || tmux select-pane -U"
+bind -n C-l run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys C-l) || tmux select-pane -R"
+bind -n C-\ run "(tmux display-message -p '#{pane_current_command}' | grep -iqE '(^|\/)vim(diff)?$' && tmux send-keys 'C-\\') || tmux select-pane -l"
+
+
+
+#0x06 0x48   resize leftward
+#0x06 0x4A   resize downward
+#0x06 0x4B   resize upward
+#0x06 0x4C   resize rightward
+bind-key H resize-pane -L 10
+bind-key J resize-pane -D 10
+bind-key K resize-pane -U 10
+bind-key L resize-pane -R 10
+
+#0x06 0x6E   next window
+#0x06 0x70   previous window
+bind-key n next-window
+bind-key p previous-window
+
+#0x06 0x5B 0x41     move to pane above
+#0x06 0x5B 0x42     move to pane below
+#0x06 0x5B 0x43     move to pane at right
+#0x06 0x5B 0x44     move to pane at left
+
+# vi-style controls in copy mode
+set-option -g status-keys vi
+set-window-option -g mode-keys vi
+
+## v and y like vi in copy-mode
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+
+# Watch background windows for activity
+# setw -g monitor-activity on
+# set -g visual-activity on
+set-option -g allow-rename off
+
+#### COLOUR (Solarized dark)
+
+# default statusbar colors
+#set-option -g status-bg black #base02
+#set-option -g status-fg yellow #yellow
+#set-option -g status-attr default
+#
+## default window title colors
+#set-window-option -g window-status-fg brightblue #base0
+#set-window-option -g window-status-bg default
+##set-window-option -g window-status-attr dim
+#
+## active window title colors
+#set-window-option -g window-status-current-fg brightred #orange
+#set-window-option -g window-status-current-bg default
+#
+#set-window-option -g window-status-current-attr bright
+#
+## pane border
+#set-option -g pane-border-fg black #base02
+##set-option -g pane-active-border-fg brightgreen #base01
+#set-option -g pane-active-border-fg green #base01
+#
+## message text
+#set-option -g message-bg black #base02
+#set-option -g message-fg brightred #orange
+#
+## pane number display
+#set-option -g display-panes-active-colour blue #blue
+#set-option -g display-panes-colour brightred #orange
+#
+## clock
+#set-window-option -g clock-mode-colour green #green
+
+#### OTHER TRICKS
+
+set -g mode-mouse on
+set -g mouse-resize-pane on
+set -g mouse-select-pane on
+set -g mouse-select-window on
+set -g mouse-select-w
+#
+# COLOURS
+#
+
+# default statusbar colors
+set-option -g status-fg colour250
+set-option -g status-bg colour234
+set-option -g status-attr default
+
+# default left statusbar colors
+set-option -g status-left-fg colour250
+set-option -g status-left-bg default
+set-option -g status-left-attr default
+
+# default right statusbar colors
+set-option -g status-right-fg colour240
+set-option -g status-right-bg default
+set-option -g status-right-attr default
+
+# default window title colors
+set-window-option -g window-status-fg colour240
+set-window-option -g window-status-bg default
+
+# active window title colors
+set-window-option -g window-status-current-fg colour252
+set-window-option -g window-status-current-bg default
+set-window-option -g window-status-current-attr default
+
+# pane border
+#set-option -g pane-border-fg colour235
+#set-option -g pane-active-border-fg colour235
+
+set-option -g pane-border-fg colour235
+set-option -g pane-active-border-fg colour240
+
+# message text
+set-option -g message-fg colour232
+set-option -g message-bg colour32
+
+# pane number display
+# set-option -g display-panes-active-colour colour32
+# set-option -g display-panes-colour colour166
+
+set-option -g mode-fg colour232
+set-option -g mode-bg colour32
+

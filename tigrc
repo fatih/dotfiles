@@ -1,0 +1,76 @@
+# Show the revision graph like gitk does.
+#set show-rev-graph = yes
+
+# Don't display uncommitted changes.
+set show-changes = yes
+
+set line-graphics  = utf-8
+set horizontal-scroll = 33%
+
+# Unbind git gc
+bind generic G none
+# Unbind toggle date
+bind generic D none
+# Unbind toggle author
+bind generic A none
+# Unbind toggle graph
+bind generic g none
+# Unbind toggle ref
+bind generic F none
+# Unbind toggle sort order
+bind generic I none
+# Unbind toggle sort field
+bind generic i none
+# Unbind scroll page down
+bind generic s none
+# Unbind view-status
+bind generic S none
+# Unbind refresh
+bind generic R none
+
+# Unbind git gc
+bind main C none
+
+	
+bind main s view-status
+bind main b view-refs
+
+# Close current view like in mutt.
+bind diff i view-close
+
+# Allow moving in the main menu while displaying a diff in the bottom of the
+# screen.
+bind generic J next
+bind generic K previous
+
+# Vi like binding
+#bind generic <Ctrl-u> scroll-page-up
+#bind generic <Ctrl-d> scroll-page-down
+bind generic y scroll-line-up
+bind generic e scroll-line-down
+bind generic g move-first-line
+bind generic G move-last-line
+bind generic o enter
+bind generic ? view-help
+
+# GIT Shortcuts
+bind generic R !?git reset --hard %(commit)
+bind generic F !git fetch
+bind generic P !?git push
+bind generic p !?git pull
+bind generic A !git commit --amend
+bind generic S !git status
+
+
+# Copy rev id to clipboard
+bind generic c !@sh -c 'echo %(commit) | tr -d "\n" | pbcopy'
+
+bind tree v !vim %(file) # open file from tree
+bind branch n !@git branch %(prompt) # Create a new branch
+bind branch d !?git branch -D %(branch) # Delete local branch
+bind branch c !git checkout %(branch) # Checkout branch
+bind branch C !git checkout -b %(prompt) %(branch) # Create a new branch
+
+bind status d !@?rm -rf %(file) # delete untracked files
+
+

@@ -20,7 +20,6 @@ Plugin 'kchmck/vim-coffee-script'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-
 "
 " Settings
 " 

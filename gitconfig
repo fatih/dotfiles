@@ -1,0 +1,49 @@
+[user]
+	name = Fatih Arslan
+	email = ftharsln@gmail.com
+[alias]
+    st = status -sb
+    ci = commit
+    all = commit -am
+    br = branch
+    co = checkout
+    di = diff
+    dic = diff --cached
+    lg = log -p
+    lol = log --graph --decorate --pretty=oneline --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+    ls = ls-files
+# Show files ignored by git:
+    ign = ls-files -o -i --exclude-standard
+
+    shoot = push origin --delete
+    unstage = reset HEAD --
+    prev = checkout -
+    discard = checkout -- 
+
+[color]
+    ui = auto
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+[color "status"]
+    added = yellow
+    changed = green
+    untracked = cyan
+[core]
+    whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+	editor = vim
+	quotepath = false
+	excludesfile = /Users/fatih/.gitignore_global
+[credential]
+	helper = osxkeychain
+[github]
+	user = fatih
+[mergetool]
+	keepBackup = true
+[filter "media"]
+	clean = git-media-clean %f
+	smudge = git-media-smudge %f
+[push]
+	default = simple
