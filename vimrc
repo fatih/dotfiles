@@ -17,6 +17,7 @@ Plugin 'Raimondi/delimitMate'
 Plugin 't9md/vim-choosewin'
 Plugin 'fatih/molokai'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'tomtom/tcomment_vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -221,6 +222,7 @@ let g:CommandTMaxHeight = 20
 let g:CommandTMaxFiles = 500000
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTMaxCachedDirectories = 0
+let g:CommandTAcceptSelectionTabMap = '<CR>'
 
 nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
 
@@ -254,8 +256,8 @@ autocmd FileType qf wincmd J
 " quickfix buffers.  Note: Normally, :cwindow jumps to the quickfix window if
 " the command opens it (but not if it's already open). However, as part of the
 " autocmd, this doesn't seem to happen.
-" autocmd QuickFixCmdPost [^l]* nested cwindow
-" autocmd QuickFixCmdPost    l* nested lwindow
+autocmd QuickFixCmdPost [^l]* nested cwindow
+autocmd QuickFixCmdPost    l* nested lwindow
 
 "Dont show me any output when I build something
 "Because I am using quickfix for errors
