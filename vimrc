@@ -18,6 +18,7 @@ Plugin 't9md/vim-choosewin'
 Plugin 'fatih/molokai'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tomtom/tcomment_vim'
+Plugin 'majutsushi/tagbar'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -256,8 +257,8 @@ autocmd FileType qf wincmd J
 " quickfix buffers.  Note: Normally, :cwindow jumps to the quickfix window if
 " the command opens it (but not if it's already open). However, as part of the
 " autocmd, this doesn't seem to happen.
-autocmd QuickFixCmdPost [^l]* nested cwindow
-autocmd QuickFixCmdPost    l* nested lwindow
+" autocmd QuickFixCmdPost [^l]* nested cwindow
+" autocmd QuickFixCmdPost    l* nested lwindow
 
 "Dont show me any output when I build something
 "Because I am using quickfix for errors
@@ -338,7 +339,7 @@ au FileType go nmap gd <Plug>(go-def)
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
 
-au FileType go nmap <Leader>i <Plug>(go-import)
+au FileType go nmap <Leader>i <Plug>(go-info)
 
 au FileType go nmap  <leader>r  <Plug>(go-run)
 au FileType go nmap  <leader>b  <Plug>(go-build)
@@ -438,6 +439,10 @@ endif
 
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+
+" Prettify json
+com! FormatJSON %!python -m json.tool
 
 " vim:ts=4:sw=4:et
 
