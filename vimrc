@@ -56,11 +56,17 @@ set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
 set ttyfast 
 
+" speed up syntax highlighting
+set nocursorcolumn
+set nocursorline
+syntax sync minlines=256
+
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
-    set guifont=Source\ Code\ Pro:h12
+    " set guifont=Source\ Code\ Pro:h12
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -75,15 +81,6 @@ if has("gui_macvim")
     colorscheme molokai
     highlight SignColumn guibg=#272822
 
-    " set fillchars+=vert:\|
-    " highlight SignColumn guibg=#002b36
-    " highlight LineNr guibg=#002b36
-    " highlight VertSplit guibg=#002b36
-    "
-    " set fillchars+=vert:\|
-    " highlight SignColumn guibg=bg
-    " highlight LineNr guibg=bg
-    " highlight VertSplit guibg=bg
 
     " Open ctrlp with cmd+p
     " let g:ctrlp_map = '<D-p>'
@@ -97,8 +94,8 @@ if has("gui_macvim")
     imap <D-R> <esc>:CtrlPBufTagAll<cr>
 
     " Open goto file
-    " nmap <D-t> :CtrlP<cr>
-    " imap <D-t> <esc>:CtrlP<cr>
+    nmap <D-t> :CtrlP<cr>
+    imap <D-t> <esc>:CtrlP<cr>
 
     " Comment lines with cmd+/
     map <D-/> :TComment<cr>
@@ -146,13 +143,6 @@ if has("gui_macvim")
 else
     syntax enable
     set background=dark
-    " colorscheme solarized
-
-    " highlight SignColumn ctermbg=8
-    " highlight LineNr ctermbg=8
-    " set fillchars+=vert:\|
-    " highlight VertSplit ctermbg=bg ctermfg=bg 
-    " set t_Co=256
 
     let macvim_skip_colorscheme=1
     let g:molokai_original=1
@@ -160,7 +150,6 @@ else
     highlight SignColumn guibg=#272822
     highlight VertSplit ctermbg=bg ctermfg=bg 
     set t_Co=256
-
 endif
 
 " Stop completion with enter, in addition to default ctrl+y
@@ -174,7 +163,7 @@ let g:ctrlp_cmd = 'CtrlPMRU'		" search anything (in files, buffers and MRU files
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_height = 10		" maxiumum height of match window
 let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
-let g:ctrlp_mruf_max=250 		" number of recently opened files
+let g:ctrlp_mruf_max=450 		" number of recently opened files
 let g:ctrlp_max_files=0  		" do not limit the number of searchable files
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
@@ -317,7 +306,7 @@ nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 " Act like D and C
 nnoremap Y y$
 
-" Do not show stup q: window
+" Do not show stupid q: window
 map q: :q
 
 "Reindent whoel file
@@ -442,7 +431,9 @@ au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-
 
 
 " Prettify json
-com! FormatJSON %!python -m json.tool
+com! JSONFormat %!python -m json.tool
+
+let g:airline_powerline_fonts = 1
 
 " vim:ts=4:sw=4:et
 
