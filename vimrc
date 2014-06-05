@@ -7,7 +7,8 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'fatih/vim-go'
+Plugin 'fatih/vim-go' 
+Plugin 'derekwyatt/vim-scala'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'scrooloose/nerdcommenter'
@@ -19,6 +20,7 @@ Plugin 'fatih/molokai'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'majutsushi/tagbar'
+Plugin 'AndrewRadev/splitjoin.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -60,13 +62,14 @@ set ttyfast
 set nocursorcolumn
 set nocursorline
 syntax sync minlines=256
+set re=1
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
-    " set guifont=Source\ Code\ Pro:h12
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+    " set guifont=Source\ Code\ Pro:h13
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h13
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -80,7 +83,6 @@ if has("gui_macvim")
     let g:molokai_original=1
     colorscheme molokai
     highlight SignColumn guibg=#272822
-
 
     " Open ctrlp with cmd+p
     " let g:ctrlp_map = '<D-p>'
@@ -106,9 +108,6 @@ if has("gui_macvim")
     nmap <D-[> <<
     vmap <D-[> <gv
     vmap <D-]> >gv
-
-    "Open sidebar with cmd+k
-    map <D-k> :NERDTreeTabsToggle<CR>
 
     " This mapping makes Ctrl-Tab switch between tabs.
     " Ctrl-Shift-Tab goes the other way.
@@ -137,9 +136,6 @@ if has("gui_macvim")
     imap <D-7> <esc>7gt
     imap <D-8> <esc>8gt
     imap <D-9> <esc>9gt
-
-    " Select text whit shift
-    let macvim_hig_shift_movement = 1
 else
     syntax enable
     set background=dark
@@ -274,7 +270,7 @@ map <C-l> <C-W>l
 nmap <leader>w :w!<cr>
 nmap <leader>q :q!<cr>
 
-" Save fold settings, open/close folds easily with spacebar
+" Center the screen
 nnoremap <space> zz
 
 " Move up and down on splitted lines (on small width screens)
@@ -312,7 +308,6 @@ map q: :q
 "Reindent whoel file
 map <F7> mzgg=G`z<CR>
 
-
 au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4 
 " ------------------------------------------"
@@ -339,14 +334,26 @@ au FileType go nmap <Leader>d <Plug>(go-doc-vertical)
 " coffeescript settings
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
 
+" scala settings
+autocmd BufNewFile,BufReadPost *.scala setl shiftwidth=2 expandtab
+
 " lua settings
-au BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
+autocmd BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
 
 let g:aghighlight=1
 noremap <Leader>a :Ag! <cword> /Users/fatih/Code/koding <cr>
 
-" Open nerdtree in current dir
-noremap <Leader>n :NERDTreeFind<cr>
+" Open nerdtree in current dir, write our own custom function because
+" NerdTreeToggle just sucks and doesn't work for buffers
+function! g:NerdTreeFindToggle()
+    if nerdtree#isTreeOpen()
+        exec 'NERDTreeClose'
+    else
+        exec 'NERDTreeFind'
+    endif
+endfunction
+
+noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
 
 "stevelosh
 
