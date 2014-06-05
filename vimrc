@@ -69,7 +69,7 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
     " set guifont=Source\ Code\ Pro:h13
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h13
+    set guifont=Source\ Code\ Pro:h13
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -353,7 +353,11 @@ function! g:NerdTreeFindToggle()
     endif
 endfunction
 
-noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
+" For toggling
+noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr> 
+
+" For refreshing current file and showing current dir
+noremap <Leader>j :NERDTreeFind<cr>
 
 "stevelosh
 
