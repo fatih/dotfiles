@@ -21,6 +21,7 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'ekalinin/Dockerfile.vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -210,10 +211,10 @@ let g:CommandTMatchWindowReverse = 1
 let g:CommandTMaxCachedDirectories = 0
 let g:CommandTAcceptSelectionTabMap = '<CR>'
 
-nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
 
 if has("gui_macvim")
     macmenu &File.New\ Tab key=<nop>
+    " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
     nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
 endif
 "
@@ -257,6 +258,9 @@ nmap <leader>m :make<CR><enter>
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
 
+" Close quickfix easily
+nnoremap <leader>a :cclose<CR>
+
 " Remove search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 
@@ -285,6 +289,9 @@ imap jk <ESC>l
 " Select search pattern howewever do not jump to the next one
 nnoremap <leader>f *N
 
+nnoremap <F6> :setlocal spell! spell?<CR>
+
+
 " Select search pattern howewever do not jump to the next one
 nnoremap <leader>c :TComment<cr>
 
@@ -310,6 +317,7 @@ map <F7> mzgg=G`z<CR>
 
 au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4 
+au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4 
 " ------------------------------------------"
 " Plugin Settings
 " ----------------------------------------- "
@@ -329,7 +337,7 @@ au FileType go nmap  <leader>r  <Plug>(go-run)
 au FileType go nmap  <leader>b  <Plug>(go-build)
 au FileType go nmap  <leader>t  <Plug>(go-test)
 
-au FileType go nmap <Leader>d <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>d <Plug>(go-doc-browser)
 
 " coffeescript settings
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
@@ -340,8 +348,8 @@ autocmd BufNewFile,BufReadPost *.scala setl shiftwidth=2 expandtab
 " lua settings
 autocmd BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
 
-let g:aghighlight=1
-noremap <Leader>a :Ag! <cword> /Users/fatih/Code/koding <cr>
+" let g:aghighlight=1
+" noremap <Leader>a :Ag! <cword> /Users/fatih/Code/koding <cr>
 
 " Open nerdtree in current dir, write our own custom function because
 " NerdTreeToggle just sucks and doesn't work for buffers
