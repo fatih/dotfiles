@@ -23,6 +23,8 @@ Plugin 'majutsushi/tagbar'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'JazzCore/ctrlp-cmatcher'
+Plugin 'bling/vim-airline'
+Plugin 'zhaocai/GoldenView.Vim'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -70,8 +72,8 @@ set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
+    set guifont=Source\ Code\ Pro:h12
     " set guifont=Source\ Code\ Pro:h13
-    set guifont=Source\ Code\ Pro:h13
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -289,9 +291,9 @@ set wildignore+=*.sw?                            " Vim swap files
 set wildignore+=*.DS_Store                       " OSX bullshit
 set wildignore+=*.luac                           " Lua byte code
 set wildignore+=migrations                       " Django migrations
-set wildignore+=*/go/pkg/*                       " Go static files
-set wildignore+=*/go/bin/*                       " Go bin files
-set wildignore+=*/go/bin-vagrant/*               " Go bin-vagrant files
+set wildignore+=go/pkg                       " Go static files
+set wildignore+=go/bin                       " Go bin files
+set wildignore+=go/bin-vagrant               " Go bin-vagrant files
 set wildignore+=*.pyc                            " Python byte code
 set wildignore+=*.orig                           " Merge resolution files
 
@@ -358,11 +360,20 @@ let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 
 
+" ==================== GoldenView ====================
+let g:goldenview__enable_default_mapping = 0
+
+
 " ==================== Fugitive ====================
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gb :Gblame<CR>
 vnoremap <leader>gb :Gblame<CR>
+
+
+" ==================== Airline ====================
+let g:airline_left_sep  = ' '
+let g:airline_right_sep = ' '
 
 
 " ==================== CommandT ====================
@@ -372,14 +383,13 @@ let g:CommandTMatchWindowReverse = 1
 let g:CommandTMaxCachedDirectories = 0
 let g:CommandTAcceptSelectionTabMap = '<CR>'
 let g:CommandTHighlightColor = 'Typedef'
-let g:CommandTFileScanner = "find"
 
 if has("gui_macvim")
     macmenu &File.New\ Tab key=<nop>
     " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
     nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
 endif
-"
+
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 1
