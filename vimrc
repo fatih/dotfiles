@@ -22,6 +22,7 @@ Plugin 'tomtom/tcomment_vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'JazzCore/ctrlp-cmatcher'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -36,7 +37,7 @@ set showcmd                     " Show me what I'm typing
 set showmode                    " Show current mode.
 
 set noswapfile                  " Don't use swapfile
-set nobackup            	" Don't create annoying backup files
+set nobackup            	    " Don't create annoying backup files
 set splitright                  " Split vertical windows right to the current windows
 set splitbelow                  " Split horizontal windows below to the current windows
 set encoding=utf-8              " Set default encoding to UTF-8
@@ -50,9 +51,9 @@ set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
 set clipboard^=unnamed 
 set clipboard^=unnamedplus
 
-set noshowmatch                   " Do not show matching brackets by flickering
+set noshowmatch                 " Do not show matching brackets by flickering
 set nocursorcolumn
-set lazyredraw          	" Wait to redraw "
+set lazyredraw          	    " Wait to redraw "
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
@@ -152,75 +153,6 @@ endif
 " Stop completion with enter, in addition to default ctrl+y
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
-" ----------------------------------------- "
-" Plugin configs 			    			"
-" ----------------------------------------- "
-" let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
-let g:ctrlp_cmd = 'CtrlPMRU'		" search anything (in files, buffers and MRU files at the same time.)
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_max_height = 10		" maxiumum height of match window
-let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
-let g:ctrlp_mruf_max=450 		" number of recently opened files
-let g:ctrlp_max_files=0  		" do not limit the number of searchable files
-let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-
-func! MyPrtMappings()
-    let g:ctrlp_prompt_mappings = {
-                \ 'AcceptSelection("e")': ['<c-t>'],
-                \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-                \ }
-endfunc
-
-func! MyCtrlPTag()
-    let g:ctrlp_prompt_mappings = {
-                \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
-                \ 'AcceptSelection("t")': ['<c-t>'],
-                \ }
-    CtrlPBufTag
-endfunc
-
-let g:ctrlp_buffer_func = { 'exit': 'MyPrtMappings' }
-com! MyCtrlPTag call MyCtrlPTag()
-
-" TODO: add javascript and some other languages who doesn't have ctags support
-" coffee: https://gist.github.com/michaelglass/5210282
-" go: http://stackoverflow.com/a/8236826/462233 
-" objc:  http://www.gregsexton.org/2011/04/objective-c-exuberant-ctags-regex/
-" rust: https://github.com/mozilla/rust/blob/master/src/etc/ctags.rust
-let g:ctrlp_buftag_types = {
-            \ 'go'     	   : '--language-force=go --golang-types=ftv',
-            \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
-            \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
-            \ 'objc'       : '--language-force=objc --objc-types=mpci',
-            \ 'rc'         : '--language-force=rust --rust-types=fTm'
-            \ }
-
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_min_num_of_chars_for_completion = 1
-
-"create line break when pressing enter
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
-
-
-let g:CommandTMaxHeight = 20
-let g:CommandTMaxFiles = 500000
-let g:CommandTMatchWindowReverse = 1
-let g:CommandTMaxCachedDirectories = 0
-let g:CommandTAcceptSelectionTabMap = '<CR>'
-
-
-if has("gui_macvim")
-    macmenu &File.New\ Tab key=<nop>
-    " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
-    nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
-endif
-"
-augroup filetypedetect
-    au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-augroup END
 
 " This comes first, because we have mappings that depend on leader
 " With a map leader it's possible to do extra key combinations
@@ -228,23 +160,11 @@ augroup END
 let mapleader = ","
 let g:mapleader = ","
 
-
 " This trigger takes advantage of the fact that the quickfix window can be
 " easily distinguished by its file-type, qf. The wincmd J command is
 " equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
 " the very bottom (see :help :wincmd and :help ^WJ).
 autocmd FileType qf wincmd J
-
-"Quickfix window
-" Automatically open, but do not go to (if there are errors) the quickfix /
-" location list window, or close it when is has become empty.
-"
-" Note: Must allow nesting of autocmds to enable any customizations for
-" quickfix buffers.  Note: Normally, :cwindow jumps to the quickfix window if
-" the command opens it (but not if it's already open). However, as part of the
-" autocmd, this doesn't seem to happen.
-" autocmd QuickFixCmdPost [^l]* nested cwindow
-" autocmd QuickFixCmdPost    l* nested lwindow
 
 "Dont show me any output when I build something
 "Because I am using quickfix for errors
@@ -315,29 +235,20 @@ map q: :q
 "Reindent whoel file
 map <F7> mzgg=G`z<CR>
 
+" ----------------------------------------- "
+" File Type settings 			    		"
+" ----------------------------------------- "
+
 au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4 
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4 
-" ------------------------------------------"
-" Plugin Settings
-" ----------------------------------------- "
 
-" golang settings
+augroup filetypedetect
+    au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+augroup END
+
+" Go settings
 au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
-
-let g:go_fmt_fail_silently = 1
-
-au FileType go nmap gd <Plug>(go-def)
-au FileType go nmap <Leader>s <Plug>(go-def-split)
-au FileType go nmap <Leader>v <Plug>(go-def-vertical)
-
-au FileType go nmap <Leader>i <Plug>(go-info)
-
-au FileType go nmap  <leader>r  <Plug>(go-run)
-au FileType go nmap  <leader>b  <Plug>(go-build)
-au FileType go nmap  <leader>t  <Plug>(go-test)
-
-au FileType go nmap <Leader>d <Plug>(go-doc-browser)
 
 " coffeescript settings
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
@@ -347,27 +258,6 @@ autocmd BufNewFile,BufReadPost *.scala setl shiftwidth=2 expandtab
 
 " lua settings
 autocmd BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
-
-" let g:aghighlight=1
-" noremap <Leader>a :Ag! <cword> /Users/fatih/Code/koding <cr>
-
-" Open nerdtree in current dir, write our own custom function because
-" NerdTreeToggle just sucks and doesn't work for buffers
-function! g:NerdTreeFindToggle()
-    if nerdtree#isTreeOpen()
-        exec 'NERDTreeClose'
-    else
-        exec 'NERDTreeFind'
-    endif
-endfunction
-
-" For toggling
-noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr> 
-
-" For refreshing current file and showing current dir
-noremap <Leader>j :NERDTreeFind<cr>
-
-"stevelosh
 
 " iTerm2 is currently slow as ball at rendering the nice unicode lines, so for
 " now I'll just use ascii pipes.  They're ugly but at least I won't want to kill
@@ -397,23 +287,116 @@ set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest " compiled object files
 set wildignore+=*.spl                            " compiled spelling word lists
 set wildignore+=*.sw?                            " Vim swap files
 set wildignore+=*.DS_Store                       " OSX bullshit
-
 set wildignore+=*.luac                           " Lua byte code
-
 set wildignore+=migrations                       " Django migrations
+set wildignore+=*/go/pkg/*                       " Go static files
+set wildignore+=*/go/bin/*                       " Go bin files
+set wildignore+=*/go/bin-vagrant/*               " Go bin-vagrant files
 set wildignore+=*.pyc                            " Python byte code
-
 set wildignore+=*.orig                           " Merge resolution files
 
+" Prettify json
+com! JSONFormat %!python -m json.tool
+
+
+" ----------------------------------------- "
+" Plugin configs 			    			"
+" ----------------------------------------- "
+
+" ==================== CtrlP ====================
+let g:ctrlp_cmd = 'CtrlPMRU'		
+let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
+let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_max_height = 10		" maxiumum height of match window
+let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
+let g:ctrlp_mruf_max=450 		" number of recently opened files
+let g:ctrlp_max_files=0  		" do not limit the number of searchable files
+let g:ctrlp_use_caching = 1
+let g:ctrlp_clear_cache_on_exit = 0
+let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+
+func! MyPrtMappings()
+    let g:ctrlp_prompt_mappings = {
+                \ 'AcceptSelection("e")': ['<c-t>'],
+                \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+                \ }
+endfunc
+
+func! MyCtrlPTag()
+    let g:ctrlp_prompt_mappings = {
+                \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
+                \ 'AcceptSelection("t")': ['<c-t>'],
+                \ }
+    CtrlPBufTag
+endfunc
+
+let g:ctrlp_buffer_func = { 'exit': 'MyPrtMappings' }
+com! MyCtrlPTag call MyCtrlPTag()
+
+let g:ctrlp_buftag_types = {
+            \ 'go'     	   : '--language-force=go --golang-types=ftv',
+            \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
+            \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
+            \ 'objc'       : '--language-force=objc --objc-types=mpci',
+            \ 'rc'         : '--language-force=rust --rust-types=fTm'
+            \ }
+
+
+
+" ==================== YouCompleteMe ====================
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_min_num_of_chars_for_completion = 1
+
+
+" ==================== ChooseWin ====================
+nmap  -  <Plug>(choosewin)
+
+
+" ==================== DelimitMate ====================
+let g:delimitMate_expand_cr = 1
+let g:delimitMate_expand_space = 1
+
+
+" ==================== Fugitive ====================
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gb :Gblame<CR>
 vnoremap <leader>gb :Gblame<CR>
 
-" choosewin
-nmap  -  <Plug>(choosewin)
 
-" ultisnips
+" ==================== CommandT ====================
+let g:CommandTMaxHeight = 20
+let g:CommandTMaxFiles = 500000
+let g:CommandTMatchWindowReverse = 1
+let g:CommandTMaxCachedDirectories = 0
+let g:CommandTAcceptSelectionTabMap = '<CR>'
+let g:CommandTHighlightColor = 'Typedef'
+let g:CommandTFileScanner = "find"
+
+if has("gui_macvim")
+    macmenu &File.New\ Tab key=<nop>
+    " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
+    nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
+endif
+"
+
+" ==================== Vim-go ====================
+let g:go_fmt_fail_silently = 1
+
+au FileType go nmap gd <Plug>(go-def)
+au FileType go nmap <Leader>s <Plug>(go-def-split)
+au FileType go nmap <Leader>v <Plug>(go-def-vertical)
+
+au FileType go nmap <Leader>i <Plug>(go-info)
+
+au FileType go nmap  <leader>r  <Plug>(go-run)
+au FileType go nmap  <leader>b  <Plug>(go-build)
+au FileType go nmap  <leader>t  <Plug>(go-test)
+
+au FileType go nmap <Leader>d <Plug>(go-doc-browser)
+
+" ==================== UltiSnips ====================
 function! g:UltiSnips_Complete()
     call UltiSnips#ExpandSnippetOrJump()
     if g:ulti_expand_or_jump_res == 0
@@ -448,11 +431,20 @@ endif
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
+" ==================== NerdTree ====================
+" Open nerdtree in current dir, write our own custom function because
+" NerdTreeToggle just sucks and doesn't work for buffers
+function! g:NerdTreeFindToggle()
+    if nerdtree#isTreeOpen()
+        exec 'NERDTreeClose'
+    else
+        exec 'NERDTreeFind'
+    endif
+endfunction
 
-" Prettify json
-com! JSONFormat %!python -m json.tool
+" For toggling
+noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr> 
 
-let g:airline_powerline_fonts = 1
-
+" For refreshing current file and showing current dir
+noremap <Leader>j :NERDTreeFind<cr>
 " vim:ts=4:sw=4:et
-
