@@ -8,6 +8,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'fatih/vim-go' 
+Plugin 'fatih/vim-nginx' 
 Plugin 'derekwyatt/vim-scala'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
@@ -24,7 +25,7 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'bling/vim-airline'
-Plugin 'zhaocai/GoldenView.Vim'
+Plugin 'cespare/vim-toml'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -66,14 +67,15 @@ set ttyfast
 set nocursorcolumn
 set nocursorline
 syntax sync minlines=256
+set synmaxcol=128
 set re=1
+
 
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
-    set guifont=Source\ Code\ Pro:h12
-    " set guifont=Source\ Code\ Pro:h13
+    set guifont=Source\ Code\ Pro:h13
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -142,14 +144,15 @@ if has("gui_macvim")
     imap <D-9> <esc>9gt
 else
     syntax enable
-    set background=dark
-
-    let macvim_skip_colorscheme=1
+    " set background=dark
     let g:molokai_original=1
     colorscheme molokai
-    highlight SignColumn guibg=#272822
-    highlight VertSplit ctermbg=bg ctermfg=bg 
+
+    " highlight SignColumn guibg=#272822
+    " highlight VertSplit ctermbg=bg ctermfg=bg 
     set t_Co=256
+    " set t_ut=
+    " let g:rehash256 = 1
 endif
 
 " Stop completion with enter, in addition to default ctrl+y
@@ -194,7 +197,26 @@ map <C-l> <C-W>l
 
 " Fast saving
 nmap <leader>w :w!<cr>
-nmap <leader>q :q!<cr>
+
+
+" http://stackoverflow.com/questions/4298910/vim-close-buffer-but-not-split-window
+function! CloseSplitOrDeleteBuffer()
+  let curNr = winnr()
+  let curBuf = bufnr('%')
+  wincmd w                    " try to move on next split
+  if winnr() == curNr         " there is no split
+    exe 'bdelete'
+  elseif curBuf != bufnr('%') " there is split with another buffer
+    wincmd W                  " move back
+    exe 'bdelete'
+  else                        " there is split with same buffer"
+    wincmd W
+    wincmd c
+  endif
+endfunction
+
+nnoremap <leader>q :call CloseSplitOrDeleteBuffer()<CR>
+
 
 " Center the screen
 nnoremap <space> zz
@@ -237,6 +259,189 @@ map q: :q
 "Reindent whoel file
 map <F7> mzgg=G`z<CR>
 
+
+" ========== Steve Losh hacks ==========="
+
+" Don't move on *
+" I'd use a function for this but Vim clobbers the last search when you're in
+" a function so fuck it, practicality beats purity.
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+
+" Easier to hit tab
+map <tab> %
+
+" iTerm2 is currently slow as balls at rendering the nice unicode lines, so for
+" now I'll just use ASCII pipes.  They're ugly but at least I won't want to kill
+" myself when trying to move around a file.
+set fillchars=diff:⣿,vert:│
+set fillchars=diff:⣿,vert:\|
+
+" Time out on key codes but not mappings.
+" Basically this makes terminal Vim work sanely.
+set notimeout
+set ttimeout
+set ttimeoutlen=10
+
+" Better Completion
+set complete=.,w,b,u,t
+set completeopt=longest,menuone
+
+" Diffoff
+nnoremap <leader>D :diffoff!<cr>
+
+" Resize splits when the window is resized
+au VimResized * :wincmd =
+
+" }}}
+" Visual Mode */# from Scrooloose {{{
+
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+
+vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
+vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
+
+" }}}
+" Next and Last {{{
+"
+" Motion for "next/last object".  "Last" here means "previous", not "final".
+" Unfortunately the "p" motion was already taken for paragraphs.
+"
+" Next acts on the next object of the given type, last acts on the previous
+" object of the given type.  These don't necessarily have to be in the current
+" line.
+"
+" Currently works for (, [, {, and their shortcuts b, r, B. 
+"
+" Next kind of works for ' and " as long as there are no escaped versions of
+" them in the string (TODO: fix that).  Last is currently broken for quotes
+" (TODO: fix that).
+"
+" Some examples (C marks cursor positions, V means visually selected):
+"
+" din'  -> delete in next single quotes                foo = bar('spam')
+"                                                      C
+"                                                      foo = bar('')
+"                                                                C
+"
+" canb  -> change around next parens                   foo = bar('spam')
+"                                                      C
+"                                                      foo = bar
+"                                                               C
+"
+" vin"  -> select inside next double quotes            print "hello ", name
+"                                                       C
+"                                                      print "hello ", name
+"                                                             VVVVVV
+
+onoremap an :<c-u>call <SID>NextTextObject('a', '/')<cr>
+xnoremap an :<c-u>call <SID>NextTextObject('a', '/')<cr>
+onoremap in :<c-u>call <SID>NextTextObject('i', '/')<cr>
+xnoremap in :<c-u>call <SID>NextTextObject('i', '/')<cr>
+
+onoremap al :<c-u>call <SID>NextTextObject('a', '?')<cr>
+xnoremap al :<c-u>call <SID>NextTextObject('a', '?')<cr>
+onoremap il :<c-u>call <SID>NextTextObject('i', '?')<cr>
+xnoremap il :<c-u>call <SID>NextTextObject('i', '?')<cr>
+
+
+function! s:NextTextObject(motion, dir)
+    let c = nr2char(getchar())
+    let d = ''
+
+    if c ==# "b" || c ==# "(" || c ==# ")"
+        let c = "("
+    elseif c ==# "B" || c ==# "{" || c ==# "}"
+        let c = "{"
+    elseif c ==# "r" || c ==# "[" || c ==# "]"
+        let c = "["
+    elseif c ==# "'"
+        let c = "'"
+    elseif c ==# '"'
+        let c = '"'
+    else
+        return
+    endif
+
+    " Find the next opening-whatever.
+    execute "normal! " . a:dir . c . "\<cr>"
+
+    if a:motion ==# 'a'
+        " If we're doing an 'around' method, we just need to select around it
+        " and we can bail out to Vim.
+        execute "normal! va" . c
+    else
+        " Otherwise we're looking at an 'inside' motion.  Unfortunately these
+        " get tricky when you're dealing with an empty set of delimiters because
+        " Vim does the wrong thing when you say vi(.
+
+        let open = ''
+        let close = ''
+
+        if c ==# "(" 
+            let open = "("
+            let close = ")"
+        elseif c ==# "{"
+            let open = "{"
+            let close = "}"
+        elseif c ==# "["
+            let open = "\\["
+            let close = "\\]"
+        elseif c ==# "'"
+            let open = "'"
+            let close = "'"
+        elseif c ==# '"'
+            let open = '"'
+            let close = '"'
+        endif
+
+        " We'll start at the current delimiter.
+        let start_pos = getpos('.')
+        let start_l = start_pos[1]
+        let start_c = start_pos[2]
+
+        " Then we'll find it's matching end delimiter.
+        if c ==# "'" || c ==# '"'
+            " searchpairpos() doesn't work for quotes, because fuck me.
+            let end_pos = searchpos(open)
+        else
+            let end_pos = searchpairpos(open, '', close)
+        endif
+
+        let end_l = end_pos[0]
+        let end_c = end_pos[1]
+
+        call setpos('.', start_pos)
+
+        if start_l == end_l && start_c == (end_c - 1)
+            " We're in an empty set of delimiters.  We'll append an "x"
+            " character and select that so most Vim commands will do something
+            " sane.  v is gonna be weird, and so is y.  Oh well.
+            execute "normal! ax\<esc>\<left>"
+            execute "normal! vi" . c
+        elseif start_l == end_l && start_c == (end_c - 2)
+            " We're on a set of delimiters that contain a single, non-newline
+            " character.  We can just select that and we're done.
+            execute "normal! vi" . c
+        else
+            " Otherwise these delimiters contain something.  But we're still not
+            " sure Vim's gonna work, because if they contain nothing but
+            " newlines Vim still does the wrong thing.  So we'll manually select
+            " the guts ourselves.
+            let whichwrap = &whichwrap
+            set whichwrap+=h,l
+
+            execute "normal! va" . c . "hol"
+
+            let &whichwrap = whichwrap
+        endif
+    endif
+endfunction
+
 " ----------------------------------------- "
 " File Type settings 			    		"
 " ----------------------------------------- "
@@ -247,10 +452,14 @@ au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
 augroup filetypedetect
     au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+    au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
 augroup END
+
+au FileType nginx setlocal noet ts=4 sw=4 sts=4
 
 " Go settings
 au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+" au BufNewFile,BufRead *.go setlocal noet ts=8 sw=8 sts=8
 
 " coffeescript settings
 autocmd BufNewFile,BufReadPost *.coffee setl shiftwidth=2 expandtab
@@ -261,21 +470,6 @@ autocmd BufNewFile,BufReadPost *.scala setl shiftwidth=2 expandtab
 " lua settings
 autocmd BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
 
-" iTerm2 is currently slow as ball at rendering the nice unicode lines, so for
-" now I'll just use ascii pipes.  They're ugly but at least I won't want to kill
-" myself when trying to move around a file.
-set fillchars=diff:⣿,vert:│
-set fillchars=diff:⣿,vert:\|
-
-" Don't try to highlight lines longer than 800 characters.
-set synmaxcol=800
-
-" Better Completion
-set complete=.,w,b,u,t
-set completeopt=longest,menuone
-
-" Resize splits when the window is resized
-au VimResized * :wincmd =
 
 " Wildmenu completion {{{
 set wildmenu
@@ -345,6 +539,12 @@ let g:ctrlp_buftag_types = {
             \ }
 
 
+" get me a list of files in the current dir
+if has("gui_macvim")
+    nmap <C-f> :CtrlPCurWD<cr>
+    imap <C-f> <esc>:CtrlPCurWD<cr>
+endif
+
 
 " ==================== YouCompleteMe ====================
 let g:ycm_autoclose_preview_window_after_completion = 1
@@ -358,10 +558,6 @@ nmap  -  <Plug>(choosewin)
 " ==================== DelimitMate ====================
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
-
-
-" ==================== GoldenView ====================
-let g:goldenview__enable_default_mapping = 0
 
 
 " ==================== Fugitive ====================
@@ -388,23 +584,28 @@ if has("gui_macvim")
     macmenu &File.New\ Tab key=<nop>
     " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
     nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
+else
+    nmap <C-t> :CommandT /Users/fatih/Code/koding<cr>
+    imap <C-t> <esc>:CommandT /Users/fatih/Code/koding<cr>
 endif
 
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 1
+let g:go_fmt_command = "gofmt"
+
 
 au FileType go nmap gd <Plug>(go-def)
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
+au FileType go nmap <Leader>t <Plug>(go-def-tab)
 
 au FileType go nmap <Leader>i <Plug>(go-info)
 
 au FileType go nmap  <leader>r  <Plug>(go-run)
 au FileType go nmap  <leader>b  <Plug>(go-build)
-au FileType go nmap  <leader>t  <Plug>(go-test)
 
-au FileType go nmap <Leader>d <Plug>(go-doc-browser)
+au FileType go nmap <Leader>d <Plug>(go-doc)
 
 " ==================== UltiSnips ====================
 function! g:UltiSnips_Complete()
