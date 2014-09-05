@@ -147,12 +147,7 @@ else
     " set background=dark
     let g:molokai_original=1
     colorscheme molokai
-
-    " highlight SignColumn guibg=#272822
-    " highlight VertSplit ctermbg=bg ctermfg=bg 
     set t_Co=256
-    " set t_ut=
-    " let g:rehash256 = 1
 endif
 
 " Stop completion with enter, in addition to default ctrl+y
@@ -266,9 +261,6 @@ map <F7> mzgg=G`z<CR>
 " I'd use a function for this but Vim clobbers the last search when you're in
 " a function so fuck it, practicality beats purity.
 nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
-
-" Easier to hit tab
-map <tab> %
 
 " iTerm2 is currently slow as balls at rendering the nice unicode lines, so for
 " now I'll just use ASCII pipes.  They're ugly but at least I won't want to kill
