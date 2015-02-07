@@ -5,10 +5,16 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-dispatch'
+Plugin 'tpope/vim-vinegar'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'git://git.wincent.com/command-t.git'
 Plugin 'fatih/vim-go' 
 Plugin 'fatih/vim-nginx' 
+Plugin 'fatih/molokai'
+Plugin 'nanotech/jellybeans.vim'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
@@ -17,7 +23,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'SirVer/ultisnips'
 Plugin 'Raimondi/delimitMate'
 Plugin 't9md/vim-choosewin'
-Plugin 'fatih/molokai'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'majutsushi/tagbar'
@@ -26,6 +31,8 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'bling/vim-airline'
 Plugin 'cespare/vim-toml'
+Plugin 'elzr/vim-json'
+Plugin 'chilicuil/vim-sml-coursera'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -56,18 +63,20 @@ set clipboard^=unnamedplus
 
 set noshowmatch                 " Do not show matching brackets by flickering
 set nocursorcolumn
-set lazyredraw          	    " Wait to redraw "
 set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
 set ttyfast 
+set ttymouse=xterm2
+set ttyscroll=3
+set lazyredraw          	    " Wait to redraw "
 
 " speed up syntax highlighting
 set nocursorcolumn
 set nocursorline
 syntax sync minlines=256
-set synmaxcol=128
+set synmaxcol=300
 set re=1
 
 
@@ -85,10 +94,12 @@ if has("gui_macvim")
     set guioptions-=r  "no scrollbar
     set guioptions-=R
 
-    let macvim_skip_colorscheme=1
-    let g:molokai_original=1
-    colorscheme molokai
-    highlight SignColumn guibg=#272822
+    "let macvim_skip_colorscheme=1
+    "let g:molokai_original=1
+    "colorscheme molokai
+    "highlight SignColumn guibg=#272822
+
+    colorscheme jellybeans
 
     " Open ctrlp with cmd+p
     " let g:ctrlp_map = '<D-p>'
@@ -144,10 +155,21 @@ if has("gui_macvim")
     imap <D-9> <esc>9gt
 else
     syntax enable
-    " set background=dark
-    let g:molokai_original=1
-    colorscheme molokai
-    set t_Co=256
+    colorscheme jellybeans
+
+    nmap <C-r> :MyCtrlPTag<cr>
+    imap <C-r> <esc>:MyCtrlPTag<cr>
+
+    "let g:molokai_original=1
+    "colorscheme molokai
+    "
+    "set t_Co=256
+    "set background=dark
+
+    "let macvim_skip_colorscheme=1
+    "let g:molokai_original=1
+    " colorscheme molokai
+    "highlight SignColumn guibg=#272822
 endif
 
 " Stop completion with enter, in addition to default ctrl+y
@@ -178,6 +200,11 @@ nmap <leader>m :make<CR><enter>
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
 
+" Yank the word under the cursor, go into insert mode one line below, execute
+" the snippet `fa`, which puts the yanked word inside the `fa` snippet and
+" finish
+nmap <silent> <leader>z yiwofa<tab><esc><cr>
+
 " Close quickfix easily
 nnoremap <leader>a :cclose<CR>
 
@@ -200,17 +227,18 @@ function! CloseSplitOrDeleteBuffer()
   let curBuf = bufnr('%')
   wincmd w                    " try to move on next split
   if winnr() == curNr         " there is no split
-    exe 'bdelete'
+    exe 'bdelete!'
   elseif curBuf != bufnr('%') " there is split with another buffer
     wincmd W                  " move back
-    exe 'bdelete'
+    exe 'bdelete!'
   else                        " there is split with same buffer"
     wincmd W
-    wincmd c
+    close!
   endif
 endfunction
 
-nnoremap <leader>q :call CloseSplitOrDeleteBuffer()<CR>
+" nnoremap <leader>q :call CloseSplitOrDeleteBuffer()<CR>
+nnoremap <leader>q :q!<cr>
 
 
 " Center the screen
@@ -224,9 +252,6 @@ map j gj
 
 " Just go out in insert mode
 imap jk <ESC>l
-
-" Select search pattern howewever do not jump to the next one
-nnoremap <leader>f *N
 
 nnoremap <F6> :setlocal spell! spell?<CR>
 
@@ -484,7 +509,9 @@ set wildignore+=*.pyc                            " Python byte code
 set wildignore+=*.orig                           " Merge resolution files
 
 " Prettify json
-com! JSONFormat %!python -m json.tool
+" comes with yajl, install: brew install yajl
+" I don't use pythons json tool because it sorts the keys
+com! JSONFormat %!json_reformat
 
 
 " ----------------------------------------- "
@@ -544,12 +571,16 @@ let g:ycm_min_num_of_chars_for_completion = 1
 
 
 " ==================== ChooseWin ====================
-nmap  -  <Plug>(choosewin)
+" nmap  -  <Plug>(choosewin)
 
 
 " ==================== DelimitMate ====================
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
+let delimitMate_smart_quotes = 1
+let delimitMate_expand_inside_quotes = 0
+
+let delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
 
 " ==================== Fugitive ====================
@@ -562,7 +593,6 @@ vnoremap <leader>gb :Gblame<CR>
 " ==================== Airline ====================
 let g:airline_left_sep  = ' '
 let g:airline_right_sep = ' '
-
 
 " ==================== CommandT ====================
 let g:CommandTMaxHeight = 20
@@ -584,32 +614,65 @@ endif
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 1
-let g:go_fmt_command = "gofmt"
+let g:go_fmt_command = "goimports"
 
 
-au FileType go nmap gd <Plug>(go-def)
+let g:go_highlight_space_tab_error = 0
+let g:go_highlight_array_whitespace_error = 0
+let g:go_highlight_trailing_whitespace_error = 0
+
+let g:go_highlight_space_tab_error = 0
+let g:go_highlight_extra_types = 0
+let g:go_highlight_methods = 0
+let g:go_highlight_functions = 0
+
+
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
 au FileType go nmap <Leader>t <Plug>(go-def-tab)
 
-au FileType go nmap <Leader>i <Plug>(go-info)
+au FileType go nmap <Leader>in <Plug>(go-info)
+au FileType go nmap <Leader>ii <Plug>(go-implements)
+
+au FileType go nmap  <leader>e  <Plug>(go-rename)
 
 au FileType go nmap  <leader>r  <Plug>(go-run)
 au FileType go nmap  <leader>b  <Plug>(go-build)
 
 au FileType go nmap <Leader>d <Plug>(go-doc)
 
+au FileType go nmap <Leader>f :GoImports<CR>
+
+" ==================== Vim-json ====================
+"
+let g:vim_json_syntax_conceal = 0
+
 " ==================== UltiSnips ====================
+" function! g:UltiSnips_Complete()
+"     call UltiSnips#ExpandSnippetOrJump()
+"     if g:ulti_expand_or_jump_res == 0
+"         if pumvisible()
+"             return "\<C-N>"
+"         else
+"             return "\<TAB>"
+"         endif
+"     endif
+"
+"     return ""
+" endfunction
+
 function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippetOrJump()
-    if g:ulti_expand_or_jump_res == 0
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
         if pumvisible()
-            return "\<C-N>"
+            return "\<C-n>"
         else
-            return "\<TAB>"
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
         endif
     endif
-
     return ""
 endfunction
 
@@ -631,8 +694,11 @@ if !exists("g:UltiSnipsJumpBackwardTrigger")
     let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 endif
 
-au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 " ==================== NerdTree ====================
 " Open nerdtree in current dir, write our own custom function because
@@ -650,4 +716,16 @@ noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
 
 " For refreshing current file and showing current dir
 noremap <Leader>j :NERDTreeFind<cr>
-" vim:ts=4:sw=4:et
+
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+" map <leader>re :call RenameFile()<cr>
+"
+"
