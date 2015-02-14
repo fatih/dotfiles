@@ -6,15 +6,16 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-vinegar'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
+Plugin 'moll/vim-bbye'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'fatih/vim-go' 
-Plugin 'fatih/vim-nginx' 
+Plugin 'fatih/vim-go'
+Plugin 'fatih/vim-nginx'
 Plugin 'fatih/molokai'
 Plugin 'nanotech/jellybeans.vim'
+Plugin 'altercation/vim-colors-solarized'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'kien/ctrlp.vim'
 Plugin 'mileszs/ack.vim'
@@ -39,7 +40,7 @@ filetype plugin indent on    " required
 
 "
 " Settings
-" 
+"
 set noerrorbells                " No beeps
 set number                      " Show line numbers
 set backspace=indent,eol,start  " Makes backspace key more powerful.
@@ -54,11 +55,12 @@ set encoding=utf-8              " Set default encoding to UTF-8
 set autowrite                   " Automatically save before :next, :make etc.
 set autoread                    " Automatically reread changed files without asking me anything
 set laststatus=2
+set hidden
 
 set fileformats=unix,dos,mac    " Prefer Unix over Windows over OS 9 formats
 
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
-set clipboard^=unnamed 
+set clipboard^=unnamed
 set clipboard^=unnamedplus
 
 set noshowmatch                 " Do not show matching brackets by flickering
@@ -67,7 +69,7 @@ set incsearch                   " Shows the match while typing
 set hlsearch                    " Highlight found searches
 set ignorecase                  " Search case insensitive...
 set smartcase                   " ... but not when search pattern contains upper case characters
-set ttyfast 
+set ttyfast
 set ttymouse=xterm2
 set ttyscroll=3
 set lazyredraw          	    " Wait to redraw "
@@ -75,16 +77,15 @@ set lazyredraw          	    " Wait to redraw "
 " speed up syntax highlighting
 set nocursorcolumn
 set nocursorline
+
 syntax sync minlines=256
 set synmaxcol=300
 set re=1
-
-
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 
 if has("gui_macvim")
     " No toolbars, menu or scrollbars in the GUI
-    set guifont=Source\ Code\ Pro:h13
+    set guifont=Source\ Code\ Pro:h12
     set clipboard+=unnamed
     set vb t_vb=
     set guioptions-=m  "no menu
@@ -94,12 +95,10 @@ if has("gui_macvim")
     set guioptions-=r  "no scrollbar
     set guioptions-=R
 
-    "let macvim_skip_colorscheme=1
-    "let g:molokai_original=1
-    "colorscheme molokai
-    "highlight SignColumn guibg=#272822
-
-    colorscheme jellybeans
+    let macvim_skip_colorscheme=1
+    let g:molokai_original=1
+    colorscheme molokai
+    highlight SignColumn guibg=#272822
 
     " Open ctrlp with cmd+p
     " let g:ctrlp_map = '<D-p>'
@@ -155,26 +154,26 @@ if has("gui_macvim")
     imap <D-9> <esc>9gt
 else
     syntax enable
-    colorscheme jellybeans
+    " set background=dark
+    let g:molokai_original=1
+    colorscheme molokai
+    set t_Co=256
 
-    nmap <C-r> :MyCtrlPTag<cr>
-    imap <C-r> <esc>:MyCtrlPTag<cr>
+    "syntax enable
+    ""colorscheme jellybeans
 
-    "let g:molokai_original=1
-    "colorscheme molokai
-    "
-    "set t_Co=256
     "set background=dark
-
-    "let macvim_skip_colorscheme=1
-    "let g:molokai_original=1
-    " colorscheme molokai
-    "highlight SignColumn guibg=#272822
+    "colorscheme solarized
 endif
+
+
+"let g:molokai_original=1
+"colorscheme molokai
+"set t_Co=256
+
 
 " Stop completion with enter, in addition to default ctrl+y
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
-
 
 " This comes first, because we have mappings that depend on leader
 " With a map leader it's possible to do extra key combinations
@@ -200,6 +199,46 @@ nmap <leader>m :make<CR><enter>
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
 
+" simulate tab shortcuts
+map gb :bnext<cr>
+map gB :bprevious<cr>
+
+"nnoremap <leader>q :q<cr>
+nnoremap <silent> <leader>q :call CloseSplitOrDeleteBuffer()<CR>
+
+
+function! CloseSplitOrDeleteBuffer()
+  let totalBufNr = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
+  let totalWinNr = winnr('$')
+
+  " there is only one buffer and one window, close VIM
+  if totalBufNr == 1 && totalWinNr == 1
+    quit
+  endif
+
+  let curNr = winnr()
+  let curBuf = bufnr('%')
+
+  "try to move on next split
+  wincmd w
+  if winnr() == curNr
+    " there is no split, delete the buffer only
+    exe 'bdelete!'
+  elseif curBuf != bufnr('%')
+    "there is split with another buffer, move back and delete it
+    wincmd W
+    exe 'bdelete!'
+  else
+    "there is split with same buffer, just close the split
+    wincmd W
+    close!
+  endif
+endfunction
+
+" Replace the current buffer with the given new file. That means a new file
+" will be open in a buffer while the old one will be deleted
+com -nargs=1 -complete=file Breplace edit <args>| bdelete #
+
 " Yank the word under the cursor, go into insert mode one line below, execute
 " the snippet `fa`, which puts the yanked word inside the `fa` snippet and
 " finish
@@ -219,27 +258,6 @@ map <C-l> <C-W>l
 
 " Fast saving
 nmap <leader>w :w!<cr>
-
-
-" http://stackoverflow.com/questions/4298910/vim-close-buffer-but-not-split-window
-function! CloseSplitOrDeleteBuffer()
-  let curNr = winnr()
-  let curBuf = bufnr('%')
-  wincmd w                    " try to move on next split
-  if winnr() == curNr         " there is no split
-    exe 'bdelete!'
-  elseif curBuf != bufnr('%') " there is split with another buffer
-    wincmd W                  " move back
-    exe 'bdelete!'
-  else                        " there is split with same buffer"
-    wincmd W
-    close!
-  endif
-endfunction
-
-" nnoremap <leader>q :call CloseSplitOrDeleteBuffer()<CR>
-nnoremap <leader>q :q!<cr>
-
 
 " Center the screen
 nnoremap <space> zz
@@ -332,7 +350,7 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 " object of the given type.  These don't necessarily have to be in the current
 " line.
 "
-" Currently works for (, [, {, and their shortcuts b, r, B. 
+" Currently works for (, [, {, and their shortcuts b, r, B.
 "
 " Next kind of works for ' and " as long as there are no escaped versions of
 " them in the string (TODO: fix that).  Last is currently broken for quotes
@@ -367,96 +385,96 @@ xnoremap il :<c-u>call <SID>NextTextObject('i', '?')<cr>
 
 
 function! s:NextTextObject(motion, dir)
-    let c = nr2char(getchar())
-    let d = ''
+  let c = nr2char(getchar())
+  let d = ''
 
-    if c ==# "b" || c ==# "(" || c ==# ")"
-        let c = "("
-    elseif c ==# "B" || c ==# "{" || c ==# "}"
-        let c = "{"
-    elseif c ==# "r" || c ==# "[" || c ==# "]"
-        let c = "["
+  if c ==# "b" || c ==# "(" || c ==# ")"
+    let c = "("
+  elseif c ==# "B" || c ==# "{" || c ==# "}"
+    let c = "{"
+  elseif c ==# "r" || c ==# "[" || c ==# "]"
+    let c = "["
+  elseif c ==# "'"
+    let c = "'"
+  elseif c ==# '"'
+    let c = '"'
+  else
+    return
+  endif
+
+  " Find the next opening-whatever.
+  execute "normal! " . a:dir . c . "\<cr>"
+
+  if a:motion ==# 'a'
+    " If we're doing an 'around' method, we just need to select around it
+    " and we can bail out to Vim.
+    execute "normal! va" . c
+  else
+    " Otherwise we're looking at an 'inside' motion.  Unfortunately these
+    " get tricky when you're dealing with an empty set of delimiters because
+    " Vim does the wrong thing when you say vi(.
+
+    let open = ''
+    let close = ''
+
+    if c ==# "("
+      let open = "("
+      let close = ")"
+    elseif c ==# "{"
+      let open = "{"
+      let close = "}"
+    elseif c ==# "["
+      let open = "\\["
+      let close = "\\]"
     elseif c ==# "'"
-        let c = "'"
+      let open = "'"
+      let close = "'"
     elseif c ==# '"'
-        let c = '"'
-    else
-        return
+      let open = '"'
+      let close = '"'
     endif
 
-    " Find the next opening-whatever.
-    execute "normal! " . a:dir . c . "\<cr>"
+    " We'll start at the current delimiter.
+    let start_pos = getpos('.')
+    let start_l = start_pos[1]
+    let start_c = start_pos[2]
 
-    if a:motion ==# 'a'
-        " If we're doing an 'around' method, we just need to select around it
-        " and we can bail out to Vim.
-        execute "normal! va" . c
+    " Then we'll find it's matching end delimiter.
+    if c ==# "'" || c ==# '"'
+      " searchpairpos() doesn't work for quotes, because fuck me.
+      let end_pos = searchpos(open)
     else
-        " Otherwise we're looking at an 'inside' motion.  Unfortunately these
-        " get tricky when you're dealing with an empty set of delimiters because
-        " Vim does the wrong thing when you say vi(.
-
-        let open = ''
-        let close = ''
-
-        if c ==# "(" 
-            let open = "("
-            let close = ")"
-        elseif c ==# "{"
-            let open = "{"
-            let close = "}"
-        elseif c ==# "["
-            let open = "\\["
-            let close = "\\]"
-        elseif c ==# "'"
-            let open = "'"
-            let close = "'"
-        elseif c ==# '"'
-            let open = '"'
-            let close = '"'
-        endif
-
-        " We'll start at the current delimiter.
-        let start_pos = getpos('.')
-        let start_l = start_pos[1]
-        let start_c = start_pos[2]
-
-        " Then we'll find it's matching end delimiter.
-        if c ==# "'" || c ==# '"'
-            " searchpairpos() doesn't work for quotes, because fuck me.
-            let end_pos = searchpos(open)
-        else
-            let end_pos = searchpairpos(open, '', close)
-        endif
-
-        let end_l = end_pos[0]
-        let end_c = end_pos[1]
-
-        call setpos('.', start_pos)
-
-        if start_l == end_l && start_c == (end_c - 1)
-            " We're in an empty set of delimiters.  We'll append an "x"
-            " character and select that so most Vim commands will do something
-            " sane.  v is gonna be weird, and so is y.  Oh well.
-            execute "normal! ax\<esc>\<left>"
-            execute "normal! vi" . c
-        elseif start_l == end_l && start_c == (end_c - 2)
-            " We're on a set of delimiters that contain a single, non-newline
-            " character.  We can just select that and we're done.
-            execute "normal! vi" . c
-        else
-            " Otherwise these delimiters contain something.  But we're still not
-            " sure Vim's gonna work, because if they contain nothing but
-            " newlines Vim still does the wrong thing.  So we'll manually select
-            " the guts ourselves.
-            let whichwrap = &whichwrap
-            set whichwrap+=h,l
-
-            execute "normal! va" . c . "hol"
-
-            let &whichwrap = whichwrap
-        endif
+      let end_pos = searchpairpos(open, '', close)
     endif
+
+    let end_l = end_pos[0]
+    let end_c = end_pos[1]
+
+    call setpos('.', start_pos)
+
+    if start_l == end_l && start_c == (end_c - 1)
+      " We're in an empty set of delimiters.  We'll append an "x"
+      " character and select that so most Vim commands will do something
+      " sane.  v is gonna be weird, and so is y.  Oh well.
+      execute "normal! ax\<esc>\<left>"
+      execute "normal! vi" . c
+    elseif start_l == end_l && start_c == (end_c - 2)
+      " We're on a set of delimiters that contain a single, non-newline
+      " character.  We can just select that and we're done.
+      execute "normal! vi" . c
+    else
+      " Otherwise these delimiters contain something.  But we're still not
+      " sure Vim's gonna work, because if they contain nothing but
+      " newlines Vim still does the wrong thing.  So we'll manually select
+      " the guts ourselves.
+      let whichwrap = &whichwrap
+      set whichwrap+=h,l
+
+      execute "normal! va" . c . "hol"
+
+      let &whichwrap = whichwrap
+    endif
+  endif
 endfunction
 
 " ----------------------------------------- "
@@ -464,12 +482,12 @@ endfunction
 " ----------------------------------------- "
 
 au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
-au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4 
-au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4 
+au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
 augroup filetypedetect
-    au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-    au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+  au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+  au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
 augroup END
 
 au FileType nginx setlocal noet ts=4 sw=4 sts=4
@@ -519,7 +537,7 @@ com! JSONFormat %!json_reformat
 " ----------------------------------------- "
 
 " ==================== CtrlP ====================
-let g:ctrlp_cmd = 'CtrlPMRU'		
+let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
 let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 let g:ctrlp_working_path_mode = 'ra'
@@ -531,38 +549,38 @@ let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 
-func! MyPrtMappings()
-    let g:ctrlp_prompt_mappings = {
-                \ 'AcceptSelection("e")': ['<c-t>'],
-                \ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-                \ }
-endfunc
+"func! MyPrtMappings()
+"let g:ctrlp_prompt_mappings = {
+"\ 'AcceptSelection("e")': ['<c-t>'],
+"\ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
+"\ }
+"endfunc
 
-func! MyCtrlPTag()
-    let g:ctrlp_prompt_mappings = {
-                \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
-                \ 'AcceptSelection("t")': ['<c-t>'],
-                \ }
-    CtrlPBufTag
-endfunc
+"let g:ctrlp_buffer_func = { 'exit': 'MyPrtMappings' }
 
-let g:ctrlp_buffer_func = { 'exit': 'MyPrtMappings' }
-com! MyCtrlPTag call MyCtrlPTag()
 
 let g:ctrlp_buftag_types = {
-            \ 'go'     	   : '--language-force=go --golang-types=ftv',
-            \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
-            \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
-            \ 'objc'       : '--language-force=objc --objc-types=mpci',
-            \ 'rc'         : '--language-force=rust --rust-types=fTm'
-            \ }
+      \ 'go'     	   : '--language-force=go --golang-types=ftv',
+      \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
+      \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
+      \ 'objc'       : '--language-force=objc --objc-types=mpci',
+      \ 'rc'         : '--language-force=rust --rust-types=fTm'
+      \ }
 
+func! MyCtrlPTag()
+  let g:ctrlp_prompt_mappings = {
+        \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
+        \ 'AcceptSelection("t")': ['<c-t>'],
+        \ }
+  CtrlPBufTag
+endfunc
+command! MyCtrlPTag call MyCtrlPTag()
 
-" get me a list of files in the current dir
-if has("gui_macvim")
-    nmap <C-f> :CtrlPCurWD<cr>
-    imap <C-f> <esc>:CtrlPCurWD<cr>
-endif
+nmap <C-f> :CtrlPCurWD<cr>
+imap <C-f> <esc>:CtrlPCurWD<cr>
+
+nmap <C-b> :CtrlPBuffer<cr>
+imap <C-b> <esc>:CtrlPBuffer<cr>
 
 
 " ==================== YouCompleteMe ====================
@@ -594,22 +612,18 @@ vnoremap <leader>gb :Gblame<CR>
 let g:airline_left_sep  = ' '
 let g:airline_right_sep = ' '
 
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
+
 " ==================== CommandT ====================
 let g:CommandTMaxHeight = 20
 let g:CommandTMaxFiles = 500000
 let g:CommandTMatchWindowReverse = 1
 let g:CommandTMaxCachedDirectories = 0
-let g:CommandTAcceptSelectionTabMap = '<CR>'
 let g:CommandTHighlightColor = 'Typedef'
 
-if has("gui_macvim")
-    macmenu &File.New\ Tab key=<nop>
-    " nnoremap <silent> <c-p> :CommandT /Users/fatih/Code/koding/<CR>
-    nmap <D-p> :CommandT /Users/fatih/Code/koding<CR>
-else
-    nmap <C-t> :CommandT /Users/fatih/Code/koding<cr>
-    imap <C-t> <esc>:CommandT /Users/fatih/Code/koding<cr>
-endif
+nmap <C-t> :CommandT /Users/fatih/Code/koding<cr>
+imap <C-t> <esc>:CommandT /Users/fatih/Code/koding<cr>
 
 
 " ==================== Vim-go ====================
@@ -662,36 +676,36 @@ let g:vim_json_syntax_conceal = 0
 " endfunction
 
 function! g:UltiSnips_Complete()
-    call UltiSnips#ExpandSnippet()
-    if g:ulti_expand_res == 0
-        if pumvisible()
-            return "\<C-n>"
-        else
-            call UltiSnips#JumpForwards()
-            if g:ulti_jump_forwards_res == 0
-               return "\<TAB>"
-            endif
-        endif
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
     endif
-    return ""
+  endif
+  return ""
 endfunction
 
 function! g:UltiSnips_Reverse()
-    call UltiSnips#JumpBackwards()
-    if g:ulti_jump_backwards_res == 0
-        return "\<C-P>"
-    endif
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
 
-    return ""
+  return ""
 endfunction
 
 
 if !exists("g:UltiSnipsJumpForwardTrigger")
-    let g:UltiSnipsJumpForwardTrigger = "<tab>"
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
 endif
 
 if !exists("g:UltiSnipsJumpBackwardTrigger")
-    let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 endif
 
 " au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
@@ -704,28 +718,27 @@ au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " 
 " Open nerdtree in current dir, write our own custom function because
 " NerdTreeToggle just sucks and doesn't work for buffers
 function! g:NerdTreeFindToggle()
-    if nerdtree#isTreeOpen()
-        exec 'NERDTreeClose'
-    else
-        exec 'NERDTreeFind'
-    endif
+  if nerdtree#isTreeOpen()
+    exec 'NERDTreeClose'
+  else
+    exec 'NERDTreeFind'
+  endif
 endfunction
 
 " For toggling
-noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr> 
-
-" For refreshing current file and showing current dir
-noremap <Leader>j :NERDTreeFind<cr>
+noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
 
 function! RenameFile()
-    let old_name = expand('%')
-    let new_name = input('New file name: ', expand('%'), 'file')
-    if new_name != '' && new_name != old_name
-        exec ':saveas ' . new_name
-        exec ':silent !rm ' . old_name
-        redraw!
-    endif
+  let old_name = expand('%')
+  let new_name = input('New file name: ', expand('%'), 'file')
+  if new_name != '' && new_name != old_name
+    exec ':saveas ' . new_name
+    exec ':silent !rm ' . old_name
+    redraw!
+  endif
 endfunction
 " map <leader>re :call RenameFile()<cr>
 "
 "
+"
+" vim:ts=2:sw=2:et
