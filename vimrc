@@ -1,41 +1,38 @@
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'moll/vim-bbye'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'git://git.wincent.com/command-t.git'
+Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'fatih/molokai'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'mileszs/ack.vim'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'SirVer/ultisnips'
+Plug 'Raimondi/delimitMate'
+Plug 't9md/vim-choosewin'
+Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
+Plug 'tomtom/tcomment_vim'
+Plug 'majutsushi/tagbar'
+Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
+Plug 'bling/vim-airline'
+Plug 'cespare/vim-toml', {'for' : 'toml'}
+Plug 'elzr/vim-json', {'for' : 'json'}
+
+call plug#end()
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
 
-Plugin 'gmarik/Vundle.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-dispatch'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-Plugin 'moll/vim-bbye'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'fatih/vim-go'
-Plugin 'fatih/vim-nginx'
-Plugin 'fatih/molokai'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'kien/ctrlp.vim'
-Plugin 'mileszs/ack.vim'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'SirVer/ultisnips'
-Plugin 'Raimondi/delimitMate'
-Plugin 't9md/vim-choosewin'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'tomtom/tcomment_vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'AndrewRadev/splitjoin.vim'
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'JazzCore/ctrlp-cmatcher'
-Plugin 'bling/vim-airline'
-Plugin 'cespare/vim-toml'
-Plugin 'elzr/vim-json'
-Plugin 'chilicuil/vim-sml-coursera'
-
-call vundle#end()            " required
 filetype plugin indent on    " required
 
 "
@@ -237,7 +234,7 @@ endfunction
 
 " Replace the current buffer with the given new file. That means a new file
 " will be open in a buffer while the old one will be deleted
-com -nargs=1 -complete=file Breplace edit <args>| bdelete #
+com! -nargs=1 -complete=file Breplace edit <args>| bdelete #
 
 " Yank the word under the cursor, go into insert mode one line below, execute
 " the snippet `fa`, which puts the yanked word inside the `fa` snippet and
