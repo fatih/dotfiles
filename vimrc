@@ -1,11 +1,14 @@
-
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-scriptease'
+Plug 'Shougo/vimfiler.vim'
+Plug 'Shougo/unite.vim'
 Plug 'moll/vim-bbye'
+Plug 'justinmk/vim-sneak'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'git://git.wincent.com/command-t.git'
 Plug 'fatih/vim-go', {'for': 'go'}
@@ -14,7 +17,6 @@ Plug 'fatih/molokai'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
-Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
 Plug 'Raimondi/delimitMate'
 Plug 't9md/vim-choosewin'
@@ -25,6 +27,7 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'bling/vim-airline'
+" Plug 'itchyny/lightline.vim'
 Plug 'cespare/vim-toml', {'for' : 'toml'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 
@@ -269,7 +272,6 @@ map j gj
 imap jk <ESC>l
 
 nnoremap <F6> :setlocal spell! spell?<CR>
-
 
 " Select search pattern howewever do not jump to the next one
 nnoremap <leader>c :TComment<cr>
@@ -546,16 +548,6 @@ let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 
-"func! MyPrtMappings()
-"let g:ctrlp_prompt_mappings = {
-"\ 'AcceptSelection("e")': ['<c-t>'],
-"\ 'AcceptSelection("t")': ['<cr>', '<2-LeftMouse>'],
-"\ }
-"endfunc
-
-"let g:ctrlp_buffer_func = { 'exit': 'MyPrtMappings' }
-
-
 let g:ctrlp_buftag_types = {
       \ 'go'     	   : '--language-force=go --golang-types=ftv',
       \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
@@ -597,17 +589,17 @@ let delimitMate_expand_inside_quotes = 0
 
 let delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
-
 " ==================== Fugitive ====================
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Gstatus<CR>
 nnoremap <leader>gb :Gblame<CR>
 vnoremap <leader>gb :Gblame<CR>
 
-
 " ==================== Airline ====================
-let g:airline_left_sep  = ' '
-let g:airline_right_sep = ' '
+let g:airline_left_sep  = ''
+let g:airline_right_sep = ''
+
+let g:airline_theme = 'powerlineish'
 
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
@@ -622,55 +614,31 @@ let g:CommandTHighlightColor = 'Typedef'
 nmap <C-t> :CommandT /Users/fatih/Code/koding<cr>
 imap <C-t> <esc>:CommandT /Users/fatih/Code/koding<cr>
 
-
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 
-
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
-
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_extra_types = 0
-let g:go_highlight_methods = 0
-let g:go_highlight_functions = 0
-
 
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
-au FileType go nmap <Leader>t <Plug>(go-def-tab)
-
 au FileType go nmap <Leader>in <Plug>(go-info)
 au FileType go nmap <Leader>ii <Plug>(go-implements)
-
 au FileType go nmap  <leader>e  <Plug>(go-rename)
-
 au FileType go nmap  <leader>r  <Plug>(go-run)
 au FileType go nmap  <leader>b  <Plug>(go-build)
-
+au FileType go nmap  <leader>t  <Plug>(go-test-compile)
 au FileType go nmap <Leader>d <Plug>(go-doc)
-
 au FileType go nmap <Leader>f :GoImports<CR>
 
 " ==================== Vim-json ====================
-"
 let g:vim_json_syntax_conceal = 0
 
 " ==================== UltiSnips ====================
-" function! g:UltiSnips_Complete()
-"     call UltiSnips#ExpandSnippetOrJump()
-"     if g:ulti_expand_or_jump_res == 0
-"         if pumvisible()
-"             return "\<C-N>"
-"         else
-"             return "\<TAB>"
-"         endif
-"     endif
-"
-"     return ""
-" endfunction
 
 function! g:UltiSnips_Complete()
   call UltiSnips#ExpandSnippet()
@@ -705,37 +673,16 @@ if !exists("g:UltiSnipsJumpBackwardTrigger")
   let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 endif
 
-" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-" au BufEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
-" ==================== NerdTree ====================
-" Open nerdtree in current dir, write our own custom function because
-" NerdTreeToggle just sucks and doesn't work for buffers
-function! g:NerdTreeFindToggle()
-  if nerdtree#isTreeOpen()
-    exec 'NERDTreeClose'
-  else
-    exec 'NERDTreeFind'
-  endif
-endfunction
+" ==================== vimfiler.vim ====================
+"
+let g:vimfiler_force_overwrite_statusline = 0
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_enable_auto_cd = 1
+let g:loaded_netrwPlugin = 1
 
-" For toggling
-noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
+noremap <Leader>n :VimFilerCurrentDir -buffer-name=explorer -split -simple -winwidth=35 -toggle -force-quit<cr>
 
-function! RenameFile()
-  let old_name = expand('%')
-  let new_name = input('New file name: ', expand('%'), 'file')
-  if new_name != '' && new_name != old_name
-    exec ':saveas ' . new_name
-    exec ':silent !rm ' . old_name
-    redraw!
-  endif
-endfunction
-" map <leader>re :call RenameFile()<cr>
-"
-"
-"
 " vim:ts=2:sw=2:et
