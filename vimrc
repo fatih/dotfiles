@@ -6,6 +6,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
 Plug 'moll/vim-bbye'
+Plug 'rking/ag.vim'
 Plug 'mhinz/vim-sayonara'
 Plug 'justinmk/vim-sneak'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
@@ -83,6 +84,11 @@ syntax sync minlines=256
 set synmaxcol=300
 set re=1
 set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
+" open help vertically
+
+command! -nargs=* -complete=help Help vertical belowright help <args>
+autocmd FileType help wincmd L
 
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
@@ -204,7 +210,7 @@ map <C-m> :cp<CR>
 map gb :bnext<cr>
 map gB :bprevious<cr>
 
-nnoremap <silent> <leader>q :q<CR>
+nnoremap <silent> <leader>q :Sayonara<CR>
 
 " function! CloseSplitOrDeleteBuffer()
 "   let totalBufNr = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
@@ -364,7 +370,7 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 " File Type settings 			    		"
 " ----------------------------------------- "
 
-au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
+au BufNewFile,BufRead *.vim setlocal noet ts=4 sw=4 sts=4
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
@@ -485,8 +491,9 @@ nmap <C-t> :CommandT /Users/fatih/Code/koding<cr>
 imap <C-t> <esc>:CommandT /Users/fatih/Code/koding<cr>
 
 " ==================== Vim-go ====================
-let g:go_fmt_fail_silently = 1
+let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
+let g:go_autodetect_gopath = 1
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -501,6 +508,7 @@ au FileType go nmap <Leader>ii <Plug>(go-implements)
 
 au FileType go nmap <leader>r  <Plug>(go-run)
 au FileType go nmap <leader>b  <Plug>(go-build)
+au FileType go nmap <leader>g  <Plug>(go-gbbuild)
 au FileType go nmap <leader>t  <Plug>(go-test-compile)
 au FileType go nmap <Leader>d <Plug>(go-doc)
 au FileType go nmap <Leader>f :GoImports<CR>
