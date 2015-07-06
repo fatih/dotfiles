@@ -8,7 +8,7 @@ Plug 'tpope/vim-scriptease'
 Plug 'moll/vim-bbye'
 Plug 'rking/ag.vim'
 Plug 'mhinz/vim-sayonara'
-Plug 'justinmk/vim-sneak'
+Plug 'itchyny/lightline.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'git://git.wincent.com/command-t.git'
 Plug 'fatih/vim-go', {'for': 'go'}
@@ -16,17 +16,14 @@ Plug 'garyburd/go-explorer'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'fatih/molokai'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'SirVer/ultisnips'
-Plug 'Raimondi/delimitMate'
 Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
 Plug 'tomtom/tcomment_vim'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
-Plug 'itchyny/lightline.vim'
 Plug 'cespare/vim-toml', {'for' : 'toml'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
@@ -173,15 +170,6 @@ else
   "colorscheme solarized
 endif
 
-
-"let g:molokai_original=1
-"colorscheme molokai
-"set t_Co=256
-
-
-" Stop completion with enter, in addition to default ctrl+y
-imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
-
 " This comes first, because we have mappings that depend on leader
 " With a map leader it's possible to do extra key combinations
 " i.e: <leader>w saves the current file
@@ -320,6 +308,10 @@ nnoremap Y y$
 " Do not show stupid q: window
 map q: :q
 
+" sometimes this happens and I hate it
+map :Vs :vs
+map :Sp :sp
+
 "Reindent whoel file
 map <F7> mzgg=G`z<CR>
 
@@ -427,7 +419,8 @@ com! JSONFormat %!json_reformat
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
-let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
+"  let g:ctrlp_match_func = {'match': 'cpsm#CtrlPMatch'}
+" let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_height = 10		" maxiumum height of match window
 let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
@@ -465,19 +458,10 @@ imap <C-b> <esc>:CtrlPBuffer<cr>
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_min_num_of_chars_for_completion = 1
 
-
-" ==================== DelimitMate ====================
-let g:delimitMate_expand_cr = 1
-let g:delimitMate_expand_space = 1
-let delimitMate_smart_quotes = 1
-let delimitMate_expand_inside_quotes = 0
-
-let delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
-
 " ==================== Fugitive ====================
 nnoremap <leader>ga :Git add %:p<CR><CR>
 nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>gp :Gpush<CR>
 vnoremap <leader>gb :Gblame<CR>
 
 " ==================== CommandT ====================
