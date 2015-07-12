@@ -28,7 +28,11 @@ export DOCKER_HOST=tcp://192.168.59.103:2376
 export DOCKER_CERT_PATH=/Users/fatih/.boot2docker/certs/boot2docker-vm
 export DOCKER_TLS_VERIFY=1
 
-export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+# checkout `man ls` for the meaning
+export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
+
+# enable GIT prompt color
+export GIT_PS1_SHOWCOLORHINTS=true
 
 ###############
 # Bash settings
@@ -37,14 +41,13 @@ export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
 # This is not used anymore as we use __git_ps1 for evaluatin the PS1, just here
 # in case we might need it in the future
-# PS1="\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
+# PS1="\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
 
 # 1. Git branch is being showed
 # 2. Title of terminal is changed for each new shell
 # 3. History is appended each time
-export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " \\\$ "; echo -ne "\033]0;$PWD\007"; history -a'
-# export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-# export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " \\\$ "; echo -ne "\033]0;$PWD\007"; history -a'
+
 
 
 # -- History
