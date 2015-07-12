@@ -1,5 +1,7 @@
 ###############
-# Source senstive functions which are not pushed to Github
+# Source other files
+
+# Senstive functions which are not pushed to Github
 # It contains GOPATH, some functions, aliases etc...
 [ -r ~/.bash_private ] && source ~/.bash_private
 
@@ -7,6 +9,19 @@
 # Get it from the original Git repo: 
 # https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 source ~/.git-prompt.sh
+
+# On Mac OS X: brew install bash-completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+# On Mac OS X: brew install fasd
+fasd_cache="$HOME/.fasd-init-bash"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
 
 ###############
 # Aliases (custom)
@@ -17,6 +32,8 @@ alias vim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias vi='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
+
+alias j='fasd_cd -d -i' # make it like autojump
 
 ###############
 # Exports (custom)
@@ -46,8 +63,7 @@ export GIT_PS1_SHOWCOLORHINTS=true
 # 1. Git branch is being showed
 # 2. Title of terminal is changed for each new shell
 # 3. History is appended each time
-export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " \\\$ "; echo -ne "\033]0;$PWD\007"; history -a'
-
+export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " "; echo -ne "\033]0;$PWD\007"; history -a'
 
 
 # -- History
@@ -64,17 +80,13 @@ shopt -s cmdhist    # save multi line commands as one command
 
 # -- Completion
 
-# On Mac OS X: brew install bash-completion
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-  . $(brew --prefix)/etc/bash_completion
-fi
 
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 bind "set completion-ignore-case on" # note: bind used instead of sticking these in .inputrc
 bind "set bell-style none" # no bell
 bind "set show-all-if-ambiguous On" # show list automatically, without double tab
-bind "TAB: menu-complete" # TAB syle completion
+# bind "TAB: menu-complete" # TAB syle completion
 
 # -- Functions
 
