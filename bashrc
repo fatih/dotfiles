@@ -1,0 +1,108 @@
+###############
+# Source senstive functions which are not pushed to Github
+# It contains GOPATH, some functions, aliases etc...
+[ -r ~/.bash_private ] && source ~/.bash_private
+
+###############
+# Aliases (custom)
+alias ..='cd ..'
+alias tigs="tig status"
+alias mvim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
+alias vim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
+alias vi='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
+alias ls='ls -GpF' # Mac OSX specific
+alias ll='ls -alGpF' # Mac OSX specific
+
+###############
+# Exports (custom)
+
+export PATH=$PATH:$HOME/bin:/usr/local/bin:$GOBIN:/Applications/Racket\ v6.2/bin
+export EDITOR="vim"
+export CDPATH=.:$GOPATH/src/github.com
+
+export DOCKER_HOST=tcp://192.168.59.103:2376
+export DOCKER_CERT_PATH=/Users/fatih/.boot2docker/certs/boot2docker-vm
+export DOCKER_TLS_VERIFY=1
+
+export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
+
+###############
+# Bash settings
+
+# -- Prompt
+
+# this set's the title of terminal everytime we open a new shell
+export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+
+PS1="\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
+
+# -- History
+
+# ignoreboth ignores commands starting with a space and duplicates. Erasedups
+# removes all previous dups in history
+export HISTCONTROL=ignoreboth:erasedups  
+export HISTFILE=~/.bash_history          # be explicit about file path
+export HISTSIZE=100000                   # in memory history size
+export HISTFILESIZE=100000               # on disk history size
+export HISTTIMEFORMAT='%F %T '
+export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+shopt -s histappend # append to history, don't overwrite it
+shopt -s cmdhist    # save multi line commands as one command
+
+# -- Completion
+
+# On Mac OS X: brew install bash-completion
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind "set completion-ignore-case on" # note: bind used instead of sticking these in .inputrc
+bind "set bell-style none" # no bell
+bind "set show-all-if-ambiguous On" # show list automatically, without double tab
+bind "TAB: menu-complete" # TAB syle completion
+
+# -- Functions
+
+# extracts the given file
+x () {
+    if [ -f $1 ] ; then
+      case $1 in
+        *.tar.bz2)   tar xjf $1     ;;
+        *.tar.gz)    tar xzf $1     ;;
+        *.bz2)       bunzip2 $1     ;;
+        *.rar)       unrar e $1     ;;
+        *.gz)        gunzip $1      ;;
+        *.tar)       tar xf $1      ;;
+        *.tbz2)      tar xjf $1     ;;
+        *.tgz)       tar xzf $1     ;;
+        *.zip)       unzip $1       ;;
+        *.Z)         uncompress $1  ;;
+        *.7z)        7z x $1        ;;
+        *)     echo "'$1' cannot be extracted via extract()" ;;
+         esac
+     else
+         echo "'$1' is not a valid file"
+     fi
+}
+
+# -- Misc
+
+# Colored man pages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# check windows size if windows is resized
+shopt -s checkwinsize
+
+#use extra globing features. See man bash, search extglob.
+shopt -s extglob
+
+#include .files when globbing.
+shopt -s dotglob
