@@ -3,6 +3,11 @@
 # It contains GOPATH, some functions, aliases etc...
 [ -r ~/.bash_private ] && source ~/.bash_private
 
+
+# Get it from the original Git repo: 
+# https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+source ~/.git-prompt.sh
+
 ###############
 # Aliases (custom)
 alias ..='cd ..'
@@ -18,7 +23,6 @@ alias ll='ls -alGpF' # Mac OSX specific
 
 export PATH=$PATH:$HOME/bin:/usr/local/bin:$GOBIN:/Applications/Racket\ v6.2/bin
 export EDITOR="vim"
-export CDPATH=.:$GOPATH/src/github.com
 
 export DOCKER_HOST=tcp://192.168.59.103:2376
 export DOCKER_CERT_PATH=/Users/fatih/.boot2docker/certs/boot2docker-vm
@@ -31,10 +35,17 @@ export LSCOLORS=gxBxhxDxfxhxhxhxhxcxcx
 
 # -- Prompt
 
-# this set's the title of terminal everytime we open a new shell
-export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+# This is not used anymore as we use __git_ps1 for evaluatin the PS1, just here
+# in case we might need it in the future
+# PS1="\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
 
-PS1="\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
+# 1. Git branch is being showed
+# 2. Title of terminal is changed for each new shell
+# 3. History is appended each time
+export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 10)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " \\\$ "; echo -ne "\033]0;$PWD\007"; history -a'
+# export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
+# export PROMPT_COMMAND='echo -ne "\033]0;$PWD\007"'
+
 
 # -- History
 
@@ -45,7 +56,6 @@ export HISTFILE=~/.bash_history          # be explicit about file path
 export HISTSIZE=100000                   # in memory history size
 export HISTFILESIZE=100000               # on disk history size
 export HISTTIMEFORMAT='%F %T '
-export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 shopt -s histappend # append to history, don't overwrite it
 shopt -s cmdhist    # save multi line commands as one command
 
