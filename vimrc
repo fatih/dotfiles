@@ -11,7 +11,7 @@ Plug 'mhinz/vim-sayonara'
 Plug 'itchyny/lightline.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'git://git.wincent.com/command-t.git'
-Plug 'fatih/vim-go', {'for': 'go'}
+Plug 'fatih/vim-go'
 Plug 'garyburd/go-explorer'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'fatih/molokai'
@@ -27,6 +27,8 @@ Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'cespare/vim-toml', {'for' : 'toml'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'Raimondi/delimitMate'
+Plug 'wlangstroth/vim-racket'
 
 
 call plug#end()
@@ -385,7 +387,6 @@ autocmd BufNewFile,BufReadPost *.scala setl shiftwidth=2 expandtab
 " lua settings
 autocmd BufNewFile,BufRead *.lua setlocal noet ts=4 sw=4 sts=4
 
-
 " Wildmenu completion {{{
 set wildmenu
 " set wildmode=list:longest
@@ -496,6 +497,15 @@ au FileType go nmap <leader>g  <Plug>(go-gbbuild)
 au FileType go nmap <leader>t  <Plug>(go-test-compile)
 au FileType go nmap <Leader>d <Plug>(go-doc)
 au FileType go nmap <Leader>f :GoImports<CR>
+
+" ==================== delimitMate ====================
+let g:delimitMate_expand_cr = 1		
+let g:delimitMate_expand_space = 1		
+let g:delimitMate_smart_quotes = 1		
+let g:delimitMate_expand_inside_quotes = 0		
+let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
+
+imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
 " ==================== Vim-json ====================
 let g:vim_json_syntax_conceal = 0
