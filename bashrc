@@ -126,6 +126,12 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # check windows size if windows is resized
 shopt -s checkwinsize
 
+# autocorrect directory if mispelled
+shopt -s dirspell direxpand
+
+# auto cd if only the directory name is given
+shopt -s autocd
+
 #use extra globing features. See man bash, search extglob.
 shopt -s extglob
 
