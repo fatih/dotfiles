@@ -2,16 +2,27 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'fatih/vim-go'
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tomasr/molokai'
 Plug 'itchyny/lightline.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat'
+Plug 'scrooloose/nerdtree'
+Plug 'SirVer/ultisnips'
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'elzr/vim-json', {'for' : 'json'}
 
 call plug#end()
 
 "=====================================================
 "===================== SETTINGS ======================
+"
+"
+filetype plugin indent on    " required
 
 set noerrorbells             " No beeps
 set number                   " Show line numbers
@@ -186,3 +197,55 @@ imap <C-f> <esc>:CtrlPCurWD<cr>
 
 nmap <C-b> :CtrlPBuffer<cr>
 imap <C-b> <esc>:CtrlPBuffer<cr>
+
+" ==================== UltiSnips ====================
+
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
+  endif
+  return ""
+endfunction
+
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
+
+  return ""
+endfunction
+
+
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
+endif
+
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+" ==================== NerdTree ====================
+" Open nerdtree in current dir, write our own custom function because
+" NerdTreeToggle just sucks and doesn't work for buffers
+function! g:NerdTreeFindToggle()
+  if g:NERDTree.IsOpen()
+    exec 'NERDTreeClose'
+  else
+    exec 'NERDTree'
+  endif
+endfunction
+
+" For toggling
+noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
