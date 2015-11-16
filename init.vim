@@ -6,6 +6,7 @@ Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tomasr/molokai'
+Plug 'itchyny/lightline.vim'
 
 call plug#end()
 
@@ -66,6 +67,7 @@ let g:mapleader = ","
 ":clist   list all errors
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
+nnoremap <leader>a :cclose<CR>
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -73,8 +75,6 @@ nnoremap <silent> <leader>q :q!<CR>
 
 " Center the screen
 nnoremap <space> zz
-
-nnoremap <leader>a :cclose<CR>
 
 " Remove search highlight
 nnoremap <leader><space> :nohlsearch<CR>
@@ -113,13 +113,23 @@ map q: :q
 map :Vs :vs
 map :Sp :sp
 
+" Don't move on *
+" I'd use a function for this but Vim clobbers the last search when you're in
+" a function so fuck it, practicality beats purity.
+nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+
+" Time out on key codes but not mappings.
+" Basically this makes terminal Vim work sanely.
+set notimeout
+set ttimeout
+set ttimeoutlen=10
 
 "====================================================
 "===================== PLUGINS ======================
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 0
-let g:go_fmt_command = "GoImports"
+let g:go_fmt_command = "goimports"
 let g:go_vet_autosave = 1
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
