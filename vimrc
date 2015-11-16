@@ -5,6 +5,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
+Plug 'rhysd/vim-go-impl'
 Plug 'moll/vim-bbye'
 Plug 'rking/ag.vim'
 Plug 'mhinz/vim-sayonara'
@@ -12,9 +13,11 @@ Plug 'itchyny/lightline.vim'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'git://git.wincent.com/command-t.git'
 Plug 'fatih/vim-go'
-Plug 'garyburd/go-explorer'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'fatih/molokai'
+Plug 'garyburd/go-explorer'
+Plug 'morhetz/gruvbox'
+Plug 'w0ng/vim-hybrid'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
@@ -29,6 +32,7 @@ Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'Raimondi/delimitMate'
 Plug 'wlangstroth/vim-racket'
+Plug 'christoomey/vim-tmux-navigator'
 
 
 call plug#end()
@@ -91,7 +95,7 @@ autocmd FileType help wincmd L
 
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
-  set guifont=Source\ Code\ Pro:h12
+  set guifont=Source\ Code\ Pro\ Light:h12
   set clipboard+=unnamed
   set vb t_vb=
   set guioptions-=m  "no menu
@@ -105,6 +109,11 @@ if has("gui_macvim")
   let g:molokai_original=1
   colorscheme molokai
   highlight SignColumn guibg=#272822
+  "
+  "
+  " set background=dark
+  " colorscheme gruvbox
+  " let g:gruvbox_contrast_dark = "hard"
 
   " Open ctrlp with cmd+p
   " let g:ctrlp_map = '<D-p>'
@@ -159,11 +168,17 @@ if has("gui_macvim")
   imap <D-8> <esc>8gt
   imap <D-9> <esc>9gt
 else
-  syntax enable
-  " set background=dark
-  let g:molokai_original=1
-  colorscheme molokai
-  set t_Co=256
+  "syntax enable
+  "let g:molokai_original=1
+  "colorscheme molokai
+  "highlight SignColumn guibg=#272822
+  "set t_Co=256
+  
+   syntax enable
+   set t_Co=256
+   set background=dark
+   colorscheme gruvbox
+   let g:gruvbox_contrast_dark = "hard"
 
   "syntax enable
   ""colorscheme jellybeans
@@ -182,7 +197,7 @@ let g:mapleader = ","
 " easily distinguished by its file-type, qf. The wincmd J command is
 " equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
 " the very bottom (see :help :wincmd and :help ^WJ).
-autocmd FileType qf wincmd J
+ autocmd FileType qf wincmd J
 
 "Dont show me any output when I build something
 "Because I am using quickfix for errors
@@ -196,11 +211,8 @@ nmap <leader>m :make<CR><enter>
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
 
-" simulate tab shortcuts
-map gb :bnext<cr>
-map gB :bprevious<cr>
-
 nnoremap <silent> <leader>q :Sayonara<CR>
+
 
 " function! CloseSplitOrDeleteBuffer()
 "   let totalBufNr = len(filter(range(1, bufnr('$')), 'buflisted(v:val)'))
@@ -256,11 +268,6 @@ endfunction
 
 command! Ball :call DeleteInactiveBufs()
 
-" Yank the word under the cursor, go into insert mode one line below, execute
-" the snippet `fa`, which puts the yanked word inside the `fa` snippet and
-" finish
-nmap <silent> <leader>z yiwofa<tab><esc><cr>
-
 " Close quickfix easily
 nnoremap <leader>a :cclose<CR>
 
@@ -291,7 +298,7 @@ imap jk <ESC>l
 nnoremap <F6> :setlocal spell! spell?<CR>
 
 " Select search pattern howewever do not jump to the next one
-nnoremap <leader>c :TComment<cr>
+nnoremap <leader>c :TComment<CR>
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
@@ -313,9 +320,6 @@ map q: :q
 " sometimes this happens and I hate it
 map :Vs :vs
 map :Sp :sp
-
-"Reindent whoel file
-map <F7> mzgg=G`z<CR>
 
 
 " ========== Steve Losh hacks ==========="
@@ -453,7 +457,6 @@ imap <C-f> <esc>:CtrlPCurWD<cr>
 
 nmap <C-b> :CtrlPBuffer<cr>
 imap <C-b> <esc>:CtrlPBuffer<cr>
-
 
 " ==================== YouCompleteMe ====================
 let g:ycm_autoclose_preview_window_after_completion = 1
