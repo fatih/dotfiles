@@ -23,17 +23,25 @@ fi
 source "$fasd_cache"
 unset fasd_cache
 
+
+# On Mac OS X: brew reinstall --HEAD fzf
+
 ###############
 # Aliases (custom)
 alias ..='cd ..'
-alias tigs="tig status"
 alias mvim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias vim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias vi='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
-
 alias j='fasd_cd -d -i' # make it like autojump
+
+
+# most used fast git commands
+alias t="tig status"
+alias tigs="tig status" #old habits don't die
+alias d='git diff' 
+
 
 ###############
 # Exports (custom)
@@ -63,7 +71,7 @@ export GIT_PS1_SHOWCOLORHINTS=true
 # 1. Git branch is being showed
 # 2. Title of terminal is changed for each new shell
 # 3. History is appended each time
-export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " "; echo -ne "\033]0;$PWD\007"; history -a'
+export PROMPT_COMMAND='__git_ps1 "\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\]" " "; echo -ne "\033]0;$PWD\007"'
 
 
 # -- History
@@ -127,10 +135,10 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 shopt -s checkwinsize
 
 # autocorrect directory if mispelled
-shopt -s dirspell direxpand
+#shopt -s dirspell direxpand
 
 # auto cd if only the directory name is given
-shopt -s autocd
+#shopt -s autocd
 
 #use extra globing features. See man bash, search extglob.
 shopt -s extglob
