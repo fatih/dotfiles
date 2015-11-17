@@ -5,6 +5,7 @@ Plug 'SirVer/ultisnips'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
@@ -15,14 +16,15 @@ Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
+Plug 'Raimondi/delimitMate'
 
 call plug#end()
 
 "=====================================================
 "===================== SETTINGS ======================
-"
-"
-filetype plugin indent on    " required
+
+"filetype plugin indent on    " required
+let g:AutoPairsMultilineClose = 0
 
 set noerrorbells             " No beeps
 set number                   " Show line numbers
@@ -48,9 +50,10 @@ set nocursorline
 set clipboard^=unnamed
 set clipboard^=unnamedplus
 
+set lazyredraw          " Wait to redraw
 syntax sync minlines=256
 set synmaxcol=300
-set re=1
+"set re=1
 
 let g:molokai_original = 1
 let g:rehash256 = 1
@@ -149,6 +152,15 @@ set notimeout
 set ttimeout
 set ttimeoutlen=10
 
+if ! has('gui_running')
+    set ttimeoutlen=10
+    augroup FastEscape
+        autocmd!
+        au InsertEnter * set timeoutlen=0
+        au InsertLeave * set timeoutlen=1000
+    augroup END
+endif
+
 " Resize splits when the window is resized
 au VimResized * :wincmd =
 
@@ -158,7 +170,6 @@ au VimResized * :wincmd =
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
-let g:go_vet_autosave = 1
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
 
@@ -183,6 +194,7 @@ au FileType go nmap <Leader>f :GoImports<CR>
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
+let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_height = 10		" maxiumum height of match window
 let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
@@ -208,6 +220,9 @@ func! MyCtrlPTag()
   CtrlPBufTag
 endfunc
 command! MyCtrlPTag call MyCtrlPTag()
+
+nmap <C-g> :MyCtrlPTag<cr>
+imap <C-g> <esc>:MyCtrlPTag<cr>
 
 nmap <C-f> :CtrlPCurWD<cr>
 imap <C-f> <esc>:CtrlPCurWD<cr>
@@ -253,6 +268,13 @@ endif
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
+" ==================== delimitMate ====================
+let g:delimitMate_expand_cr = 1		
+let g:delimitMate_expand_space = 1		
+let g:delimitMate_smart_quotes = 1		
+let g:delimitMate_expand_inside_quotes = 0		
+let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
+
 " ==================== NerdTree ====================
 " Open nerdtree in current dir, write our own custom function because
 " NerdTreeToggle just sucks and doesn't work for buffers
@@ -266,3 +288,100 @@ endfunction
 
 " For toggling
 noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
+
+" ==================== Lightline ====================
+let g:lightline = {
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'fugitive', 'filename', 'modified' ],
+      \             [ 'ctrlpmark'] ],
+      \   'right': [ [ 'lineinfo' ], 
+      \              [ 'percent' ], 
+      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
+      \ },
+      \ 'component_function': {
+      \   'modified': 'LightLineModified',
+      \   'filename': 'LightLineFilename',
+      \   'fileformat': 'LightLineFileformat',
+      \   'filetype': 'LightLineFiletype',
+      \   'fileencoding': 'LightLineFileencoding',
+      \   'mode': 'LightLineMode',
+      \   'fugitive': 'LightLineFugitive',
+      \   'ctrlpmark': 'CtrlPMark',
+      \ },
+      \ }
+
+function! LightLineModified()
+  if &filetype == "help"
+    return ""
+  elseif &modified
+    return "+"
+  elseif &modifiable
+    return ""
+  else
+    return ""
+  endif
+endfunction
+
+function! LightLineFileformat()
+  return winwidth(0) > 70 ? &fileformat : ''
+endfunction
+
+function! LightLineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
+
+function! LightLineFileencoding()
+  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
+endfunction
+
+function! LightLineFugitive()
+  return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function! CtrlPMark()
+  if expand('%:t') =~ 'ControlP'
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
+    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
+          \ , g:lightline.ctrlp_next], 0)
+  else
+    return ''
+  endif
+endfunction
+
+let g:ctrlp_status_func = {
+  \ 'main': 'CtrlPStatusFunc_1',
+  \ 'prog': 'CtrlPStatusFunc_2',
+  \ }
+
+function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
+  let g:lightline.ctrlp_regex = a:regex
+  let g:lightline.ctrlp_prev = a:prev
+  let g:lightline.ctrlp_item = a:item
+  let g:lightline.ctrlp_next = a:next
+  return lightline#statusline(0)
+endfunction
+
+function! CtrlPStatusFunc_2(str)
+  return lightline#statusline(0)
+endfunction
+
+function! LightLineMode()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? 'CtrlP' :
+        \ fname =~ 'NERD_tree' ? 'NERDTree' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightLineFilename()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? g:lightline.ctrlp_item :
+        \ fname =~ '__Gundo\|NERD_tree' ? '' :
+        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]') .
+        \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
+endfunction
+
+function! LightLineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
+endfunction
