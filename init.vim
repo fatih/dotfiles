@@ -5,7 +5,6 @@ Plug 'SirVer/ultisnips'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'JazzCore/ctrlp-cmatcher', {'do': './install.sh'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
@@ -23,8 +22,25 @@ call plug#end()
 "=====================================================
 "===================== SETTINGS ======================
 
-"filetype plugin indent on    " required
-let g:AutoPairsMultilineClose = 0
+" I'm still using Vim from time to time. These needs to enabled so we can make
+" Vim usable again (these are default on NeoVim)
+if !has('nvim')
+  set nocompatible              " be iMproved, required
+  filetype off                  " required
+  filetype plugin indent on    " required
+
+  set ttyfast
+  set ttymouse=xterm2
+  set ttyscroll=3
+
+  set laststatus=2
+  set encoding=utf-8              " Set default encoding to UTF-8
+  set autoread                    " Automatically reread changed files without asking me anything
+  "set autoindent                  
+  set backspace=indent,eol,start  " Makes backspace key more powerful.
+  set incsearch                   " Shows the match while typing
+  set hlsearch                    " Highlight found searches
+endif
 
 set noerrorbells             " No beeps
 set number                   " Show line numbers
@@ -53,17 +69,99 @@ set clipboard^=unnamedplus
 set lazyredraw          " Wait to redraw
 syntax sync minlines=256
 set synmaxcol=300
-"set re=1
+set re=1
 
-let g:molokai_original = 1
-let g:rehash256 = 1
-colorscheme molokai
+if has("gui_macvim")
+  " No toolbars, menu or scrollbars in the GUI
+  set guifont=Source\ Code\ Pro\ Light:h12
+  set clipboard+=unnamed
+  set vb t_vb=
+  set guioptions-=m  "no menu
+  set guioptions-=T  "no toolbar
+  set guioptions-=l
+  set guioptions-=L
+  set guioptions-=r  "no scrollbar
+  set guioptions-=R
+
+  let macvim_skip_colorscheme=1
+  let g:molokai_original=1
+  colorscheme molokai
+  highlight SignColumn guibg=#272822
+
+  " Open goto symbol on current buffer
+  nmap <D-r> :MyCtrlPTag<cr>
+  imap <D-r> <esc>:MyCtrlPTag<cr>
+
+  " Open goto symbol on all buffers
+  nmap <D-R> :CtrlPBufTagAll<cr>
+  imap <D-R> <esc>:CtrlPBufTagAll<cr>
+
+  " Open goto file
+  nmap <D-t> :CtrlP<cr>
+  imap <D-t> <esc>:CtrlP<cr>
+
+  " Comment lines with cmd+/
+  map <D-/> :TComment<cr>
+  vmap <D-/> :TComment<cr>gv
+
+  " Indent lines with cmd+[ and cmd+]
+  nmap <D-]> >>
+  nmap <D-[> <<
+  vmap <D-[> <gv
+  vmap <D-]> >gv
+
+  " This mapping makes Ctrl-Tab switch between tabs.
+  " Ctrl-Shift-Tab goes the other way.
+  noremap <C-Tab> :tabnext<CR>
+  noremap <C-S-Tab> :tabprev<CR>
+
+  " switch between tabs with cmd+1, cmd+2,..."
+  map <D-1> 1gt
+  map <D-2> 2gt
+  map <D-3> 3gt
+  map <D-4> 4gt
+  map <D-5> 5gt
+  map <D-6> 6gt
+  map <D-7> 7gt
+  map <D-8> 8gt
+  map <D-9> 9gt
+
+  " until we have default MacVim shortcuts this is the only way to use it in
+  " insert mode
+  imap <D-1> <esc>1gt
+  imap <D-2> <esc>2gt
+  imap <D-3> <esc>3gt
+  imap <D-4> <esc>4gt
+  imap <D-5> <esc>5gt
+  imap <D-6> <esc>6gt
+  imap <D-7> <esc>7gt
+  imap <D-8> <esc>8gt
+  imap <D-9> <esc>9gt
+else
+  if has('nvim')
+    syntax enable
+    set t_Co=256
+    set background=dark
+  endif
+
+  let g:molokai_original = 1
+  let g:rehash256 = 1
+  colorscheme molokai
+endif
 
 " open help vertically
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
 autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+au BufNewFile,BufRead *.vim setlocal noet ts=4 sw=4 sts=4
+au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+
+augroup filetypedetect
+  au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+  au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+augroup END
 
 "=====================================================
 "===================== MAPPINGS ======================
@@ -73,6 +171,12 @@ autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
 " i.e: <leader>w saves the current file
 let mapleader = ","
 let g:mapleader = ","
+
+" This trigger takes advantage of the fact that the quickfix window can be
+" easily distinguished by its file-type, qf. The wincmd J command is
+" equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
+" the very bottom (see :help :wincmd and :help ^WJ).
+autocmd FileType qf wincmd J
 
 " Some useful quickfix shortcuts for quickfix
 ":cc      see the current error
@@ -99,19 +203,26 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" tnoremap <C-h> <C-\><C-n><C-w>h
-" Workaround since <C-h> isn't working in neovim right now
-" tnoremap <C-w>h <C-\><C-n><C-w>h
-tnoremap <C-h> <C-\><C-n><C-w>h
-tnoremap <C-j> <C-\><C-n><C-w>j
-tnoremap <C-k> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
 
-" always start terminal in insert mode
-autocmd BufWinEnter,WinEnter term://* startinsert
+" Terminal settings
+if has('nvim')
+  " Leader e to exit terminal mode. 
+  tnoremap <Leader>e <C-\><C-n> 
 
-" Leader + e to exit terminal mode. 
-tnoremap <Leader>e <C-\><C-n> 
+  " mappings to move out from terminal to other views
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-l> <C-\><C-n><C-w>l
+
+  " Open terminal in vertical, horizontal and new tab
+  nnoremap <leader>tv :vsplit term://zsh<CR>
+  nnoremap <leader>ts :split term://zsh<CR>
+  nnoremap <leader>tt :tabnew term://zsh<CR>
+
+  " always start terminal in insert mode
+  autocmd BufWinEnter,WinEnter term://* startinsert
+endif
 
 " Move up and down on splitted lines (on small width screens)
 map <Up> gk
@@ -129,6 +240,7 @@ nnoremap <F6> :setlocal spell! spell?<CR>
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
+" Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
 
 " Act like D and C
@@ -152,7 +264,7 @@ set notimeout
 set ttimeout
 set ttimeoutlen=10
 
-if ! has('gui_running')
+if !has('gui_running')
     set ttimeoutlen=10
     augroup FastEscape
         autocmd!
@@ -163,6 +275,17 @@ endif
 
 " Resize splits when the window is resized
 au VimResized * :wincmd =
+
+" Visual Mode */# from Scrooloose {{{
+function! s:VSetSearch()
+  let temp = @@
+  norm! gvy
+  let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+  let @@ = temp
+endfunction
+
+vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
+vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 
 "====================================================
 "===================== PLUGINS ======================
@@ -194,7 +317,6 @@ au FileType go nmap <Leader>f :GoImports<CR>
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_match_func  = {'match' : 'matcher#cmatch'}
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_max_height = 10		" maxiumum height of match window
 let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
@@ -289,7 +411,9 @@ endfunction
 " For toggling
 noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
 
+
 " ==================== Lightline ====================
+"
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
@@ -385,3 +509,5 @@ endfunction
 function! LightLineReadonly()
   return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
+
+" vim:ts=2:sw=2:et
