@@ -1,20 +1,20 @@
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'SirVer/ultisnips'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tomasr/molokai'
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'fatih/vim-go'
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'itchyny/lightline.vim'
+Plug 'scrooloose/nerdtree'
+Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'scrooloose/nerdtree'
-Plug 'SirVer/ultisnips'
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'elzr/vim-json', {'for' : 'json'}
 
 call plug#end()
 
@@ -96,6 +96,20 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+" tnoremap <C-h> <C-\><C-n><C-w>h
+" Workaround since <C-h> isn't working in neovim right now
+" tnoremap <C-w>h <C-\><C-n><C-w>h
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+
+" always start terminal in insert mode
+autocmd BufWinEnter,WinEnter term://* startinsert
+
+" Leader + e to exit terminal mode. 
+tnoremap <Leader>e <C-\><C-n> 
+
 " Move up and down on splitted lines (on small width screens)
 map <Up> gk
 map <Down> gj
@@ -134,6 +148,9 @@ nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(st
 set notimeout
 set ttimeout
 set ttimeoutlen=10
+
+" Resize splits when the window is resized
+au VimResized * :wincmd =
 
 "====================================================
 "===================== PLUGINS ======================
