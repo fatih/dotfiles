@@ -1,14 +1,10 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'SirVer/ultisnips'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
-Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'SirVer/ultisnips'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'tomasr/molokai'
@@ -16,6 +12,13 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'Raimondi/delimitMate'
+
+" filetype plugins
+Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'tejr/vim-tmux', {'for': 'tmux'}
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'corylanou/vim-present', {'for' : 'present'}
 
 call plug#end()
 
@@ -36,7 +39,7 @@ if !has('nvim')
   set laststatus=2
   set encoding=utf-8              " Set default encoding to UTF-8
   set autoread                    " Automatically reread changed files without asking me anything
-  "set autoindent                  
+  set autoindent                  
   set backspace=indent,eol,start  " Makes backspace key more powerful.
   set incsearch                   " Shows the match while typing
   set hlsearch                    " Highlight found searches
@@ -62,6 +65,8 @@ set completeopt=menu,menuone
 set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
 
+set pumheight=10             " Completion window max size
+
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
@@ -70,6 +75,11 @@ set lazyredraw          " Wait to redraw
 syntax sync minlines=256
 set synmaxcol=300
 set re=1
+
+if has('persistent_undo')
+  set undofile
+  set undodir=~/.config/nvim/tmp/undo//
+endif
 
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
@@ -224,14 +234,25 @@ if has('nvim')
   autocmd BufWinEnter,WinEnter term://* startinsert
 endif
 
-" Move up and down on splitted lines (on small width screens)
-map <Up> gk
-map <Down> gj
-map k gk
-map j gj
+" Visual linewise up and down by default (and use gj gk to go quicker)
+noremap <Up> gk
+noremap <Down> gj
+noremap j gj
+noremap k gk
+nnoremap gj 5j
+nnoremap gk 5k
+
+" More useful enter and backspace
+nnoremap <CR> G
+vnoremap <CR> G
+nnoremap <BS> gg
+vnoremap <BS> gg
 
 " Just go out in insert mode
 imap jk <ESC>l
+
+" Source (reload configuration)
+nnoremap <silent> <F5> :source $MYNVIMRC<CR>
 
 nnoremap <F6> :setlocal spell! spell?<CR>
 
@@ -240,22 +261,27 @@ nnoremap <F6> :setlocal spell! spell?<CR>
 nnoremap n nzzzv
 nnoremap N Nzzzv
 
-" Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
+" Same when moving up and down
+noremap <C-d> <C-d>zz
+noremap <C-u> <C-u>zz
+
+" Remap H and L (top, bottom of screen to left and right end of line)
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L g_
 
 " Act like D and C
 nnoremap Y y$
 
+" Enter automatically into the files directory
+autocmd BufEnter * silent! lcd %:p:h
+
 " Do not show stupid q: window
 map q: :q
 
-" sometimes this happens and I hate it
-map :Vs :vs
-map :Sp :sp
-
-" Don't move on *
-" I'd use a function for this but Vim clobbers the last search when you're in
-" a function so fuck it, practicality beats purity.
+" Don't move on * I'd use a function for this but Vim clobbers the last search
+" when you're in a function so fuck it, practicality beats purity.
 nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
 
 " Time out on key codes but not mappings.
@@ -502,8 +528,7 @@ function! LightLineFilename()
   return fname == 'ControlP' ? g:lightline.ctrlp_item :
         \ fname =~ '__Gundo\|NERD_tree' ? '' :
         \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]') .
-        \ ('' != LightLineModified() ? ' ' . LightLineModified() : '')
+        \ ('' != fname ? fname : '[No Name]')
 endfunction
 
 function! LightLineReadonly()
