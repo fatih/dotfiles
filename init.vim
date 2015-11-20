@@ -1,8 +1,9 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
+Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
 Plug 'itchyny/lightline.vim'
@@ -11,7 +12,7 @@ Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
-Plug 'Raimondi/delimitMate'
+Plug 'tpope/vim-scriptease'
 
 " filetype plugins
 Plug 'elzr/vim-json', {'for' : 'json'}
@@ -93,7 +94,7 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
-  let macvim_skip_colorscheme=1
+  " let macvim_skip_colorscheme=1
   let g:molokai_original=1
   colorscheme molokai
   highlight SignColumn guibg=#272822
@@ -154,7 +155,6 @@ else
     set background=dark
   endif
 
-  let g:molokai_original = 1
   let g:rehash256 = 1
   colorscheme molokai
 endif
@@ -213,6 +213,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+" Print full path
+map <C-f> :echo expand("%:p")<cr>
 
 " Terminal settings
 if has('nvim')
@@ -239,14 +241,6 @@ noremap <Up> gk
 noremap <Down> gj
 noremap j gj
 noremap k gk
-nnoremap gj 5j
-nnoremap gk 5k
-
-" More useful enter and backspace
-nnoremap <CR> G
-vnoremap <CR> G
-nnoremap <BS> gg
-vnoremap <BS> gg
 
 " Just go out in insert mode
 imap jk <ESC>l
@@ -286,11 +280,9 @@ nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(st
 
 " Time out on key codes but not mappings.
 " Basically this makes terminal Vim work sanely.
-set notimeout
-set ttimeout
-set ttimeoutlen=10
-
 if !has('gui_running')
+    set notimeout
+    set ttimeout
     set ttimeoutlen=10
     augroup FastEscape
         autocmd!
@@ -372,11 +364,9 @@ command! MyCtrlPTag call MyCtrlPTag()
 nmap <C-g> :MyCtrlPTag<cr>
 imap <C-g> <esc>:MyCtrlPTag<cr>
 
-nmap <C-f> :CtrlPCurWD<cr>
-imap <C-f> <esc>:CtrlPCurWD<cr>
+nmap <C-b> :CtrlPCurWD<cr>
+imap <C-b> <esc>:CtrlPCurWD<cr>
 
-nmap <C-b> :CtrlPBuffer<cr>
-imap <C-b> <esc>:CtrlPBuffer<cr>
 
 " ==================== UltiSnips ====================
 
