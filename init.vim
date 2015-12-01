@@ -9,10 +9,15 @@ Plug 'fatih/vim-go'
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'tomasr/molokai'
+Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'edkolev/tmuxline.vim'
+Plug 'ConradIrwin/vim-bracketed-paste'
+Plug 'unblevable/quick-scope'  
 
 " filetype plugins
 Plug 'elzr/vim-json', {'for' : 'json'}
@@ -20,6 +25,7 @@ Plug 'tejr/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
 
 call plug#end()
 
@@ -29,9 +35,9 @@ call plug#end()
 " I'm still using Vim from time to time. These needs to enabled so we can make
 " Vim usable again (these are default on NeoVim)
 if !has('nvim')
-  set nocompatible              " be iMproved, required
-  filetype off                  " required
-  filetype plugin indent on    " required
+  set nocompatible
+  filetype off
+  filetype plugin indent on
 
   set ttyfast
   set ttymouse=xterm2
@@ -75,7 +81,7 @@ set clipboard^=unnamedplus
 set lazyredraw          " Wait to redraw
 syntax sync minlines=256
 set synmaxcol=300
-set re=1
+" set re=1
 
 if has('persistent_undo')
   set undofile
@@ -94,8 +100,8 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
-  " let macvim_skip_colorscheme=1
-  let g:molokai_original=1
+  let macvim_skip_colorscheme=1
+  " let g:molokai_original=1
   colorscheme molokai
   highlight SignColumn guibg=#272822
 
@@ -110,10 +116,6 @@ if has("gui_macvim")
   " Open goto file
   nmap <D-t> :CtrlP<cr>
   imap <D-t> <esc>:CtrlP<cr>
-
-  " Comment lines with cmd+/
-  map <D-/> :TComment<cr>
-  vmap <D-/> :TComment<cr>gv
 
   " Indent lines with cmd+[ and cmd+]
   nmap <D-]> >>
@@ -149,13 +151,13 @@ if has("gui_macvim")
   imap <D-8> <esc>8gt
   imap <D-9> <esc>9gt
 else
-  if has('nvim')
+  if has('!nvim')
     syntax enable
     set t_Co=256
-    set background=dark
   endif
 
   let g:rehash256 = 1
+  set background=dark
   colorscheme molokai
 endif
 
@@ -164,7 +166,7 @@ command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
 autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
-au BufNewFile,BufRead *.vim setlocal noet ts=4 sw=4 sts=4
+au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
@@ -186,16 +188,16 @@ let g:mapleader = ","
 " easily distinguished by its file-type, qf. The wincmd J command is
 " equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
 " the very bottom (see :help :wincmd and :help ^WJ).
-autocmd FileType qf wincmd J
+" autocmd FileType qf wincmd J
 
 " Some useful quickfix shortcuts for quickfix
 ":cc      see the current error
 ":cn      next error
 ":cp      previous error
 ":clist   list all errors
-map <C-n> :cn<CR>
-map <C-m> :cp<CR>
-nnoremap <leader>a :cclose<CR>
+map <C-n> :lnext<CR>
+map <C-m> :lprevious<CR>
+nnoremap <leader>a :lclose<CR>
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -218,8 +220,9 @@ map <C-f> :echo expand("%:p")<cr>
 
 " Terminal settings
 if has('nvim')
-  " Leader e to exit terminal mode. 
-  tnoremap <Leader>e <C-\><C-n> 
+  " Leader q to exit terminal mode. Somehow it jumps to the end, so jump to
+  " the top again
+  tnoremap <Leader>q <C-\><C-n>gg<cr>
 
   " mappings to move out from terminal to other views
   tnoremap <C-h> <C-\><C-n><C-w>h
@@ -312,7 +315,12 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
+
+" let g:go_metalinter_autosave = 1
+" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
+" let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+
+" let g:go_term_enabled = 1
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -326,7 +334,11 @@ au FileType go nmap <Leader>v <Plug>(go-def-vertical)
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>l <Plug>(go-metalinter)
 
-au FileType go nmap <leader>r  <Plug>(go-run)
+au FileType go nmap <leader>rr  <Plug>(go-run)
+au FileType go nmap <Leader>rt <Plug>(go-run-tab)
+au FileType go nmap <Leader>rs <Plug>(go-run-split)
+au FileType go nmap <Leader>rv <Plug>(go-run-vertical)
+
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>t  <Plug>(go-test)
 au FileType go nmap <leader>dt  <Plug>(go-test-compile)
@@ -432,16 +444,20 @@ noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
 "
 let g:lightline = {
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'fugitive', 'filename', 'modified' ],
-      \             [ 'ctrlpmark'] ],
+      \   'left': [ [ 'mode', 'paste'],
+      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark' ],
+      \             [ 'go'] ],
       \   'right': [ [ 'lineinfo' ], 
       \              [ 'percent' ], 
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
+      \ 'inactive': {
+      \   'left': [ [ 'go'] ],
+      \ },
       \ 'component_function': {
       \   'modified': 'LightLineModified',
       \   'filename': 'LightLineFilename',
+	    \   'go': 'LightLineGo',
       \   'fileformat': 'LightLineFileformat',
       \   'filetype': 'LightLineFiletype',
       \   'fileencoding': 'LightLineFileencoding',
@@ -477,6 +493,10 @@ endfunction
 
 function! LightLineFugitive()
   return exists('*fugitive#head') ? fugitive#head() : ''
+endfunction
+
+function! LightLineGo()
+  return exists('*go#jobcontrol#Statusline') ? go#jobcontrol#Statusline() : ''
 endfunction
 
 function! CtrlPMark()
@@ -515,6 +535,10 @@ endfunction
 
 function! LightLineFilename()
   let fname = expand('%:t')
+  if mode() == 't'
+    return ''
+  endif
+
   return fname == 'ControlP' ? g:lightline.ctrlp_item :
         \ fname =~ '__Gundo\|NERD_tree' ? '' :
         \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
@@ -525,4 +549,20 @@ function! LightLineReadonly()
   return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
 
+""""""""""""""""" TMUXLINE
+
+let g:tmuxline_separators = {
+    \ 'left' : '',
+    \ 'left_alt': '',
+    \ 'right' : '',
+    \ 'right_alt' : '',
+    \ 'space' : ' '}
+
+""""""""""""""""" TMUXLINE
+
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+
 " vim:ts=2:sw=2:et
+"
