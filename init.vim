@@ -1,9 +1,9 @@
 call plug#begin('~/.config/nvim/plugged')
 
+Plug 'vim-ruby/vim-ruby'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
 Plug 'itchyny/lightline.vim'
@@ -170,6 +170,8 @@ au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
+autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
+
 augroup filetypedetect
   au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
   au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
@@ -294,9 +296,6 @@ if !has('gui_running')
     augroup END
 endif
 
-" Resize splits when the window is resized
-au VimResized * :wincmd =
-
 " Visual Mode */# from Scrooloose {{{
 function! s:VSetSearch()
   let temp = @@
@@ -310,6 +309,10 @@ vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 
 "====================================================
 "===================== PLUGINS ======================
+
+" ==================== Fugitive ====================
+vnoremap <leader>gb :Gblame<CR>
+nnoremap <leader>gb :Gblame<CR>
 
 " ==================== Vim-go ====================
 let g:go_fmt_fail_silently = 0
