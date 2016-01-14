@@ -289,14 +289,14 @@ nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(st
 " Time out on key codes but not mappings.
 " Basically this makes terminal Vim work sanely.
 if !has('gui_running')
-    set notimeout
-    set ttimeout
-    set ttimeoutlen=10
-    augroup FastEscape
-        autocmd!
-        au InsertEnter * set timeoutlen=0
-        au InsertLeave * set timeoutlen=1000
-    augroup END
+  set notimeout
+  set ttimeout
+  set ttimeoutlen=10
+  augroup FastEscape
+    autocmd!
+    au InsertEnter * set timeoutlen=0
+    au InsertLeave * set timeoutlen=1000
+  augroup END
 endif
 
 " Visual Mode */# from Scrooloose {{{
@@ -460,7 +460,7 @@ let g:lightline = {
       \   'percent': 'LightLinePercent',
       \   'modified': 'LightLineModified',
       \   'filename': 'LightLineFilename',
-	    \   'go': 'LightLineGo',
+      \   'go': 'LightLineGo',
       \   'fileformat': 'LightLineFileformat',
       \   'filetype': 'LightLineFiletype',
       \   'fileencoding': 'LightLineFileencoding',
@@ -499,7 +499,7 @@ function! LightLineInfo()
 endfunction
 
 function! LightLinePercent()
-    return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
+  return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
 endfunction
 
 function! LightLineFugitive()
@@ -544,9 +544,9 @@ function! CtrlPMark()
 endfunction
 
 let g:ctrlp_status_func = {
-  \ 'main': 'CtrlPStatusFunc_1',
-  \ 'prog': 'CtrlPStatusFunc_2',
-  \ }
+      \ 'main': 'CtrlPStatusFunc_1',
+      \ 'prog': 'CtrlPStatusFunc_2',
+      \ }
 
 function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
   let g:lightline.ctrlp_regex = a:regex
@@ -564,11 +564,11 @@ endfunction
 """"""""""""""""" TMUXLINE
 
 let g:tmuxline_separators = {
-    \ 'left' : '',
-    \ 'left_alt': '',
-    \ 'right' : '',
-    \ 'right_alt' : '',
-    \ 'space' : ' '}
+      \ 'left' : '',
+      \ 'left_alt': '',
+      \ 'right' : '',
+      \ 'right_alt' : '',
+      \ 'space' : ' '}
 
 """"""""""""""""" TMUXLINE
 
@@ -577,10 +577,10 @@ let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 """"""""""""""""" Vimfiler
 let g:unite_force_overwrite_statusline = 0
-let g:vimfiler_force_overwrite_statusline = 0
-let g:vimfiler_as_default_explorer = 1
-let g:vimfiler_no_default_key_mappings = 1 " Let's create our own mappings
-let g:vimfiler_ignore_pattern = []         " Show anything
+let g:vimfiler_force_overwrite_statusline = 0 " We're using lightline, don't overwrite it
+let g:vimfiler_as_default_explorer = 1        " Open it as a sidebar just like NERDTree
+let g:vimfiler_no_default_key_mappings = 1    " Let's create our own mappings
+let g:vimfiler_ignore_pattern = []            " Show anything
 
 let g:vimfiler_tree_leaf_icon = ' '
 let g:vimfiler_tree_opened_icon = '▾'
@@ -590,30 +590,30 @@ let g:vimfiler_marked_file_icon = '*'
 au FileType vimfiler nmap <buffer> c <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_copy_file)
 au FileType vimfiler nmap <buffer> m <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_move_file)
 au FileType vimfiler nmap <buffer> d <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_delete_file)
-au FileType vimfiler nmap <buffer> u       <Plug>(vimfiler_switch_to_parent_directory)
-au FileType vimfiler nmap <buffer> R       <Plug>(vimfiler_redraw_screen)
-au FileType vimfiler nmap <buffer> o       <Plug>(vimfiler_expand_or_edit)
+au FileType vimfiler nmap <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
+au FileType vimfiler nmap <buffer> R <Plug>(vimfiler_redraw_screen)
+au FileType vimfiler nmap <buffer> o <Plug>(vimfiler_expand_or_edit)
 au FileType vimfiler nmap <buffer> <Enter> <Plug>(vimfiler_expand_or_edit)
-au FileType vimfiler nmap <buffer> C       <Plug>(vimfiler_cd_or_edit)
-au FileType vimfiler nmap <buffer> t			 <Plug>(vimfiler_expand_tree_recursive)
-au FileType vimfiler nmap <buffer> T			 <Plug>(vimfiler_expand_tree_recursive)
-au FileType vimfiler nmap <buffer> r			 <Plug>(vimfiler_switch_to_project_directory)
-au FileType vimfiler nmap <buffer> .			 <Plug>(vimfiler_toggle_visible_ignore_files)
-au FileType vimfiler nmap <buffer> p			 <Plug>(vimfiler_print_filename)
-au FileType vimfiler nmap <buffer> s			 <Plug>(vimfiler_split_edit_file)
-au FileType vimfiler nmap <buffer> gr			 <Plug>(vimfiler_grep)
-au FileType vimfiler nmap <buffer> gf			 <Plug>(vimfiler_find)
-au FileType vimfiler nmap <buffer> g?			 <Plug>(vimfiler_help)
+au FileType vimfiler nmap <buffer> C <Plug>(vimfiler_cd_or_edit)
+au FileType vimfiler nmap <buffer> t <Plug>(vimfiler_expand_tree_recursive)
+au FileType vimfiler nmap <buffer> T <Plug>(vimfiler_expand_tree_recursive)
+au FileType vimfiler nmap <buffer> r <Plug>(vimfiler_switch_to_project_directory)
+au FileType vimfiler nmap <buffer> . <Plug>(vimfiler_toggle_visible_ignore_files)
+au FileType vimfiler nmap <buffer> p <Plug>(vimfiler_print_filename)
+au FileType vimfiler nmap <buffer> s <Plug>(vimfiler_split_edit_file)
+au FileType vimfiler nmap <buffer> gr	<Plug>(vimfiler_grep)
+au FileType vimfiler nmap <buffer> gf	<Plug>(vimfiler_find)
+au FileType vimfiler nmap <buffer> g?	<Plug>(vimfiler_help)
+au FileType vimfiler nmap <buffer> gc	<Plug>(vimfiler_cd_file)
 
 call vimfiler#custom#profile('default', 'context', {
-                  \ 'parent': 1,
-                  \ 'auto_expand': 1,
-                  \ })
+      \ 'parent': 1,
+      \ 'auto_expand': 1,
+      \ })
 
 function! s:VimFilerExplorerFix()
   exec 'VimFilerExplorer ' . getcwd()
 endfunction
-
 noremap <Leader>n :<C-u>call <SID>VimFilerExplorerFix()<cr>
 
 " vim:ts=2:sw=2:et
