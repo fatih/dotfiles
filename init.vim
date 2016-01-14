@@ -7,7 +7,6 @@ Plug 'SirVer/ultisnips'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fatih/vim-go'
 Plug 'itchyny/lightline.vim'
-Plug 'scrooloose/nerdtree'
 Plug 'tomasr/molokai'
 Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-commentary'
@@ -18,6 +17,10 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'edkolev/tmuxline.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
+
+Plug 'Shougo/vimfiler.vim'
+Plug 'Shougo/unite.vim'
+Plug 'Shougo/vimproc.vim'
 
 " filetype plugins
 Plug 'elzr/vim-json', {'for' : 'json'}
@@ -170,7 +173,7 @@ au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
-autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
+autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 
 augroup filetypedetect
   au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
@@ -307,6 +310,16 @@ endfunction
 vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
 vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 
+
+" prependend
+function! s:CreateGoDocComment()
+  norm "zyiw
+  execute ":put! z"
+  execute ":norm I# \<Esc>$"
+endfunction
+
+nnoremap <leader>ui :<C-u>call <SID>CreateGoDocComment()<CR>
+
 "====================================================
 "===================== PLUGINS ======================
 
@@ -323,7 +336,7 @@ let g:go_autodetect_gopath = 1
 " let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
 " let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 
-" let g:go_term_enabled = 1
+let g:go_term_enabled = 0
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -428,21 +441,6 @@ let g:delimitMate_smart_quotes = 1
 let g:delimitMate_expand_inside_quotes = 0		
 let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
 
-" ==================== NerdTree ====================
-" Open nerdtree in current dir, write our own custom function because
-" NerdTreeToggle just sucks and doesn't work for buffers
-function! g:NerdTreeFindToggle()
-  if g:NERDTree.IsOpen()
-    exec 'NERDTreeClose'
-  else
-    exec 'NERDTree'
-  endif
-endfunction
-
-" For toggling
-noremap <Leader>n :<C-u>call g:NerdTreeFindToggle()<cr>
-
-
 " ==================== Lightline ====================
 "
 let g:lightline = {
@@ -458,6 +456,8 @@ let g:lightline = {
       \   'left': [ [ 'go'] ],
       \ },
       \ 'component_function': {
+      \   'lineinfo': 'LightLineInfo',
+      \   'percent': 'LightLinePercent',
       \   'modified': 'LightLineModified',
       \   'filename': 'LightLineFilename',
 	    \   'go': 'LightLineGo',
@@ -494,12 +494,43 @@ function! LightLineFileencoding()
   return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
 endfunction
 
+function! LightLineInfo()
+  return winwidth(0) > 60 ? printf("%3d:%-2d", line('.'), col('.')) : ''
+endfunction
+
+function! LightLinePercent()
+    return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
+endfunction
+
 function! LightLineFugitive()
   return exists('*fugitive#head') ? fugitive#head() : ''
 endfunction
 
 function! LightLineGo()
   return exists('*go#jobcontrol#Statusline') ? go#jobcontrol#Statusline() : ''
+endfunction
+
+function! LightLineMode()
+  let fname = expand('%:t')
+  return fname == 'ControlP' ? 'CtrlP' :
+        \ &ft == 'vimfiler' ? 'VimFiler' :
+        \ winwidth(0) > 60 ? lightline#mode() : ''
+endfunction
+
+function! LightLineFilename()
+  let fname = expand('%:t')
+  if mode() == 't'
+    return ''
+  endif
+
+  return fname == 'ControlP' ? g:lightline.ctrlp_item :
+        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
+        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
+        \ ('' != fname ? fname : '[No Name]')
+endfunction
+
+function! LightLineReadonly()
+  return &ft !~? 'help' && &readonly ? 'RO' : ''
 endfunction
 
 function! CtrlPMark()
@@ -529,28 +560,6 @@ function! CtrlPStatusFunc_2(str)
   return lightline#statusline(0)
 endfunction
 
-function! LightLineMode()
-  let fname = expand('%:t')
-  return fname == 'ControlP' ? 'CtrlP' :
-        \ fname =~ 'NERD_tree' ? 'NERDTree' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! LightLineFilename()
-  let fname = expand('%:t')
-  if mode() == 't'
-    return ''
-  endif
-
-  return fname == 'ControlP' ? g:lightline.ctrlp_item :
-        \ fname =~ '__Gundo\|NERD_tree' ? '' :
-        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]')
-endfunction
-
-function! LightLineReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
 
 """"""""""""""""" TMUXLINE
 
@@ -566,6 +575,46 @@ let g:tmuxline_separators = {
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
+""""""""""""""""" Vimfiler
+let g:unite_force_overwrite_statusline = 0
+let g:vimfiler_force_overwrite_statusline = 0
+let g:vimfiler_as_default_explorer = 1
+let g:vimfiler_no_default_key_mappings = 1 " Let's create our own mappings
+let g:vimfiler_ignore_pattern = []         " Show anything
+
+let g:vimfiler_tree_leaf_icon = ' '
+let g:vimfiler_tree_opened_icon = '▾'
+let g:vimfiler_tree_closed_icon = '▸'
+let g:vimfiler_marked_file_icon = '*'
+
+au FileType vimfiler nmap <buffer> c <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_copy_file)
+au FileType vimfiler nmap <buffer> m <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_move_file)
+au FileType vimfiler nmap <buffer> d <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_delete_file)
+au FileType vimfiler nmap <buffer> u       <Plug>(vimfiler_switch_to_parent_directory)
+au FileType vimfiler nmap <buffer> R       <Plug>(vimfiler_redraw_screen)
+au FileType vimfiler nmap <buffer> o       <Plug>(vimfiler_expand_or_edit)
+au FileType vimfiler nmap <buffer> <Enter> <Plug>(vimfiler_expand_or_edit)
+au FileType vimfiler nmap <buffer> C       <Plug>(vimfiler_cd_or_edit)
+au FileType vimfiler nmap <buffer> t			 <Plug>(vimfiler_expand_tree_recursive)
+au FileType vimfiler nmap <buffer> T			 <Plug>(vimfiler_expand_tree_recursive)
+au FileType vimfiler nmap <buffer> r			 <Plug>(vimfiler_switch_to_project_directory)
+au FileType vimfiler nmap <buffer> .			 <Plug>(vimfiler_toggle_visible_ignore_files)
+au FileType vimfiler nmap <buffer> p			 <Plug>(vimfiler_print_filename)
+au FileType vimfiler nmap <buffer> s			 <Plug>(vimfiler_split_edit_file)
+au FileType vimfiler nmap <buffer> gr			 <Plug>(vimfiler_grep)
+au FileType vimfiler nmap <buffer> gf			 <Plug>(vimfiler_find)
+au FileType vimfiler nmap <buffer> g?			 <Plug>(vimfiler_help)
+
+call vimfiler#custom#profile('default', 'context', {
+                  \ 'parent': 1,
+                  \ 'auto_expand': 1,
+                  \ })
+
+function! s:VimFilerExplorerFix()
+  exec 'VimFilerExplorer ' . getcwd()
+endfunction
+
+noremap <Leader>n :<C-u>call <SID>VimFilerExplorerFix()<cr>
 
 " vim:ts=2:sw=2:et
 "
