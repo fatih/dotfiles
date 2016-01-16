@@ -15,17 +15,6 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
 
-# On Mac OS X: brew install fasd
-fasd_cache="$HOME/.fasd-init-bash"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init posix-alias bash-hook bash-ccomp bash-ccomp-install >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
-
-
-# On Mac OS X: brew reinstall --HEAD fzf
-
 ###############
 # Aliases (custom)
 alias ..='cd ..'
@@ -34,8 +23,6 @@ alias vim='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias vi='/usr/local/Cellar/macvim/HEAD/bin/mvim -v'
 alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
-alias j='fasd_cd -d -i' # make it like autojump
-
 
 # most used fast git commands
 alias t="tig status"
