@@ -10,6 +10,13 @@ bind-key C-f last-window
 set -g base-index 1
 setw -g pane-base-index 1
 
+# re-number windows when one is closed
+set -g renumber-windows on
+
+# highlight window when it has new activity
+setw -g monitor-activity on
+set -g visual-activity on
+
 # Show times longer than supposed
 set -g display-panes-time 2000
 
@@ -26,7 +33,11 @@ bind-key -n C-S-Left swap-window -t -1
 bind-key -n C-S-Right swap-window -t +1
 
 # Source file
-bind-key r source-file ~/.tmux.conf
+unbind r
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# Use vim keybindings in copy mode
+setw -g mode-keys vi
 
 # Select and copy with v and y, instead of default space and enter
 bind-key -t vi-copy 'v' begin-selection
@@ -98,7 +109,6 @@ set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
 
-
 ######## iTerm + Tmux key integration #########
 
 # The followings are not any kind of setting for Tmux, but crucial to my
@@ -112,7 +122,7 @@ run '~/.tmux/plugins/tpm/tpm'
 # 'xxd'
 
 # If you run "xxd -psd" and hit "c-f v" and then enter and finally c-c to exit
-# , it outpus the following:
+# , it outputs the following:
 #
 # 	$ xxd -psd
 # 	^Fv
@@ -128,9 +138,9 @@ run '~/.tmux/plugins/tpm/tpm'
 # From here, we know that 0x06 0x76 corresponds to "c-f v".
 #
 # Finally, inside the iTerm2 Key settings, I'm adding just various shortcuts,
-# such as command - j, command - left, etc.. , select the option "send hex
-# code" and the enter the hex code which I want to be executed, hence the tmux
-# sequence. so when I press CMD + d in iterm, I send the sequence 0x06 0x76,
+# such as cmd-j, cmd-left, etc.. , select the option "send hex code" and the
+# enter the hex code which I want to be executed, hence the tmux sequence. So
+# when I press CMD + d in iterm, I send the sequence 0x06 0x76,
 # which tmux inteprets it as opening a new pane. 
 ###############################################
 
