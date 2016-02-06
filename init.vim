@@ -342,9 +342,8 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-
 let g:go_term_enabled = 1
-
+let g:go_snippet_engine = "neosnippet"
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
@@ -384,13 +383,7 @@ let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 
-let g:ctrlp_buftag_types = {
-      \ 'go'     	   : '--language-force=go --golang-types=ftv',
-      \ 'coffee'     : '--language-force=coffee --coffee-types=cmfvf',
-      \ 'markdown'   : '--language-force=markdown --markdown-types=hik',
-      \ 'objc'       : '--language-force=objc --objc-types=mpci',
-      \ 'rc'         : '--language-force=rust --rust-types=fTm'
-      \ }
+let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
 
 func! MyCtrlPTag()
   let g:ctrlp_prompt_mappings = {
@@ -553,7 +546,7 @@ let g:vim_json_syntax_conceal = 0
 let g:deoplete#enable_at_startup = 1   "enable deoplete at vim startup
 let g:deoplete#ignore_sources = {}
 let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', "neosnippet"]
-let deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
+let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
 
 " Use partial fuzzy matches like YouCompleteMe
 call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
@@ -561,8 +554,9 @@ call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
 inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr><CR>  pumvisible() ? "\<C-y>" : "\<CR>"
 
-let g:go_snippet_engine = "neosnippet"
-let g:neosnippet#expand_word_boundary = 1
+" There is a bug with neosnippet that prevents us to use let
+" g:neosnippet#enable_completed_snippet, so disable it 
+" let g:neosnippet#enable_completed_snippet = 1
 
 " I want to use my tab more smarter. If we are inside a completion menu jump
 " to the next item. Otherwise check if there is any snippet to expand, if yes
@@ -578,9 +572,14 @@ function! s:tab_complete()
     return "\<tab>"
   endif
 endfunction
-
 imap <expr><TAB> <SID>tab_complete()
 
+smap <expr><tab> neosnippet#expandable_or_jumpable() ? 
+      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+if has('conceal')
+  set conceallevel=2 concealcursor=niv
+endif
 
 " vim:ts=2:sw=2:et
 "
