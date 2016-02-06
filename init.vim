@@ -1,34 +1,34 @@
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'vim-ruby/vim-ruby'
+Plug 'fatih/vim-go'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
-Plug 'SirVer/ultisnips'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'fatih/vim-go'
 Plug 'itchyny/lightline.vim'
 Plug 'tomasr/molokai'
-Plug 'morhetz/gruvbox'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-vinegar'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'edkolev/tmuxline.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
+Plug 'scrooloose/nerdtree'
 
-Plug 'Shougo/vimfiler.vim'
-Plug 'Shougo/unite.vim'
-Plug 'Shougo/vimproc.vim'
+Plug 'Shougo/neopairs.vim'
+Plug 'Shougo/deoplete.nvim'
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
+Plug 'zchee/deoplete-go'
 
 " filetype plugins
+Plug 'vim-ruby/vim-ruby'
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'tejr/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'kchmck/vim-coffee-script', {'for' : 'coffee'}
 
 call plug#end()
 
@@ -84,7 +84,7 @@ set clipboard^=unnamedplus
 set lazyredraw          " Wait to redraw
 syntax sync minlines=256
 set synmaxcol=300
-" set re=1
+set re=1
 
 if has('persistent_undo')
   set undofile
@@ -173,6 +173,7 @@ au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
+autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 
 augroup filetypedetect
@@ -200,8 +201,8 @@ let g:mapleader = ","
 ":cn      next error
 ":cp      previous error
 ":clist   list all errors
-map <C-n> :lnext<CR>
-map <C-m> :lprevious<CR>
+" map <C-n> :lnext<CR>
+" map <C-m> :lprevious<CR>
 nnoremap <leader>a :lclose<CR>
 
 " Fast saving
@@ -220,6 +221,16 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
+" Resize window quickly
+" nnoremap <silent> <A-Right> :vertical resize +10<CR>
+" nnoremap <silent> <A-Left> :vertical resize -10<CR>
+" nnoremap <silent> <A-Up> :resize +10<CR>
+" nnoremap <silent> <A-Down> :resize -10<CR>
+if bufwinnr(1)
+  map = <C-W>>
+  map - <C-W><
+endif
+
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
 
@@ -236,9 +247,9 @@ if has('nvim')
   tnoremap <C-l> <C-\><C-n><C-w>l
 
   " Open terminal in vertical, horizontal and new tab
-  nnoremap <leader>tv :vsplit term://zsh<CR>
-  nnoremap <leader>ts :split term://zsh<CR>
-  nnoremap <leader>tt :tabnew term://zsh<CR>
+  " nnoremap <leader>tv :vsplit term://zsh<CR>
+  " nnoremap <leader>ts :split term://zsh<CR>
+  " nnoremap <leader>tt :tabnew term://zsh<CR>
 
   " always start terminal in insert mode
   autocmd BufWinEnter,WinEnter term://* startinsert
@@ -332,11 +343,7 @@ let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 
-" let g:go_metalinter_autosave = 1
-" let g:go_metalinter_enabled = ['vet', 'golint', 'errcheck', "gotype"]
-" let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-
-let g:go_term_enabled = 0
+let g:go_term_enabled = 1
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -345,21 +352,26 @@ let g:go_highlight_extra_types = 0
 let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
 
+
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>l <Plug>(go-metalinter)
 
-au FileType go nmap <leader>rr  <Plug>(go-run)
-au FileType go nmap <Leader>rt <Plug>(go-run-tab)
-au FileType go nmap <Leader>rs <Plug>(go-run-split)
-au FileType go nmap <Leader>rv <Plug>(go-run-vertical)
+au FileType go nmap <leader>r  <Plug>(go-run)
 
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>t  <Plug>(go-test)
 au FileType go nmap <leader>dt  <Plug>(go-test-compile)
 au FileType go nmap <Leader>d <Plug>(go-doc)
-au FileType go nmap <Leader>f :GoImports<CR>
+
+" I like these more!
+augroup go
+    autocmd!
+    autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+    autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+    autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+augroup END
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
@@ -394,45 +406,6 @@ imap <C-g> <esc>:MyCtrlPTag<cr>
 
 nmap <C-b> :CtrlPCurWD<cr>
 imap <C-b> <esc>:CtrlPCurWD<cr>
-
-
-" ==================== UltiSnips ====================
-
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
-
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
-
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 " ==================== delimitMate ====================
 let g:delimitMate_expand_cr = 1		
@@ -507,6 +480,7 @@ function! LightLineFugitive()
 endfunction
 
 function! LightLineGo()
+  " return ''
   return exists('*go#jobcontrol#Statusline') ? go#jobcontrol#Statusline() : ''
 endfunction
 
@@ -561,60 +535,57 @@ function! CtrlPStatusFunc_2(str)
 endfunction
 
 
-""""""""""""""""" TMUXLINE
-
-let g:tmuxline_separators = {
-      \ 'left' : '',
-      \ 'left_alt': '',
-      \ 'right' : '',
-      \ 'right_alt' : '',
-      \ 'space' : ' '}
-
-""""""""""""""""" TMUXLINE
-
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
-""""""""""""""""" Vimfiler
-let g:unite_force_overwrite_statusline = 0
-let g:vimfiler_force_overwrite_statusline = 0 " We're using lightline, don't overwrite it
-let g:vimfiler_as_default_explorer = 1        " Open it as a sidebar just like NERDTree
-let g:vimfiler_no_default_key_mappings = 1    " Let's create our own mappings
-let g:vimfiler_ignore_pattern = []            " Show anything
+" ==================== NerdTree ====================
+" For toggling
+noremap <Leader>n :NERDTreeToggle<cr>
+noremap <Leader>f :NERDTreeFind<cr>
 
-let g:vimfiler_tree_leaf_icon = ' '
-let g:vimfiler_tree_opened_icon = '▾'
-let g:vimfiler_tree_closed_icon = '▸'
-let g:vimfiler_marked_file_icon = '*'
+let NERDTreeShowHidden=1
 
-au FileType vimfiler nmap <buffer> c <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_copy_file)
-au FileType vimfiler nmap <buffer> m <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_move_file)
-au FileType vimfiler nmap <buffer> d <Plug>(vimfiler_mark_current_line)<Plug>(vimfiler_delete_file)
-au FileType vimfiler nmap <buffer> u <Plug>(vimfiler_switch_to_parent_directory)
-au FileType vimfiler nmap <buffer> R <Plug>(vimfiler_redraw_screen)
-au FileType vimfiler nmap <buffer> o <Plug>(vimfiler_expand_or_edit)
-au FileType vimfiler nmap <buffer> <Enter> <Plug>(vimfiler_expand_or_edit)
-au FileType vimfiler nmap <buffer> C <Plug>(vimfiler_cd_or_edit)
-au FileType vimfiler nmap <buffer> t <Plug>(vimfiler_expand_tree_recursive)
-au FileType vimfiler nmap <buffer> T <Plug>(vimfiler_expand_tree_recursive)
-au FileType vimfiler nmap <buffer> r <Plug>(vimfiler_switch_to_project_directory)
-au FileType vimfiler nmap <buffer> . <Plug>(vimfiler_toggle_visible_ignore_files)
-au FileType vimfiler nmap <buffer> p <Plug>(vimfiler_print_filename)
-au FileType vimfiler nmap <buffer> s <Plug>(vimfiler_split_edit_file)
-au FileType vimfiler nmap <buffer> gr	<Plug>(vimfiler_grep)
-au FileType vimfiler nmap <buffer> gf	<Plug>(vimfiler_find)
-au FileType vimfiler nmap <buffer> g?	<Plug>(vimfiler_help)
-au FileType vimfiler nmap <buffer> gc	<Plug>(vimfiler_cd_file)
+" ==================== vim-json ====================
+let g:vim_json_syntax_conceal = 0
 
-call vimfiler#custom#profile('default', 'context', {
-      \ 'parent': 1,
-      \ 'auto_expand': 1,
-      \ })
+" ==================== deoplete =========================
+" ==================== neosnippet =======================
+let g:deoplete#enable_at_startup = 1   "enable deoplete at vim startup
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', "neosnippet"]
+let deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
 
-function! s:VimFilerExplorerFix()
-  exec 'VimFilerExplorer ' . getcwd()
+" call deoplete#custom#set('go', 'rank', 9999)
+
+" Use partial fuzzy matches like YouCompleteMe
+call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+
+inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+inoremap <silent><expr><CR>  pumvisible() ? "\<C-y>" : "\<CR>"
+inoremap <silent><expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
+inoremap <silent><expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
+
+let g:go_snippet_engine = "neosnippet"
+let g:neosnippet#expand_word_boundary = 1
+
+" I want to use my tab more smarter. If we are inside a completion menu jump
+" to the next item. Otherwise check if there is any snippet to expand, if yes
+" expand it. Also if inside a snippet and we need to jump tab jumps. If none
+" of the above matches we just call our usual 'tab'.
+function! s:tab_complete()
+  if pumvisible()
+    return "\<c-n>"
+  else
+    if neosnippet#expandable_or_jumpable() 
+      return "\<Plug>(neosnippet_expand_or_jump)"
+    endif
+    return "\<tab>"
+  endif
 endfunction
-noremap <Leader>n :<C-u>call <SID>VimFilerExplorerFix()<cr>
+
+imap <expr><TAB> <SID>tab_complete()
+
 
 " vim:ts=2:sw=2:et
 "
+
