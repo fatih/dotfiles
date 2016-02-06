@@ -555,15 +555,11 @@ let g:deoplete#ignore_sources = {}
 let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', "neosnippet"]
 let deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
 
-" call deoplete#custom#set('go', 'rank', 9999)
-
 " Use partial fuzzy matches like YouCompleteMe
 call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
 
 inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
 inoremap <silent><expr><CR>  pumvisible() ? "\<C-y>" : "\<CR>"
-inoremap <silent><expr><C-h> deoplete#mappings#smart_close_popup()."\<C-h>"
-inoremap <silent><expr><BS>  deoplete#mappings#smart_close_popup()."\<C-h>"
 
 let g:go_snippet_engine = "neosnippet"
 let g:neosnippet#expand_word_boundary = 1
