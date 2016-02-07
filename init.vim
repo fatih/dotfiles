@@ -17,10 +17,16 @@ Plug 'unblevable/quick-scope'
 Plug 'scrooloose/nerdtree'
 
 Plug 'Shougo/neopairs.vim'
-Plug 'Shougo/deoplete.nvim'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
-Plug 'zchee/deoplete-go'
+Plug 'Shougo/vimproc'
+
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'zchee/deoplete-go', { 'do': 'make'}
+else
+  Plug 'Shougo/neocomplete.vim'
+endif
 
 " filetype plugins
 Plug 'vim-ruby/vim-ruby'
@@ -407,6 +413,7 @@ let g:delimitMate_smart_quotes = 1
 let g:delimitMate_expand_inside_quotes = 0		
 let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
 
+
 " ==================== Lightline ====================
 "
 let g:lightline = {
@@ -541,22 +548,30 @@ let NERDTreeShowHidden=1
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
-" ==================== deoplete =========================
-" ==================== neosnippet =======================
-let g:deoplete#enable_at_startup = 1   "enable deoplete at vim startup
-let g:deoplete#ignore_sources = {}
-let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', "neosnippet"]
-let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
+" ==================== completion and snippet =========================
+" I use deoplete for Neovim and neocomplete for Vim.
+if has('nvim')
+  let g:deoplete#enable_at_startup = 1
+  let g:deoplete#ignore_sources = {}
+  let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
+  let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
 
-" Use partial fuzzy matches like YouCompleteMe
-call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+  " Use partial fuzzy matches like YouCompleteMe
+  call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+else
+  let g:neocomplete#enable_at_startup = 1
+  let g:neocomplete#enable_smart_case = 1
+  let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-inoremap <silent><expr><CR>  pumvisible() ? "\<C-y>" : "\<CR>"
+	if !exists('g:neocomplete#sources')
+	  let g:neocomplete#sources = {}
+	endif
+	let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'file', 'dictionary']
+	let g:neocomplete#sources.go = ['omni']
 
-" There is a bug with neosnippet that prevents us to use let
-" g:neosnippet#enable_completed_snippet, so disable it 
-" let g:neosnippet#enable_completed_snippet = 1
+  " disable sorting
+	call neocomplete#custom#source('_', 'sorters', [])
+endif
 
 " I want to use my tab more smarter. If we are inside a completion menu jump
 " to the next item. Otherwise check if there is any snippet to expand, if yes
@@ -565,20 +580,26 @@ inoremap <silent><expr><CR>  pumvisible() ? "\<C-y>" : "\<CR>"
 function! s:tab_complete()
   if pumvisible()
     return "\<c-n>"
-  else
-    if neosnippet#expandable_or_jumpable() 
-      return "\<Plug>(neosnippet_expand_or_jump)"
-    endif
-    return "\<tab>"
   endif
+
+  if neosnippet#expandable_or_jumpable() 
+    return "\<Plug>(neosnippet_expand_or_jump)"
+  endif
+
+  return "\<tab>"
 endfunction
-imap <expr><TAB> <SID>tab_complete()
+imap <silent><expr><TAB> <SID>tab_complete()
 
 smap <expr><tab> neosnippet#expandable_or_jumpable() ? 
       \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
+inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
+imap <silent><expr> <CR> pumvisible() ? "\<C-y>" : '<Plug>delimitMateCR'
+
+autocmd InsertLeave * NeoSnippetClearMarkers
+
 if has('conceal')
-  set conceallevel=2 concealcursor=niv
+  set conceallevel=2 concealcursor=inv
 endif
 
 " vim:ts=2:sw=2:et
