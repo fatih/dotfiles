@@ -1,6 +1,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'fatih/vim-go'
+Plug 'rhysd/vim-go-impl'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -10,22 +11,21 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-Plug 'tpope/vim-vinegar'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
 Plug 'scrooloose/nerdtree'
 
-Plug 'Shougo/neopairs.vim'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-Plug 'Shougo/vimproc'
+Plug 'SirVer/ultisnips'
+Plug 't9md/vim-choosewin'
+Plug 'garyburd/go-explorer'
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim'
   Plug 'zchee/deoplete-go', { 'do': 'make'}
 else
   Plug 'Shougo/neocomplete.vim'
+  Plug 'Shougo/vimproc' , { 'do': 'make'}
 endif
 
 " filetype plugins
@@ -99,7 +99,7 @@ endif
 
 if has("gui_macvim")
   " No toolbars, menu or scrollbars in the GUI
-  set guifont=Source\ Code\ Pro\ Light:h12
+  set guifont=Source\ Code\ Pro:h13
   set clipboard+=unnamed
   set vb t_vb=
   set guioptions-=m  "no menu
@@ -109,10 +109,7 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
-  let macvim_skip_colorscheme=1
-  " let g:molokai_original=1
   colorscheme molokai
-  highlight SignColumn guibg=#272822
 
   " Open goto symbol on current buffer
   nmap <D-r> :MyCtrlPTag<cr>
@@ -168,6 +165,7 @@ else
   let g:rehash256 = 1
   set background=dark
   colorscheme molokai
+
 endif
 
 " open help vertically
@@ -203,13 +201,16 @@ let g:mapleader = ","
 " autocmd FileType qf wincmd J
 
 " Some useful quickfix shortcuts for quickfix
-":cc      see the current error
-":cn      next error
-":cp      previous error
-":clist   list all errors
-" map <C-n> :lnext<CR>
-" map <C-m> :lprevious<CR>
-nnoremap <leader>a :lclose<CR>
+if has('nvim')
+  " I'm using location list in vim-go
+  map <C-n> :lnext<CR>
+  map <C-m> :lprevious<CR>
+  nnoremap <leader>a :lclose<CR>
+else
+  map <C-n> :cn<CR>
+  map <C-m> :cp<CR>
+  nnoremap <leader>a :cclose<CR>
+endif
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -220,6 +221,9 @@ nnoremap <space> zz
 
 " Remove search highlight
 nnoremap <leader><space> :nohlsearch<CR>
+
+" Source the current Vim file
+nnoremap <leader>pr :Runtime<CR>
 
 " Better split switching
 map <C-j> <C-W>j
@@ -232,10 +236,10 @@ map <C-l> <C-W>l
 " nnoremap <silent> <A-Left> :vertical resize -10<CR>
 " nnoremap <silent> <A-Up> :resize +10<CR>
 " nnoremap <silent> <A-Down> :resize -10<CR>
-if bufwinnr(1)
-  map = <C-W>>
-  map - <C-W><
-endif
+" if bufwinnr(1)
+"   map = <C-W>>
+"   map - <C-W><
+" endif
 
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
@@ -348,15 +352,19 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_term_enabled = 1
-let g:go_snippet_engine = "neosnippet"
+let g:go_term_enabled = 0
+let g:go_term_mode = "split"
+" let g:go_snippet_engine = "neosnippet"
+
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_operators = 0
-let g:go_highlight_build_constraints = 1
+let g:go_highlight_build_constraints = 0
 
+nmap <C-g> :GoDecls<cr>
+imap <C-g> <esc>:<C-u>GoDecls<cr>
 
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
@@ -367,27 +375,29 @@ au FileType go nmap <leader>r  <Plug>(go-run)
 
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>t  <Plug>(go-test)
-au FileType go nmap <leader>dt  <Plug>(go-test-compile)
 au FileType go nmap <Leader>d <Plug>(go-doc)
+au FileType go nmap <Leader>c <Plug>(go-coverage)
 
 " I like these more!
 augroup go
-    autocmd!
-    autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-    autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-    autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd!
+  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
+  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
 augroup END
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_max_height = 10		" maxiumum height of match window
+" let g:ctrlp_max_height = 10		" maxiumum height of match window
 let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
 let g:ctrlp_mruf_max=450 		" number of recently opened files
 let g:ctrlp_max_files=0  		" do not limit the number of searchable files
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+
+let g:ctrlp_match_window = 'bottom,order:btt,min:10,max:10,results:10'
 
 let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
 
@@ -400,8 +410,6 @@ func! MyCtrlPTag()
 endfunc
 command! MyCtrlPTag call MyCtrlPTag()
 
-nmap <C-g> :MyCtrlPTag<cr>
-imap <C-g> <esc>:MyCtrlPTag<cr>
 
 nmap <C-b> :CtrlPCurWD<cr>
 imap <C-b> <esc>:CtrlPCurWD<cr>
@@ -413,6 +421,7 @@ let g:delimitMate_smart_quotes = 1
 let g:delimitMate_expand_inside_quotes = 0		
 let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
 
+imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
 " ==================== Lightline ====================
 "
@@ -534,10 +543,6 @@ function! CtrlPStatusFunc_2(str)
   return lightline#statusline(0)
 endfunction
 
-
-" Trigger a highlight in the appropriate direction when pressing these keys:
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
 " ==================== NerdTree ====================
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
@@ -548,60 +553,78 @@ let NERDTreeShowHidden=1
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
-" ==================== completion and snippet =========================
+" ==================== Completion =========================
 " I use deoplete for Neovim and neocomplete for Vim.
 if has('nvim')
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#ignore_sources = {}
   let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
   let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
+  let g:deoplete#sources#go#align_class = 1
+
 
   " Use partial fuzzy matches like YouCompleteMe
-  call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+  call deoplete#custom#set('_', 'matchers', ['matcher_fuzzy'])
+  call deoplete#custom#set('_', 'converters', ['converter_remove_paren'])
+  call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
 else
   let g:neocomplete#enable_at_startup = 1
   let g:neocomplete#enable_smart_case = 1
   let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-	if !exists('g:neocomplete#sources')
-	  let g:neocomplete#sources = {}
-	endif
-	let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'file', 'dictionary']
-	let g:neocomplete#sources.go = ['omni']
+  if !exists('g:neocomplete#sources')
+    let g:neocomplete#sources = {}
+  endif
+  let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'file', 'dictionary']
+  let g:neocomplete#sources.go = ['omni']
 
   " disable sorting
-	call neocomplete#custom#source('_', 'sorters', [])
+  call neocomplete#custom#source('_', 'sorters', [])
 endif
 
-" I want to use my tab more smarter. If we are inside a completion menu jump
-" to the next item. Otherwise check if there is any snippet to expand, if yes
-" expand it. Also if inside a snippet and we need to jump tab jumps. If none
-" of the above matches we just call our usual 'tab'.
-function! s:tab_complete()
-  if pumvisible()
-    return "\<c-n>"
+" ==================== UltiSnips ====================
+function! g:UltiSnips_Complete()
+  call UltiSnips#ExpandSnippet()
+  if g:ulti_expand_res == 0
+    if pumvisible()
+      return "\<C-n>"
+    else
+      call UltiSnips#JumpForwards()
+      if g:ulti_jump_forwards_res == 0
+        return "\<TAB>"
+      endif
+    endif
   endif
-
-  if neosnippet#expandable_or_jumpable() 
-    return "\<Plug>(neosnippet_expand_or_jump)"
-  endif
-
-  return "\<tab>"
+  return ""
 endfunction
-imap <silent><expr><TAB> <SID>tab_complete()
 
-smap <expr><tab> neosnippet#expandable_or_jumpable() ? 
-      \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+function! g:UltiSnips_Reverse()
+  call UltiSnips#JumpBackwards()
+  if g:ulti_jump_backwards_res == 0
+    return "\<C-P>"
+  endif
 
-inoremap <silent><expr><s-tab> pumvisible() ? "\<c-p>" : "\<s-tab>"
-imap <silent><expr> <CR> pumvisible() ? "\<C-y>" : '<Plug>delimitMateCR'
+  return ""
+endfunction
 
-autocmd InsertLeave * NeoSnippetClearMarkers
 
-if has('conceal')
-  set conceallevel=2 concealcursor=inv
+if !exists("g:UltiSnipsJumpForwardTrigger")
+  let g:UltiSnipsJumpForwardTrigger = "<tab>"
 endif
+
+if !exists("g:UltiSnipsJumpBackwardTrigger")
+  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+endif
+
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
+" ==================== Various other plugin settings ====================
+
+nmap  -  <Plug>(choosewin)
+
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
 
 " vim:ts=2:sw=2:et
-"
-
