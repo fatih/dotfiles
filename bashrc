@@ -122,10 +122,10 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 shopt -s checkwinsize
 
 # autocorrect directory if mispelled
-#shopt -s dirspell direxpand
+shopt -s dirspell direxpand
 
 # auto cd if only the directory name is given
-#shopt -s autocd
+shopt -s autocd
 
 #use extra globing features. See man bash, search extglob.
 shopt -s extglob
