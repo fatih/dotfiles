@@ -88,9 +88,6 @@ set clipboard^=unnamed
 set clipboard^=unnamedplus
 
 set lazyredraw          " Wait to redraw
-syntax sync minlines=256
-set synmaxcol=300
-set re=1
 
 if has('persistent_undo')
   set undofile
@@ -354,20 +351,20 @@ let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_term_enabled = 0
 let g:go_term_mode = "split"
-" let g:go_snippet_engine = "neosnippet"
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_operators = 0
-let g:go_highlight_build_constraints = 0
+let g:go_highlight_build_constraints = 1
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
 
 au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
+
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>l <Plug>(go-metalinter)
 
@@ -620,7 +617,6 @@ au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 " ==================== Various other plugin settings ====================
-
 nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
