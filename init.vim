@@ -199,7 +199,7 @@ let g:mapleader = ","
 
 " Some useful quickfix shortcuts for quickfix
 if has('nvim')
-  " I'm using location list in vim-go
+  " I'm using location list in
   map <C-n> :lnext<CR>
   map <C-m> :lprevious<CR>
   nnoremap <leader>a :lclose<CR>
@@ -345,12 +345,11 @@ nnoremap <leader>ui :<C-u>call <SID>CreateGoDocComment()<CR>
 vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
-" ==================== Vim-go ====================
-let g:go_fmt_fail_silently = 0
+" ==================== vim-go ====================
+let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_term_enabled = 0
-let g:go_term_mode = "split"
+let g:go_def_use_buffer = 1
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -362,8 +361,8 @@ let g:go_highlight_build_constraints = 1
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
 
-au FileType go nmap <Leader>s <Plug>(go-def-split)
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
+au FileType go nmap <Leader>s <Plug>(go-def-stack)
 
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>l <Plug>(go-metalinter)
