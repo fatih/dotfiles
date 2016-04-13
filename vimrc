@@ -73,7 +73,6 @@ set autowrite                " Automatically save before :next, :make etc.
 set hidden
 set fileformats=unix,dos,mac " Prefer Unix over Windows over OS 9 formats
 set noshowmatch              " Do not show matching brackets by flickering
-set nocursorcolumn
 set noshowmode               " We show the mode with airline or lightline
 set ignorecase               " Search case insensitive...
 set smartcase                " ... but not it begins with upper case 
