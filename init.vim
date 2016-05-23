@@ -1,7 +1,6 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'fatih/vim-go'
-Plug 'rhysd/vim-go-impl'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -25,7 +24,6 @@ if has('nvim')
   Plug 'zchee/deoplete-go', { 'do': 'make'}
 else
   Plug 'Shougo/neocomplete.vim'
-  Plug 'Shougo/vimproc' , { 'do': 'make'}
 endif
 
 " filetype plugins
@@ -35,6 +33,9 @@ Plug 'tejr/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
+
+Plug 'sudar/vim-arduino-syntax'
+Plug 'stevearc/vim-arduino'
 
 call plug#end()
 
@@ -59,6 +60,7 @@ if !has('nvim')
   set backspace=indent,eol,start  " Makes backspace key more powerful.
   set incsearch                   " Shows the match while typing
   set hlsearch                    " Highlight found searches
+  set mouse=a      
 endif
 
 set noerrorbells             " No beeps
@@ -162,15 +164,15 @@ else
   let g:rehash256 = 1
   set background=dark
   colorscheme molokai
-
 endif
 
 " open help vertically
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
-autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
-au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
+au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+au BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+au BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=4 tabstop=4
 au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 
@@ -222,21 +224,14 @@ nnoremap <leader><space> :nohlsearch<CR>
 " Source the current Vim file
 nnoremap <leader>pr :Runtime<CR>
 
+" Close all but the current one
+nnoremap <leader>o :only<CR>
+
 " Better split switching
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-" Resize window quickly
-" nnoremap <silent> <A-Right> :vertical resize +10<CR>
-" nnoremap <silent> <A-Left> :vertical resize -10<CR>
-" nnoremap <silent> <A-Up> :resize +10<CR>
-" nnoremap <silent> <A-Down> :resize -10<CR>
-" if bufwinnr(1)
-"   map = <C-W>>
-"   map - <C-W><
-" endif
 
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
@@ -349,7 +344,6 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_def_use_buffer = 1
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -362,17 +356,18 @@ nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
 
 au FileType go nmap <Leader>v <Plug>(go-def-vertical)
-au FileType go nmap <Leader>s <Plug>(go-def-stack)
+au FileType go nmap <Leader>s <Plug>(go-def-split)
 
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>l <Plug>(go-metalinter)
 
-au FileType go nmap <leader>r  <Plug>(go-run)
-
 au FileType go nmap <leader>b  <Plug>(go-build)
 au FileType go nmap <leader>t  <Plug>(go-test)
+
+au FileType go nmap <leader>r  <Plug>(go-run)
+
 au FileType go nmap <Leader>d <Plug>(go-doc)
-au FileType go nmap <Leader>c <Plug>(go-coverage)
+au FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
 
 " I like these more!
 augroup go
