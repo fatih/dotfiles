@@ -108,6 +108,7 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
+  let macvim_skip_colorscheme=1
   colorscheme molokai
 
   " Open goto symbol on current buffer
@@ -249,9 +250,9 @@ if has('nvim')
   tnoremap <C-l> <C-\><C-n><C-w>l
 
   " Open terminal in vertical, horizontal and new tab
-  " nnoremap <leader>tv :vsplit term://zsh<CR>
-  " nnoremap <leader>ts :split term://zsh<CR>
-  " nnoremap <leader>tt :tabnew term://zsh<CR>
+  nnoremap <leader>tv :vsplit term://zsh<CR>
+  nnoremap <leader>ts :split term://zsh<CR>
+  nnoremap <leader>tt :tabnew term://zsh<CR>
 
   " always start terminal in insert mode
   autocmd BufWinEnter,WinEnter term://* startinsert
@@ -344,6 +345,7 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
+let g:go_def_mode = 'godef'
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -355,26 +357,28 @@ let g:go_highlight_build_constraints = 1
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
 
-au FileType go nmap <Leader>v <Plug>(go-def-vertical)
-au FileType go nmap <Leader>s <Plug>(go-def-split)
-
-au FileType go nmap <Leader>i <Plug>(go-info)
-au FileType go nmap <Leader>l <Plug>(go-metalinter)
-
-au FileType go nmap <leader>b  <Plug>(go-build)
-au FileType go nmap <leader>t  <Plug>(go-test)
-
-au FileType go nmap <leader>r  <Plug>(go-run)
-
-au FileType go nmap <Leader>d <Plug>(go-doc)
-au FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
-
-" I like these more!
 augroup go
   autocmd!
+
+  autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
+  autocmd FileType go nmap <Leader>s <Plug>(go-def-split)
+
+  autocmd FileType go nmap <Leader>i <Plug>(go-info)
+  autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+
+  autocmd FileType go nmap <leader>b  <Plug>(go-build)
+  autocmd FileType go nmap <leader>t  <Plug>(go-test)
+
+  autocmd FileType go nmap <leader>r  <Plug>(go-run)
+
+  autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+  autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+  " I like these more!
   autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
   autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
 
 " ==================== CtrlP ====================
