@@ -171,18 +171,18 @@ endif
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
-au BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
-au BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
-au BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=4 tabstop=4
-au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
+autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
 
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 
 augroup filetypedetect
-  au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-  au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+  autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+  autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
 augroup END
 
 "=====================================================
@@ -353,6 +353,7 @@ let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
+let g:go_highlight_types = 1
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
@@ -384,10 +385,10 @@ augroup END
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_working_path_mode = 'ra'
-" let g:ctrlp_max_height = 10		" maxiumum height of match window
-let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
-let g:ctrlp_mruf_max=450 		" number of recently opened files
-let g:ctrlp_max_files=0  		" do not limit the number of searchable files
+" let g:ctrlp_max_height = 10   " maxiumum height of match window
+let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
+let g:ctrlp_mruf_max=450    " number of recently opened files
+let g:ctrlp_max_files=0     " do not limit the number of searchable files
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
@@ -410,11 +411,11 @@ nmap <C-b> :CtrlPCurWD<cr>
 imap <C-b> <esc>:CtrlPCurWD<cr>
 
 " ==================== delimitMate ====================
-let g:delimitMate_expand_cr = 1		
-let g:delimitMate_expand_space = 1		
-let g:delimitMate_smart_quotes = 1		
-let g:delimitMate_expand_inside_quotes = 0		
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
+let g:delimitMate_expand_cr = 1   
+let g:delimitMate_expand_space = 1    
+let g:delimitMate_smart_quotes = 1    
+let g:delimitMate_expand_inside_quotes = 0    
+let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'   
 
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
@@ -621,4 +622,4 @@ nmap  -  <Plug>(choosewin)
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 
-" vim:ts=2:sw=2:et
+" vim: sw=2 sw=2 et
