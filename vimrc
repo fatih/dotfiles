@@ -1,7 +1,6 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'fatih/vim-go'
-Plug 'rhysd/vim-go-impl'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -25,7 +24,6 @@ if has('nvim')
   Plug 'zchee/deoplete-go', { 'do': 'make'}
 else
   Plug 'Shougo/neocomplete.vim'
-  Plug 'Shougo/vimproc' , { 'do': 'make'}
 endif
 
 " filetype plugins
@@ -59,12 +57,12 @@ if !has('nvim')
   set backspace=indent,eol,start  " Makes backspace key more powerful.
   set incsearch                   " Shows the match while typing
   set hlsearch                    " Highlight found searches
+  set mouse=a      
 endif
 
 set noerrorbells             " No beeps
 set number                   " Show line numbers
 set showcmd                  " Show me what I'm typing
-set showmode                 " Show current mode.
 set noswapfile               " Don't use swapfile
 set nobackup                 " Don't create annoying backup files
 set splitright               " Split vertical windows right to the current windows
@@ -105,6 +103,7 @@ if has("gui_macvim")
   set guioptions-=r  "no scrollbar
   set guioptions-=R
 
+  let macvim_skip_colorscheme=1
   colorscheme molokai
 
   " Open goto symbol on current buffer
@@ -156,29 +155,30 @@ else
   if has('!nvim')
     syntax enable
     set t_Co=256
+    set term=ansi
   endif
 
   let g:rehash256 = 1
   set background=dark
   colorscheme molokai
-
 endif
 
 " open help vertically
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
 
-autocmd BufNewFile,BufRead *.go setlocal noet ts=4 sw=4 sts=4
-au BufNewFile,BufRead *.vim setlocal noet ts=2 sw=2 sts=2
-au BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-au BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
 
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 
 augroup filetypedetect
-  au BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-  au BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+  autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
+  autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
 augroup END
 
 "=====================================================
@@ -188,25 +188,11 @@ augroup END
 " With a map leader it's possible to do extra key combinations
 " i.e: <leader>w saves the current file
 let mapleader = ","
-let g:mapleader = ","
-
-" This trigger takes advantage of the fact that the quickfix window can be
-" easily distinguished by its file-type, qf. The wincmd J command is
-" equivalent to the Ctrl+W, Shift+J shortcut telling Vim to move a window to
-" the very bottom (see :help :wincmd and :help ^WJ).
-" autocmd FileType qf wincmd J
 
 " Some useful quickfix shortcuts for quickfix
-if has('nvim')
-  " I'm using location list in vim-go
-  map <C-n> :lnext<CR>
-  map <C-m> :lprevious<CR>
-  nnoremap <leader>a :lclose<CR>
-else
-  map <C-n> :cn<CR>
-  map <C-m> :cp<CR>
-  nnoremap <leader>a :cclose<CR>
-endif
+map <C-n> :cn<CR>
+map <C-m> :cp<CR>
+nnoremap <leader>a :cclose<CR>
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -221,21 +207,14 @@ nnoremap <leader><space> :nohlsearch<CR>
 " Source the current Vim file
 nnoremap <leader>pr :Runtime<CR>
 
+" Close all but the current one
+nnoremap <leader>o :only<CR>
+
 " Better split switching
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
-
-" Resize window quickly
-" nnoremap <silent> <A-Right> :vertical resize +10<CR>
-" nnoremap <silent> <A-Left> :vertical resize -10<CR>
-" nnoremap <silent> <A-Up> :resize +10<CR>
-" nnoremap <silent> <A-Down> :resize -10<CR>
-" if bufwinnr(1)
-"   map = <C-W>>
-"   map - <C-W><
-" endif
 
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
@@ -253,6 +232,7 @@ if has('nvim')
   tnoremap <C-l> <C-\><C-n><C-w>l
 
   " Open terminal in vertical, horizontal and new tab
+  " NOTE(arslan): never used them
   " nnoremap <leader>tv :vsplit term://zsh<CR>
   " nnoremap <leader>ts :split term://zsh<CR>
   " nnoremap <leader>tt :tabnew term://zsh<CR>
@@ -266,9 +246,6 @@ noremap <Up> gk
 noremap <Down> gj
 noremap j gj
 noremap k gk
-
-" Just go out in insert mode
-imap jk <ESC>l
 
 " Source (reload configuration)
 nnoremap <silent> <F5> :source $MYNVIMRC<CR>
@@ -327,15 +304,14 @@ endfunction
 vnoremap * :<C-u>call <SID>VSetSearch()<CR>//<CR><c-o>
 vnoremap # :<C-u>call <SID>VSetSearch()<CR>??<CR><c-o>
 
-
-" prependend
-function! s:CreateGoDocComment()
+" create a go doc comment based on the word under the cursor
+function! s:create_go_doc_comment()
   norm "zyiw
   execute ":put! z"
-  execute ":norm I# \<Esc>$"
+  execute ":norm I// \<Esc>$"
 endfunction
+nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 
-nnoremap <leader>ui :<C-u>call <SID>CreateGoDocComment()<CR>
 
 "====================================================
 "===================== PLUGINS ======================
@@ -344,57 +320,66 @@ nnoremap <leader>ui :<C-u>call <SID>CreateGoDocComment()<CR>
 vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
-" ==================== Vim-go ====================
+" ==================== vim-go ====================
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_term_enabled = 0
-let g:go_term_mode = "split"
+let g:go_auto_sameids = 0
+let g:go_auto_type_info = 0
+let g:go_list_type = "quickfix"
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
-let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
 
-nmap <C-g> :GoDecls<cr>
-imap <C-g> <esc>:<C-u>GoDecls<cr>
+nmap <C-g> :GoDeclsDir<cr>
+imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
-au FileType go nmap <Leader>s <Plug>(go-def-split)
-au FileType go nmap <Leader>v <Plug>(go-def-vertical)
+" run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#cmd#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
 
-au FileType go nmap <Leader>i <Plug>(go-info)
-au FileType go nmap <Leader>l <Plug>(go-metalinter)
-
-au FileType go nmap <leader>r  <Plug>(go-run)
-
-au FileType go nmap <leader>b  <Plug>(go-build)
-au FileType go nmap <leader>t  <Plug>(go-test)
-au FileType go nmap <Leader>d <Plug>(go-doc)
-au FileType go nmap <Leader>c <Plug>(go-coverage)
-
-" I like these more!
 augroup go
   autocmd!
+
+  autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
+  autocmd FileType go nmap <Leader>s <Plug>(go-def-split)
+
+  autocmd FileType go nmap <Leader>i <Plug>(go-info)
+  autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+
+  autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+  autocmd FileType go nmap <leader>t  <Plug>(go-test)
+  autocmd FileType go nmap <leader>r  <Plug>(go-run)
+
+  autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+  autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+
+  " I like these more!
   autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
   autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
+  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
 let g:ctrlp_working_path_mode = 'ra'
-" let g:ctrlp_max_height = 10		" maxiumum height of match window
-let g:ctrlp_switch_buffer = 'et'	" jump to a file if it's open already
-let g:ctrlp_mruf_max=450 		" number of recently opened files
-let g:ctrlp_max_files=0  		" do not limit the number of searchable files
+let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
+let g:ctrlp_mruf_max=450    " number of recently opened files
+let g:ctrlp_max_files=0     " do not limit the number of searchable files
 let g:ctrlp_use_caching = 1
 let g:ctrlp_clear_cache_on_exit = 0
 let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-
-let g:ctrlp_match_window = 'bottom,order:btt,min:10,max:10,results:10'
-
+let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
 let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
 
 func! MyCtrlPTag()
@@ -411,11 +396,11 @@ nmap <C-b> :CtrlPCurWD<cr>
 imap <C-b> <esc>:CtrlPCurWD<cr>
 
 " ==================== delimitMate ====================
-let g:delimitMate_expand_cr = 1		
-let g:delimitMate_expand_space = 1		
-let g:delimitMate_smart_quotes = 1		
-let g:delimitMate_expand_inside_quotes = 0		
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'		
+let g:delimitMate_expand_cr = 1   
+let g:delimitMate_expand_space = 1    
+let g:delimitMate_smart_quotes = 1    
+let g:delimitMate_expand_inside_quotes = 0    
+let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'   
 
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
@@ -622,4 +607,5 @@ nmap  -  <Plug>(choosewin)
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 
-" vim:ts=2:sw=2:et
+
+" vim: sw=2 sw=2 et
