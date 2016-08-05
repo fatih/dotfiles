@@ -34,9 +34,6 @@ Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
 
-Plug 'sudar/vim-arduino-syntax'
-Plug 'stevearc/vim-arduino'
-
 call plug#end()
 
 "=====================================================
@@ -191,7 +188,6 @@ augroup END
 " With a map leader it's possible to do extra key combinations
 " i.e: <leader>w saves the current file
 let mapleader = ","
-let g:mapleader = ","
 
 " Some useful quickfix shortcuts for quickfix
 map <C-n> :cn<CR>
@@ -236,9 +232,10 @@ if has('nvim')
   tnoremap <C-l> <C-\><C-n><C-w>l
 
   " Open terminal in vertical, horizontal and new tab
-  nnoremap <leader>tv :vsplit term://zsh<CR>
-  nnoremap <leader>ts :split term://zsh<CR>
-  nnoremap <leader>tt :tabnew term://zsh<CR>
+  " NOTE(arslan): never used them
+  " nnoremap <leader>tv :vsplit term://zsh<CR>
+  " nnoremap <leader>ts :split term://zsh<CR>
+  " nnoremap <leader>tt :tabnew term://zsh<CR>
 
   " always start terminal in insert mode
   autocmd BufWinEnter,WinEnter term://* startinsert
@@ -249,9 +246,6 @@ noremap <Up> gk
 noremap <Down> gj
 noremap j gj
 noremap k gk
-
-" Just go out in insert mode
-imap jk <ESC>l
 
 " Source (reload configuration)
 nnoremap <silent> <F5> :source $MYNVIMRC<CR>
@@ -330,20 +324,18 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_def_mode = 'godef'
-let g:go_auto_sameids = 1
+let g:go_auto_sameids = 0
 let g:go_auto_type_info = 0
+let g:go_list_type = "quickfix"
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
-let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
-let g:go_highlight_types = 0
 
-nmap <C-g> :GoDecls<cr>
-imap <C-g> <esc>:<C-u>GoDecls<cr>
+nmap <C-g> :GoDeclsDir<cr>
+imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -613,6 +605,7 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
 
 
 " vim: sw=2 sw=2 et
