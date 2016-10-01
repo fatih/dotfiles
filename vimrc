@@ -29,7 +29,7 @@ endif
 " filetype plugins
 Plug 'vim-ruby/vim-ruby'
 Plug 'elzr/vim-json', {'for' : 'json'}
-Plug 'tejr/vim-tmux', {'for': 'tmux'}
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
