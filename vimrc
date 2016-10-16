@@ -1,6 +1,7 @@
 call plug#begin('~/.config/nvim/plugged')
 
 Plug 'fatih/vim-go'
+Plug 'fatih/vim-hclfmt'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -14,25 +15,26 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
 Plug 'scrooloose/nerdtree'
-
 Plug 'SirVer/ultisnips'
 Plug 't9md/vim-choosewin'
-Plug 'garyburd/go-explorer'
+Plug 'direnv/direnv.vim'
+
 
 if has('nvim')
   Plug 'Shougo/deoplete.nvim'
   Plug 'zchee/deoplete-go', { 'do': 'make'}
 else
-  Plug 'Shougo/neocomplete.vim'
+  Plug 'maralla/completor.vim'
 endif
 
 " filetype plugins
 Plug 'vim-ruby/vim-ruby'
 Plug 'elzr/vim-json', {'for' : 'json'}
-Plug 'tejr/vim-tmux', {'for': 'tmux'}
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'corylanou/vim-present', {'for' : 'present'}
+Plug 'hashivim/vim-hashicorp-tools'
 
 call plug#end()
 
@@ -77,6 +79,7 @@ set smartcase                " ... but not it begins with upper case
 set completeopt=menu,menuone
 set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
+set updatetime=400
 
 set pumheight=10             " Completion window max size
 
@@ -172,6 +175,7 @@ autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
 autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
 autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
+autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
 
 autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
 autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
@@ -179,6 +183,7 @@ autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 augroup filetypedetect
   autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
+  autocmd BufNewFile,BufRead *.hcl setf conf
 augroup END
 
 "=====================================================
@@ -193,6 +198,9 @@ let mapleader = ","
 map <C-n> :cn<CR>
 map <C-m> :cp<CR>
 nnoremap <leader>a :cclose<CR>
+
+" put quickfix window always to the bottom
+autocmd FileType qf wincmd J
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -218,28 +226,6 @@ map <C-l> <C-W>l
 
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
-
-" Terminal settings
-if has('nvim')
-  " Leader q to exit terminal mode. Somehow it jumps to the end, so jump to
-  " the top again
-  tnoremap <Leader>q <C-\><C-n>gg<cr>
-
-  " mappings to move out from terminal to other views
-  tnoremap <C-h> <C-\><C-n><C-w>h
-  tnoremap <C-j> <C-\><C-n><C-w>j
-  tnoremap <C-k> <C-\><C-n><C-w>k
-  tnoremap <C-l> <C-\><C-n><C-w>l
-
-  " Open terminal in vertical, horizontal and new tab
-  " NOTE(arslan): never used them
-  " nnoremap <leader>tv :vsplit term://zsh<CR>
-  " nnoremap <leader>ts :split term://zsh<CR>
-  " nnoremap <leader>tt :tabnew term://zsh<CR>
-
-  " always start terminal in insert mode
-  autocmd BufWinEnter,WinEnter term://* startinsert
-endif
 
 " Visual linewise up and down by default (and use gj gk to go quicker)
 noremap <Up> gk
@@ -321,12 +307,13 @@ vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
 " ==================== vim-go ====================
-let g:go_fmt_fail_silently = 0
+let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_auto_sameids = 0
-let g:go_auto_type_info = 0
+let g:go_auto_type_info = 1
 let g:go_list_type = "quickfix"
+let g:go_async_run = 1
+
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -334,8 +321,8 @@ let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
 
-nmap <C-g> :GoDeclsDir<cr>
-imap <C-g> <esc>:<C-u>GoDeclsDir<cr>
+nmap <C-g> :GoDecls<cr>
+imap <C-g> <esc>:<C-u>GoDecls<cr>
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -359,6 +346,7 @@ augroup go
   autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
   autocmd FileType go nmap <leader>t  <Plug>(go-test)
   autocmd FileType go nmap <leader>r  <Plug>(go-run)
+  autocmd FileType go nmap <leader>e  <Plug>(go-install)
 
   autocmd FileType go nmap <Leader>d <Plug>(go-doc)
   autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
@@ -549,18 +537,7 @@ if has('nvim')
   call deoplete#custom#set('_', 'converters', ['converter_remove_paren'])
   call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
 else
-  let g:neocomplete#enable_at_startup = 1
-  let g:neocomplete#enable_smart_case = 1
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-  if !exists('g:neocomplete#sources')
-    let g:neocomplete#sources = {}
-  endif
-  let g:neocomplete#sources._ = ['buffer', 'member', 'tag', 'file', 'dictionary']
-  let g:neocomplete#sources.go = ['omni']
-
-  " disable sorting
-  call neocomplete#custom#source('_', 'sorters', [])
+  let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
 endif
 
 " ==================== UltiSnips ====================
