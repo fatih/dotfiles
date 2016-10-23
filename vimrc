@@ -11,6 +11,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
+Plug 'tpope/vim-eunuch'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
@@ -310,7 +311,7 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 let g:go_list_type = "quickfix"
 let g:go_async_run = 1
 
@@ -538,6 +539,8 @@ if has('nvim')
   call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
 else
   let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
+  let g:completor_disable_filename = 1
+  let g:completor_disable_buffer = 1
 endif
 
 " ==================== UltiSnips ====================
