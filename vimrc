@@ -506,10 +506,13 @@ let g:lightline = {
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component': {
-      \   'go': '%#goStatuslineColor#%{LightLineGo()}',
+      \   'go': '%#goStatuslineColor#%{exists("*go#statusline#Show")?go#statusline#Show():""}',
       \ },
       \ 'component_visible_condition': {
       \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
+      \ },
+      \ 'component_type': {
+      \   'go': 'raw',
       \ },
       \ 'component_function': {
       \   'lineinfo': 'LightLineInfo',
@@ -559,10 +562,6 @@ endfunction
 
 function! LightLineFugitive()
   return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function! LightLineGo()
-  return exists('*go#statusline#Show') ? go#statusline#Show() : ''
 endfunction
 
 function! LightLineMode()
