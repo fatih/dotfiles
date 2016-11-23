@@ -1,41 +1,35 @@
 call plug#begin('~/.config/nvim/plugged')
 
-Plug 'fatih/vim-go'
-Plug 'fatih/vim-hclfmt'
 Plug 'AndrewRadev/splitjoin.vim'
+Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'Raimondi/delimitMate'
+Plug 'SirVer/ultisnips'
+Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'itchyny/lightline.vim'
+Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
+Plug 'elzr/vim-json', {'for' : 'json'}
+Plug 'fatih/vim-go'
+Plug 'fatih/vim-hclfmt'
+Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'fatih/badwolf'
+Plug 'w0ng/vim-hybrid'
 Plug 'tomasr/molokai'
+Plug 'chriskempson/base16-vim'
+Plug 'hashivim/vim-hashicorp-tools'
+Plug 'scrooloose/nerdtree'
+Plug 't9md/vim-choosewin'
+Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-Plug 'tpope/vim-eunuch'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'unblevable/quick-scope'  
-Plug 'scrooloose/nerdtree'
-Plug 'SirVer/ultisnips'
-Plug 't9md/vim-choosewin'
-Plug 'direnv/direnv.vim'
 
-
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'zchee/deoplete-go', { 'do': 'make'}
-else
-  Plug 'maralla/completor.vim'
-endif
-
-" filetype plugins
-Plug 'vim-ruby/vim-ruby'
-Plug 'elzr/vim-json', {'for' : 'json'}
-Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'hashivim/vim-hashicorp-tools'
+" beta usage. These are plugins I try for a while and if I like them enough
+" I'll move them up
+" Plug 'maralla/completor.vim'
 
 call plug#end()
 
@@ -87,6 +81,8 @@ set pumheight=10             " Completion window max size
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
+
+set viminfo='200
 
 set lazyredraw          " Wait to redraw
 
@@ -164,6 +160,7 @@ else
 
   let g:rehash256 = 1
   set background=dark
+  let g:molokai_original = 1
   colorscheme molokai
 endif
 
@@ -186,6 +183,91 @@ augroup filetypedetect
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
   autocmd BufNewFile,BufRead *.hcl setf conf
 augroup END
+
+"=====================================================
+"===================== STATUSLINE ====================
+
+" let s:modes = {
+"       \ 'n': 'NORMAL', 
+"       \ 'i': 'INSERT', 
+"       \ 'R': 'REPLACE', 
+"       \ 'v': 'VISUAL', 
+"       \ 'V': 'V-LINE', 
+"       \ "\<C-v>": 'V-BLOCK',
+"       \ 'c': 'COMMAND',
+"       \ 's': 'SELECT', 
+"       \ 'S': 'S-LINE', 
+"       \ "\<C-s>": 'S-BLOCK', 
+"       \ 't': 'TERMINAL'
+"       \}
+
+" let s:prev_mode = ""
+" function! StatusLineMode()
+"   let cur_mode = get(s:modes, mode(), '')
+
+"   " do not update higlight if the mode is the same
+"   if cur_mode == s:prev_mode
+"     return cur_mode
+"   endif
+
+"   if cur_mode == "NORMAL"
+"     exe 'hi! StatusLine ctermfg=236'
+"     exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
+"   elseif cur_mode == "INSERT"
+"     exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
+"   elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
+"     exe 'hi! StatusLine ctermfg=236'
+"     exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
+"   endif
+
+"   let s:prev_mode = cur_mode
+"   return cur_mode
+" endfunction
+
+" function! StatusLineFiletype()
+"   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+" endfunction
+
+" function! StatusLinePercent()
+"   return (100 * line('.') / line('$')) . '%'
+" endfunction
+
+" function! StatusLineLeftInfo()
+"  let branch = fugitive#head()
+"  let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
+"  if branch !=# ''
+"    return printf("%s | %s", branch, filename)
+"  endif
+"  return filename
+" endfunction
+
+" exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
+
+" " start building our statusline
+" set statusline=
+
+" " mode with custom colors
+" set statusline+=%#myModeColor#
+" set statusline+=%{StatusLineMode()}               
+" set statusline+=%*
+
+" " left information bar (after mode)
+" set statusline+=%#myInfoColor#
+" set statusline+=\ %{StatusLineLeftInfo()}
+" set statusline+=\ %*
+
+" " go command status (requires vim-go)
+" set statusline+=%#goStatuslineColor#
+" set statusline+=%{go#statusline#Show()}
+" set statusline+=%*
+
+" " right section seperator
+" set statusline+=%=
+
+" " filetype, percentage, line number and column number
+" set statusline+=%#myInfoColor#
+" set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
+" set statusline+=\ %*
 
 "=====================================================
 "===================== MAPPINGS ======================
@@ -233,6 +315,9 @@ noremap <Up> gk
 noremap <Down> gj
 noremap j gj
 noremap k gk
+
+" Exit on jk
+imap jk <Esc>
 
 " Source (reload configuration)
 nnoremap <silent> <F5> :source $MYNVIMRC<CR>
@@ -299,9 +384,9 @@ function! s:create_go_doc_comment()
 endfunction
 nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 
-
-"====================================================
+"
 "===================== PLUGINS ======================
+"
 
 " ==================== Fugitive ====================
 vnoremap <leader>gb :Gblame<CR>
@@ -311,16 +396,16 @@ nnoremap <leader>gb :Gblame<CR>
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
-let g:go_auto_type_info = 0
 let g:go_list_type = "quickfix"
-let g:go_async_run = 1
-
+let g:go_auto_type_info = 0
+let g:go_echo_command_info= 0
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
+
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
@@ -338,19 +423,19 @@ endfunction
 augroup go
   autocmd!
 
-  autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
-  autocmd FileType go nmap <Leader>s <Plug>(go-def-split)
+  autocmd FileType go nmap <silent> <Leader>v <Plug>(go-def-vertical)
+  autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
 
-  autocmd FileType go nmap <Leader>i <Plug>(go-info)
-  autocmd FileType go nmap <Leader>l <Plug>(go-metalinter)
+  autocmd FileType go nmap <silent> <Leader>i <Plug>(go-info)
+  autocmd FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
 
-  autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-  autocmd FileType go nmap <leader>t  <Plug>(go-test)
-  autocmd FileType go nmap <leader>r  <Plug>(go-run)
-  autocmd FileType go nmap <leader>e  <Plug>(go-install)
+  autocmd FileType go nmap <silent> <leader>b :<C-u>call <SID>build_go_files()<CR>
+  autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
+  autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
+  autocmd FileType go nmap <silent> <leader>e  <Plug>(go-install)
 
-  autocmd FileType go nmap <Leader>d <Plug>(go-doc)
-  autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-doc)
+  autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
 
   " I like these more!
   autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
@@ -358,6 +443,23 @@ augroup go
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
   autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
+
+" ==================== FZF ====================
+
+" nnoremap <C-p> :call fzf#run({
+" \  'source':  filter(copy(v:oldfiles), 'v:val !~ "NERD_tree"'),
+" \  'sink':    'e',
+" \  'options': '-m -x +s',
+" \  'down':    '40%'})<CR>
+
+
+" ==================== Completor ====================
+" let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
+" let g:completor_min_chars = 2
+
+" let g:completor_disable_filename = 1
+" let g:completor_disable_buffer = 1
+" let g:completor_disable_ultisnips = 1
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
@@ -398,21 +500,22 @@ imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 let g:lightline = {
       \ 'active': {
       \   'left': [ [ 'mode', 'paste'],
-      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark' ],
-      \             [ 'go'] ],
+      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
       \   'right': [ [ 'lineinfo' ], 
       \              [ 'percent' ], 
       \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
-      \ 'inactive': {
-      \   'left': [ [ 'go'] ],
+      \ 'component': {
+      \   'go': '%#goStatuslineColor#%{LightLineGo()}',
+      \ },
+      \ 'component_visible_condition': {
+      \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
       \ },
       \ 'component_function': {
       \   'lineinfo': 'LightLineInfo',
       \   'percent': 'LightLinePercent',
       \   'modified': 'LightLineModified',
       \   'filename': 'LightLineFilename',
-      \   'go': 'LightLineGo',
       \   'fileformat': 'LightLineFileformat',
       \   'filetype': 'LightLineFiletype',
       \   'fileencoding': 'LightLineFileencoding',
@@ -459,8 +562,7 @@ function! LightLineFugitive()
 endfunction
 
 function! LightLineGo()
-  " return ''
-  return exists('*go#jobcontrol#Statusline') ? go#jobcontrol#Statusline() : ''
+  return exists('*go#statusline#Show') ? go#statusline#Show() : ''
 endfunction
 
 function! LightLineMode()
@@ -523,26 +625,6 @@ let NERDTreeShowHidden=1
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
-" ==================== Completion =========================
-" I use deoplete for Neovim and neocomplete for Vim.
-if has('nvim')
-  let g:deoplete#enable_at_startup = 1
-  let g:deoplete#ignore_sources = {}
-  let g:deoplete#ignore_sources._ = ['buffer', 'member', 'tag', 'file', 'neosnippet']
-  let g:deoplete#sources#go#sort_class = ['func', 'type', 'var', 'const']
-  let g:deoplete#sources#go#align_class = 1
-
-
-  " Use partial fuzzy matches like YouCompleteMe
-  call deoplete#custom#set('_', 'matchers', ['matcher_fuzzy'])
-  call deoplete#custom#set('_', 'converters', ['converter_remove_paren'])
-  call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
-else
-  let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
-  let g:completor_disable_filename = 1
-  let g:completor_disable_buffer = 1
-endif
-
 " ==================== UltiSnips ====================
 function! g:UltiSnips_Complete()
   call UltiSnips#ExpandSnippet()
@@ -585,7 +667,5 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-
 
 " vim: sw=2 sw=2 et
