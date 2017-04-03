@@ -1,4 +1,4 @@
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -6,16 +6,12 @@ Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-Plug 'fatih/badwolf'
-Plug 'w0ng/vim-hybrid'
 Plug 'tomasr/molokai'
-Plug 'chriskempson/base16-vim'
 Plug 'hashivim/vim-hashicorp-tools'
 Plug 'scrooloose/nerdtree'
 Plug 't9md/vim-choosewin'
@@ -25,37 +21,29 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-Plug 'unblevable/quick-scope'  
-
-" beta usage. These are plugins I try for a while and if I like them enough
-" I'll move them up
-" Plug 'maralla/completor.vim'
+Plug 'mileszs/ack.vim'
 
 call plug#end()
 
 "=====================================================
 "===================== SETTINGS ======================
 
-" I'm still using Vim from time to time. These needs to enabled so we can make
-" Vim usable again (these are default on NeoVim)
-if !has('nvim')
-  set nocompatible
-  filetype off
-  filetype plugin indent on
+set nocompatible
+filetype off
+filetype plugin indent on
 
-  set ttyfast
-  set ttymouse=xterm2
-  set ttyscroll=3
+set ttyfast
+set ttymouse=xterm2
+set ttyscroll=3
 
-  set laststatus=2
-  set encoding=utf-8              " Set default encoding to UTF-8
-  set autoread                    " Automatically reread changed files without asking me anything
-  set autoindent                  
-  set backspace=indent,eol,start  " Makes backspace key more powerful.
-  set incsearch                   " Shows the match while typing
-  set hlsearch                    " Highlight found searches
-  set mouse=a      
-endif
+set laststatus=2
+set encoding=utf-8              " Set default encoding to UTF-8
+set autoread                    " Automatically reread changed files without asking me anything
+set autoindent                  
+set backspace=indent,eol,start  " Makes backspace key more powerful.
+set incsearch                   " Shows the match while typing
+set hlsearch                    " Highlight found searches
+set mouse=a                     "Enable mouse mode
 
 set noerrorbells             " No beeps
 set number                   " Show line numbers
@@ -74,7 +62,7 @@ set smartcase                " ... but not it begins with upper case
 set completeopt=menu,menuone
 set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
-set updatetime=400
+set updatetime=300
 
 set pumheight=10             " Completion window max size
 
@@ -91,82 +79,20 @@ if has('persistent_undo')
   set undodir=~/.config/nvim/tmp/undo//
 endif
 
-if has("gui_macvim")
-  " No toolbars, menu or scrollbars in the GUI
-  set guifont=Source\ Code\ Pro:h13
-  set clipboard+=unnamed
-  set vb t_vb=
-  set guioptions-=m  "no menu
-  set guioptions-=T  "no toolbar
-  set guioptions-=l
-  set guioptions-=L
-  set guioptions-=r  "no scrollbar
-  set guioptions-=R
+" color
+syntax enable
+set t_Co=256
 
-  let macvim_skip_colorscheme=1
-  colorscheme molokai
-
-  " Open goto symbol on current buffer
-  nmap <D-r> :MyCtrlPTag<cr>
-  imap <D-r> <esc>:MyCtrlPTag<cr>
-
-  " Open goto symbol on all buffers
-  nmap <D-R> :CtrlPBufTagAll<cr>
-  imap <D-R> <esc>:CtrlPBufTagAll<cr>
-
-  " Open goto file
-  nmap <D-t> :CtrlP<cr>
-  imap <D-t> <esc>:CtrlP<cr>
-
-  " Indent lines with cmd+[ and cmd+]
-  nmap <D-]> >>
-  nmap <D-[> <<
-  vmap <D-[> <gv
-  vmap <D-]> >gv
-
-  " This mapping makes Ctrl-Tab switch between tabs.
-  " Ctrl-Shift-Tab goes the other way.
-  noremap <C-Tab> :tabnext<CR>
-  noremap <C-S-Tab> :tabprev<CR>
-
-  " switch between tabs with cmd+1, cmd+2,..."
-  map <D-1> 1gt
-  map <D-2> 2gt
-  map <D-3> 3gt
-  map <D-4> 4gt
-  map <D-5> 5gt
-  map <D-6> 6gt
-  map <D-7> 7gt
-  map <D-8> 8gt
-  map <D-9> 9gt
-
-  " until we have default MacVim shortcuts this is the only way to use it in
-  " insert mode
-  imap <D-1> <esc>1gt
-  imap <D-2> <esc>2gt
-  imap <D-3> <esc>3gt
-  imap <D-4> <esc>4gt
-  imap <D-5> <esc>5gt
-  imap <D-6> <esc>6gt
-  imap <D-7> <esc>7gt
-  imap <D-8> <esc>8gt
-  imap <D-9> <esc>9gt
-else
-  if has('!nvim')
-    syntax enable
-    set t_Co=256
-    set term=ansi
-  endif
-
-  let g:rehash256 = 1
-  set background=dark
-  let g:molokai_original = 1
-  colorscheme molokai
-endif
+let g:rehash256 = 1
+set background=dark
+let g:molokai_original = 1
+colorscheme molokai
 
 " open help vertically
 command! -nargs=* -complete=help Help vertical belowright help <args>
 autocmd FileType help wincmd L
+
+" filetypes
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
 autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
@@ -187,87 +113,87 @@ augroup END
 "=====================================================
 "===================== STATUSLINE ====================
 
-" let s:modes = {
-"       \ 'n': 'NORMAL', 
-"       \ 'i': 'INSERT', 
-"       \ 'R': 'REPLACE', 
-"       \ 'v': 'VISUAL', 
-"       \ 'V': 'V-LINE', 
-"       \ "\<C-v>": 'V-BLOCK',
-"       \ 'c': 'COMMAND',
-"       \ 's': 'SELECT', 
-"       \ 'S': 'S-LINE', 
-"       \ "\<C-s>": 'S-BLOCK', 
-"       \ 't': 'TERMINAL'
-"       \}
+let s:modes = {
+      \ 'n': 'NORMAL', 
+      \ 'i': 'INSERT', 
+      \ 'R': 'REPLACE', 
+      \ 'v': 'VISUAL', 
+      \ 'V': 'V-LINE', 
+      \ "\<C-v>": 'V-BLOCK',
+      \ 'c': 'COMMAND',
+      \ 's': 'SELECT', 
+      \ 'S': 'S-LINE', 
+      \ "\<C-s>": 'S-BLOCK', 
+      \ 't': 'TERMINAL'
+      \}
 
-" let s:prev_mode = ""
-" function! StatusLineMode()
-"   let cur_mode = get(s:modes, mode(), '')
+let s:prev_mode = ""
+function! StatusLineMode()
+  let cur_mode = get(s:modes, mode(), '')
 
-"   " do not update higlight if the mode is the same
-"   if cur_mode == s:prev_mode
-"     return cur_mode
-"   endif
+  " do not update higlight if the mode is the same
+  if cur_mode == s:prev_mode
+    return cur_mode
+  endif
 
-"   if cur_mode == "NORMAL"
-"     exe 'hi! StatusLine ctermfg=236'
-"     exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
-"   elseif cur_mode == "INSERT"
-"     exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
-"   elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
-"     exe 'hi! StatusLine ctermfg=236'
-"     exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
-"   endif
+  if cur_mode == "NORMAL"
+    exe 'hi! StatusLine ctermfg=236'
+    exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
+  elseif cur_mode == "INSERT"
+    exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
+  elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
+    exe 'hi! StatusLine ctermfg=236'
+    exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
+  endif
 
-"   let s:prev_mode = cur_mode
-"   return cur_mode
-" endfunction
+  let s:prev_mode = cur_mode
+  return cur_mode
+endfunction
 
-" function! StatusLineFiletype()
-"   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-" endfunction
+function! StatusLineFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
+endfunction
 
-" function! StatusLinePercent()
-"   return (100 * line('.') / line('$')) . '%'
-" endfunction
+function! StatusLinePercent()
+  return (100 * line('.') / line('$')) . '%'
+endfunction
 
-" function! StatusLineLeftInfo()
-"  let branch = fugitive#head()
-"  let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
-"  if branch !=# ''
-"    return printf("%s | %s", branch, filename)
-"  endif
-"  return filename
-" endfunction
+function! StatusLineLeftInfo()
+ let branch = fugitive#head()
+ let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
+ if branch !=# ''
+   return printf("%s | %s", branch, filename)
+ endif
+ return filename
+endfunction
 
-" exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
+exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
 
-" " start building our statusline
-" set statusline=
+" start building our statusline
+set statusline=
 
-" " mode with custom colors
-" set statusline+=%#myModeColor#
-" set statusline+=%{StatusLineMode()}               
-" set statusline+=%*
+" mode with custom colors
+set statusline+=%#myModeColor#
+set statusline+=%{StatusLineMode()}               
+set statusline+=%*
 
-" " left information bar (after mode)
-" set statusline+=%#myInfoColor#
-" set statusline+=\ %{StatusLineLeftInfo()}
-" set statusline+=\ %*
+" left information bar (after mode)
+set statusline+=%#myInfoColor#
+set statusline+=\ %{StatusLineLeftInfo()}
+set statusline+=\ %*
 
-" " go command status (requires vim-go)
-" set statusline+=%#goStatuslineColor#
-" set statusline+=%{go#statusline#Show()}
-" set statusline+=%*
+" go command status (requires vim-go)
+set statusline+=%#goStatuslineColor#
+set statusline+=%{go#statusline#Show()}
+set statusline+=%*
 
-" " right section seperator
-" set statusline+=%=
+" right section seperator
+set statusline+=%=
 
-" " filetype, percentage, line number and column number
-" set statusline+=%#myInfoColor#
-" set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
-" set statusline+=\ %*
+" filetype, percentage, line number and column number
+set statusline+=%#myInfoColor#
+set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
+set statusline+=\ %*
 
 "=====================================================
 "===================== MAPPINGS ======================
@@ -398,14 +324,20 @@ let g:go_fmt_command = "goimports"
 let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
 let g:go_auto_type_info = 0
-let g:go_echo_command_info= 0
+let g:go_info_mode = "guru"
+let g:go_def_mode = "guru"
+let g:go_echo_command_info = 0
+let g:go_gocode_autobuild = 0
+let g:go_gocode_unimported_packages = 1
+
+" let g:go_metalinter_autosave = 1
+" let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
-
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
@@ -426,6 +358,8 @@ augroup go
   autocmd FileType go nmap <silent> <Leader>v <Plug>(go-def-vertical)
   autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
 
+  autocmd FileType go nmap <silent> <Leader>x <Plug>(go-doc-vertical)
+
   autocmd FileType go nmap <silent> <Leader>i <Plug>(go-info)
   autocmd FileType go nmap <silent> <Leader>l <Plug>(go-metalinter)
 
@@ -434,7 +368,6 @@ augroup go
   autocmd FileType go nmap <silent> <leader>r  <Plug>(go-run)
   autocmd FileType go nmap <silent> <leader>e  <Plug>(go-install)
 
-  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-doc)
   autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
 
   " I like these more!
@@ -443,23 +376,6 @@ augroup go
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
   autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
-
-" ==================== FZF ====================
-
-" nnoremap <C-p> :call fzf#run({
-" \  'source':  filter(copy(v:oldfiles), 'v:val !~ "NERD_tree"'),
-" \  'sink':    'e',
-" \  'options': '-m -x +s',
-" \  'down':    '40%'})<CR>
-
-
-" ==================== Completor ====================
-" let g:completor_go_omni_trigger = '(?:\b[^\W\d]\w*|[\]\)])\.(?:[^\W\d]\w*)?'
-" let g:completor_min_chars = 2
-
-" let g:completor_disable_filename = 1
-" let g:completor_disable_buffer = 1
-" let g:completor_disable_ultisnips = 1
 
 " ==================== CtrlP ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
@@ -473,16 +389,6 @@ let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
 let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
 let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
 
-func! MyCtrlPTag()
-  let g:ctrlp_prompt_mappings = {
-        \ 'AcceptSelection("e")': ['<cr>', '<2-LeftMouse>'],
-        \ 'AcceptSelection("t")': ['<c-t>'],
-        \ }
-  CtrlPBufTag
-endfunc
-command! MyCtrlPTag call MyCtrlPTag()
-
-
 nmap <C-b> :CtrlPCurWD<cr>
 imap <C-b> <esc>:CtrlPCurWD<cr>
 
@@ -495,125 +401,6 @@ let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
-" ==================== Lightline ====================
-"
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste'],
-      \             [ 'fugitive', 'filename', 'modified', 'ctrlpmark', 'go'] ],
-      \   'right': [ [ 'lineinfo' ], 
-      \              [ 'percent' ], 
-      \              [ 'fileformat', 'fileencoding', 'filetype' ] ]
-      \ },
-      \ 'component': {
-      \   'go': '%#goStatuslineColor#%{exists("*go#statusline#Show")?go#statusline#Show():""}',
-      \ },
-      \ 'component_visible_condition': {
-      \   'go': '(exists("*go#statusline#Show") && ""!=go#statusline#Show())'
-      \ },
-      \ 'component_type': {
-      \   'go': 'raw',
-      \ },
-      \ 'component_function': {
-      \   'lineinfo': 'LightLineInfo',
-      \   'percent': 'LightLinePercent',
-      \   'modified': 'LightLineModified',
-      \   'filename': 'LightLineFilename',
-      \   'fileformat': 'LightLineFileformat',
-      \   'filetype': 'LightLineFiletype',
-      \   'fileencoding': 'LightLineFileencoding',
-      \   'mode': 'LightLineMode',
-      \   'fugitive': 'LightLineFugitive',
-      \   'ctrlpmark': 'CtrlPMark',
-      \ },
-      \ }
-
-function! LightLineModified()
-  if &filetype == "help"
-    return ""
-  elseif &modified
-    return "+"
-  elseif &modifiable
-    return ""
-  else
-    return ""
-  endif
-endfunction
-
-function! LightLineFileformat()
-  return winwidth(0) > 70 ? &fileformat : ''
-endfunction
-
-function! LightLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! LightLineFileencoding()
-  return winwidth(0) > 70 ? (strlen(&fenc) ? &fenc : &enc) : ''
-endfunction
-
-function! LightLineInfo()
-  return winwidth(0) > 60 ? printf("%3d:%-2d", line('.'), col('.')) : ''
-endfunction
-
-function! LightLinePercent()
-  return &ft =~? 'vimfiler' ? '' : (100 * line('.') / line('$')) . '%'
-endfunction
-
-function! LightLineFugitive()
-  return exists('*fugitive#head') ? fugitive#head() : ''
-endfunction
-
-function! LightLineMode()
-  let fname = expand('%:t')
-  return fname == 'ControlP' ? 'CtrlP' :
-        \ &ft == 'vimfiler' ? 'VimFiler' :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
-endfunction
-
-function! LightLineFilename()
-  let fname = expand('%:t')
-  if mode() == 't'
-    return ''
-  endif
-
-  return fname == 'ControlP' ? g:lightline.ctrlp_item :
-        \ &ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \ ('' != LightLineReadonly() ? LightLineReadonly() . ' ' : '') .
-        \ ('' != fname ? fname : '[No Name]')
-endfunction
-
-function! LightLineReadonly()
-  return &ft !~? 'help' && &readonly ? 'RO' : ''
-endfunction
-
-function! CtrlPMark()
-  if expand('%:t') =~ 'ControlP'
-    call lightline#link('iR'[g:lightline.ctrlp_regex])
-    return lightline#concatenate([g:lightline.ctrlp_prev, g:lightline.ctrlp_item
-          \ , g:lightline.ctrlp_next], 0)
-  else
-    return ''
-  endif
-endfunction
-
-let g:ctrlp_status_func = {
-      \ 'main': 'CtrlPStatusFunc_1',
-      \ 'prog': 'CtrlPStatusFunc_2',
-      \ }
-
-function! CtrlPStatusFunc_1(focus, byfname, regex, prev, item, next, marked)
-  let g:lightline.ctrlp_regex = a:regex
-  let g:lightline.ctrlp_prev = a:prev
-  let g:lightline.ctrlp_item = a:item
-  let g:lightline.ctrlp_next = a:next
-  return lightline#statusline(0)
-endfunction
-
-function! CtrlPStatusFunc_2(str)
-  return lightline#statusline(0)
-endfunction
-
 " ==================== NerdTree ====================
 " For toggling
 noremap <Leader>n :NERDTreeToggle<cr>
@@ -621,6 +408,8 @@ noremap <Leader>f :NERDTreeFind<cr>
 
 let NERDTreeShowHidden=1
 
+" ==================== Ag ====================
+let g:ackprg = 'ag --vimgrep --smart-case'                                                   
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
@@ -660,6 +449,7 @@ endif
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
 
 " ==================== Various other plugin settings ====================
 nmap  -  <Plug>(choosewin)
