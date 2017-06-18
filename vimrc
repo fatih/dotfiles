@@ -70,13 +70,14 @@ set pumheight=10             " Completion window max size
 set clipboard^=unnamed
 set clipboard^=unnamedplus
 
+" ~/.viminfo needs to be writable and readable
 set viminfo='200
 
 set lazyredraw          " Wait to redraw
 
 if has('persistent_undo')
   set undofile
-  set undodir=~/.config/nvim/tmp/undo//
+  set undodir=~/.cache/vim
 endif
 
 " color
@@ -95,6 +96,7 @@ autocmd FileType help wincmd L
 " filetypes
 
 autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+
 autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
 autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
 autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
@@ -210,6 +212,10 @@ nnoremap <leader>a :cclose<CR>
 
 " put quickfix window always to the bottom
 autocmd FileType qf wincmd J
+augroup quickfix
+    autocmd!
+    autocmd FileType qf setlocal wrap
+augroup END
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -319,16 +325,17 @@ vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
 " ==================== vim-go ====================
-let g:go_fmt_fail_silently = 1
+let g:go_fmt_fail_silently = 0
 let g:go_fmt_command = "goimports"
-let g:go_autodetect_gopath = 1
 let g:go_list_type = "quickfix"
 let g:go_auto_type_info = 0
-let g:go_info_mode = "guru"
 let g:go_def_mode = "guru"
-let g:go_echo_command_info = 0
+let g:go_echo_command_info = 1
 let g:go_gocode_autobuild = 0
 let g:go_gocode_unimported_packages = 1
+
+let g:go_autodetect_gopath = 1
+let g:go_info_mode = "guru"
 
 " let g:go_metalinter_autosave = 1
 " let g:go_metalinter_autosave_enabled = ['vet', 'golint']
@@ -338,6 +345,9 @@ let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
+let g:go_highlight_types = 0
+
+let g:go_modifytags_transform = 'camelcase'
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
@@ -346,7 +356,7 @@ imap <C-g> <esc>:<C-u>GoDecls<cr>
 function! s:build_go_files()
   let l:file = expand('%')
   if l:file =~# '^\f\+_test\.go$'
-    call go#cmd#Test(0, 1)
+    call go#test#Test(0, 1)
   elseif l:file =~# '^\f\+\.go$'
     call go#cmd#Build(0)
   endif
@@ -449,6 +459,7 @@ endif
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+
 
 
 " ==================== Various other plugin settings ====================
