@@ -4,24 +4,27 @@ Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
+Plug 'cespare/vim-toml'
 Plug 'corylanou/vim-present', {'for' : 'present'}
-Plug 'ctrlpvim/ctrlp.vim'
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
-Plug 'tomasr/molokai'
 Plug 'hashivim/vim-hashicorp-tools'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
+Plug 'junegunn/fzf.vim'
+Plug 'mileszs/ack.vim'
 Plug 'scrooloose/nerdtree'
 Plug 't9md/vim-choosewin'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
+Plug 'tomasr/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-Plug 'mileszs/ack.vim'
+Plug 'maralla/completor.vim'
 
 call plug#end()
 
@@ -83,33 +86,35 @@ endif
 " color
 syntax enable
 set t_Co=256
-
-let g:rehash256 = 1
 set background=dark
+
 let g:molokai_original = 1
+let g:rehash256 = 1
 colorscheme molokai
 
 " open help vertically
-command! -nargs=* -complete=help Help vertical belowright help <args>
-autocmd FileType help wincmd L
-
-" filetypes
-
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
-
-autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
-autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
-autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
-autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
-autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
-
-autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
-autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 
 augroup filetypedetect
+
+  command! -nargs=* -complete=help Help vertical belowright help <args>
+  autocmd FileType help wincmd L
+  
+  " filetypes
   autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
   autocmd BufNewFile,BufRead *.hcl setf conf
+  autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+  
+  autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
+  autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.md setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.html setlocal noet ts=4 sw=4
+  autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
+  
+  autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
 augroup END
 
 "=====================================================
@@ -211,11 +216,15 @@ map <C-m> :cp<CR>
 nnoremap <leader>a :cclose<CR>
 
 " put quickfix window always to the bottom
-autocmd FileType qf wincmd J
 augroup quickfix
     autocmd!
+    autocmd FileType qf wincmd J
     autocmd FileType qf setlocal wrap
+
 augroup END
+
+" Enter automatically into the files directory
+autocmd BufEnter * silent! lcd %:p:h
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -242,14 +251,42 @@ map <C-l> <C-W>l
 " Print full path
 map <C-f> :echo expand("%:p")<cr>
 
+" Terminal settings
+if has('terminal')
+  " Kill job and close terminal window
+  tnoremap <Leader>q <C-w><C-C><C-w>c<cr>
+
+  " switch to normal mode with esc
+  tnoremap <Esc> <C-W>N
+
+  " mappings to move out from terminal to other views
+  tnoremap <C-h> <C-w>h
+  tnoremap <C-j> <C-w>j
+  tnoremap <C-k> <C-w>k
+  tnoremap <C-l> <C-w>l
+ 
+  " Open terminal in vertical, horizontal and new tab
+  nnoremap <leader>tv :vsplit<cr>:term ++curwin<CR>
+  nnoremap <leader>ts :split<cr>:term ++curwin<CR>
+  nnoremap <leader>tt :tabnew<cr>:term ++curwin<CR>
+
+  tnoremap <leader>tv <C-w>:vsplit<cr>:term ++curwin<CR>
+  tnoremap <leader>ts <C-w>:split<cr>:term ++curwin<CR>
+  tnoremap <leader>tt <C-w>:tabnew<cr>:term ++curwin<CR>
+
+  " always start terminal in insert mode when I switch to it
+  " NOTE(arslan): startinsert doesn't work in Terminal-normal mode.
+  " autocmd WinEnter * if &buftype == 'terminal' | call feedkeys("i") | endif
+endif
+
 " Visual linewise up and down by default (and use gj gk to go quicker)
 noremap <Up> gk
 noremap <Down> gj
 noremap j gj
 noremap k gk
 
-" Exit on jk
-imap jk <Esc>
+" Exit on j
+imap jj <Esc>
 
 " Source (reload configuration)
 nnoremap <silent> <F5> :source $MYNVIMRC<CR>
@@ -274,8 +311,6 @@ vnoremap L g_
 " Act like D and C
 nnoremap Y y$
 
-" Enter automatically into the files directory
-autocmd BufEnter * silent! lcd %:p:h
 
 " Do not show stupid q: window
 map q: :q
@@ -325,29 +360,34 @@ vnoremap <leader>gb :Gblame<CR>
 nnoremap <leader>gb :Gblame<CR>
 
 " ==================== vim-go ====================
-let g:go_fmt_fail_silently = 0
+let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
+let g:go_fmt_options = {
+  \ 'goimports': '-local do/',
+  \ }
+let g:go_sameid_search_enabled = 1
+
+let g:go_test_prepend_name = 1
 let g:go_list_type = "quickfix"
 let g:go_auto_type_info = 0
 let g:go_def_mode = "guru"
 let g:go_echo_command_info = 1
 let g:go_gocode_autobuild = 0
-let g:go_gocode_unimported_packages = 1
+let g:go_gocode_unimported_packages = 0
 
 let g:go_autodetect_gopath = 1
 let g:go_info_mode = "guru"
-
-" let g:go_metalinter_autosave = 1
-" let g:go_metalinter_autosave_enabled = ['vet', 'golint']
-
+let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_types = 0
+let g:go_highlight_format_strings = 0
 
 let g:go_modifytags_transform = 'camelcase'
+let g:go_fold_enable = []
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
@@ -365,8 +405,10 @@ endfunction
 augroup go
   autocmd!
 
+
   autocmd FileType go nmap <silent> <Leader>v <Plug>(go-def-vertical)
   autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
+  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
 
   autocmd FileType go nmap <silent> <Leader>x <Plug>(go-doc-vertical)
 
@@ -387,20 +429,44 @@ augroup go
   autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
 
-" ==================== CtrlP ====================
-let g:ctrlp_cmd = 'CtrlPMRU'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
-let g:ctrlp_mruf_max=450    " number of recently opened files
-let g:ctrlp_max_files=0     " do not limit the number of searchable files
-let g:ctrlp_use_caching = 1
-let g:ctrlp_clear_cache_on_exit = 0
-let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
-let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
 
-nmap <C-b> :CtrlPCurWD<cr>
-imap <C-b> <esc>:CtrlPCurWD<cr>
+" ==================== CtrlP ====================
+" let g:ctrlp_cmd = 'CtrlPMRU'
+" let g:ctrlp_working_path_mode = 'ra'
+" let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
+" let g:ctrlp_mruf_max=450    " number of recently opened files
+" let g:ctrlp_max_files=0     " do not limit the number of searchable files
+" let g:ctrlp_use_caching = 1
+" let g:ctrlp_clear_cache_on_exit = 0
+" let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
+" let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
+" let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
+
+" nmap <C-b> :CtrlPCurWD<cr>
+" imap <C-b> <esc>:CtrlPCurWD<cr>
+
+" ==================== FZF ====================
+
+let g:fzf_command_prefix = 'Fzf'
+let g:fzf_layout = { 'down': '~20%' }
+
+
+nmap <C-p> :FzfHistory<cr>
+imap <C-p> <esc>:<C-u>FzfHistory<cr>
+
+let g:rg_command = '
+  \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
+  \ -g "*.{js,json,php,md,styl,jade,html,config,py,cpp,c,go,hs,rb,conf}"
+  \ -g "!{.git,node_modules,vendor}/*" '
+
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+  \   <bang>0)
+
+command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
 
 " ==================== delimitMate ====================
 let g:delimitMate_expand_cr = 1   
@@ -459,8 +525,6 @@ endif
 
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
-
-
 
 " ==================== Various other plugin settings ====================
 nmap  -  <Plug>(choosewin)
