@@ -1,14 +1,27 @@
-# Keep it simple for now...
 all:
+	mkdir -p ~/.config/nvim
+	mkdir -p ~/.config/alacritty
+
+	[ -f ~/.config/nvim/init.vim ] || ln -s $(PWD)/init.vim ~/.config/nvim/init.vim
+	[ -f ~/.config/alacritty/alacritty.yml ] || ln -s $(PWD)/alacritty.yml ~/.config/alacritty/alacritty.yml
 	[ -f ~/.vimrc ] || ln -s $(PWD)/vimrc ~/.vimrc
-	[ -f ~/.ctags ] || ln -s $(PWD)/ctags ~/.ctags
 	[ -f ~/.bashrc ] || ln -s $(PWD)/bashrc ~/.bashrc
+	[ -f ~/.tmux.conf ] || ln -s $(PWD)/tmuxconf ~/.tmux.conf
 	[ -f ~/.tigrc ] || ln -s $(PWD)/tigrc ~/.tigrc
-	[ -f ~/.Brewfile ] || ln -s $(PWD)/Brewfile ~/.Brewfile
 	[ -f ~/.git-prompt.sh ] || ln -s $(PWD)/git-prompt.sh ~/.git-prompt.sh
+	[ -f ~/.agignore ] || ln -s $(PWD)/agignore ~/.agignore
+
+	# don't show last login message
+	touch ~/.hushlogin
 
 clean:
-	[ -f ~/.vimrc ] || rm ~/.vimrc 
-	[ -f ~/.ctags ] || rm ~/.ctags 
+	rm -f ~/.vimrc 
+	rm -f ~/.config/nvim/init.vim
+	rm -f ~/.config/alacritty/alacritty.yml
+	rm -f ~/.bashrc
+	rm -f ~/.tmux.conf
+	rm -f ~/.tigrc
+	rm -f ~/.git-prompt.sh
+	rm -f ~/.agiginore
 
 .PHONY: all

@@ -1,4 +1,7 @@
-# Set prefix key to c-f instead of defaul  c-b
+# INSTALL
+# cp tmuxconf ~/.tmux.conf
+#
+# Set prefix key to c-f instead of default c-b
 unbind C-b
 set -g prefix C-f
 bind C-f send-prefix
@@ -40,8 +43,13 @@ bind r source-file ~/.tmux.conf \; display "Reloaded!"
 setw -g mode-keys vi
 
 # Select and copy with v and y, instead of default space and enter
-bind-key -t vi-copy 'v' begin-selection
-bind-key -t vi-copy 'y' copy-selection
+bind-key -T edit-mode-vi Up send-keys -X history-up
+bind-key -T edit-mode-vi Down send-keys -X history-down
+unbind-key -T copy-mode-vi Space     ;   bind-key -T copy-mode-vi v send-keys -X begin-selection
+unbind-key -T copy-mode-vi Enter     ;   bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "reattach-to-user-namespace pbcopy"
+unbind-key -T copy-mode-vi C-v       ;   bind-key -T copy-mode-vi C-v send-keys -X rectangle-toggle
+unbind-key -T copy-mode-vi [         ;   bind-key -T copy-mode-vi [ send-keys -X begin-selection
+unbind-key -T copy-mode-vi ]         ;   bind-key -T copy-mode-vi ] send-keys -X copy-selection
 
 # Faster command sequence
 set -s escape-time 0
@@ -62,10 +70,16 @@ bind-key = select-layout even-horizontal
 bind-key | select-layout even-vertical
 
 # Resize panes
-bind-key J resize-pane -D 5
-bind-key K resize-pane -U 5
-bind-key H resize-pane -L 5
-bind-key L resize-pane -R 5
+bind-key J resize-pane -D 10
+bind-key K resize-pane -U 10
+bind-key H resize-pane -L 10
+bind-key L resize-pane -R 10
+
+# Select panes 
+bind-key j select-pane -D 
+bind-key k select-pane -U 
+bind-key h select-pane -L 
+bind-key l select-pane -R 
 
 # Disable confirm before killing
 bind-key x kill-pane
@@ -76,15 +90,17 @@ bind-key x kill-pane
 set -g status-bg "colour236"
 set -g message-command-fg "colour231"
 set -g status-justify "left"
+set -g status-position "top"
 set -g status-left-length "100"
+set -g status-attr "none"
 set -g status "on"
+
 set -g pane-active-border-fg "colour148"
 set -g message-bg "colour240"
 set -g status-right-length "100"
 set -g status-right-attr "none"
 set -g message-fg "colour231"
 set -g message-command-bg "colour240"
-set -g status-attr "none"
 set -g pane-border-fg "colour240"
 set -g status-left-attr "none"
 setw -g window-status-fg "colour245"
@@ -100,21 +116,27 @@ setw -g window-status-format "#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=
 setw -g window-status-current-format "#[fg=colour236,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour231,bg=colour240] #I #[fg=colour231,bg=colour240]#W #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]"
 
 # List of plugins
+# see this https://github.com/tmux-plugins/tpm to installation
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
+####
+# Smart pane switching with awareness of Nvim/Vim splits.
+# See: https://github.com/christoomey/vim-tmux-navigator
+# set -g @plugin 'christoomey/vim-tmux-navigator'
+
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
 
-######## iTerm + Tmux key integration #########
 
 # The followings are not any kind of setting for Tmux, but crucial to my
 # own productivity. Setting them up is really pain, and I probably going to
 # forget it. So I'm just putting them here again.
 
+######## iTerm + Tmux key integration #########
 # First of all, iTerm can send hex codes for shortcuts you define. So for
 # example you can send a hex code for the shortcut "c-f v" which in my case
 # opens a vertical pane (see setting above). The hex code for this combination
@@ -136,6 +158,65 @@ run '~/.tmux/plugins/tpm/tpm'
 #	^C -> c-c
 #
 # From here, we know that 0x06 0x76 corresponds to "c-f v".
+#
+# Finally, inside the iTerm2 Key settings, I'm adding just various shortcuts,
+# such as cmd-j, cmd-left, etc.. , select the option "send hex code" and the
+# enter the hex code which I want to be executed, hence the tmux sequence. So
+# when I press CMD + d in iterm, I send the sequence 0x06 0x76,
+# which tmux inteprets it as opening a new pane. 
+###############################################
+
+######## Alacritty + Tmux key integration #########
+# First of all, Alacritty can send hex codes for shortcuts you define. So for
+# example you can send a hex code for the shortcut "c-f v" which in my case
+# opens a vertical pane (see setting above). The hex code for this combination
+# is: 0x06 0x76. There are many cases to find it out. One of them is the tool
+# 'xxd'
+
+# If you run "xxd -psd" and hit "c-f v" and then enter and finally c-c to exit
+# , it outputs the following:
+#
+# 	$ xxd -psd
+# 	^Fv
+# 	06760a^C
+#
+# What matters is the sequence  06760a^C where:
+#
+# 	06 -> c-f
+# 	76 -> v
+# 	0a -> return
+#	^C -> c-c
+#
+# From here, we know that 0x06 0x76 corresponds to "c-f v".
+#
+# Next step is to add a line to 'key_binding' setting in Alacritty:
+#
+#   - { key: D,        mods: Command,       chars: "\x06\x76"  } 
+#
+# That's it! The followings are the ones that I'm using:
+#
+#   key_bindings:
+#     - { key: D,        mods: Command,       chars: "\x06\x76" } 
+#     - { key: D,        mods: Command|Shift, chars: "\x06\x73" }
+#     - { key: W,        mods: Command,       chars: "\x06\x78" }
+#     - { key: H,        mods: Command,       chars: "\x06\x68" }
+#     - { key: J,        mods: Command,       chars: "\x06\x6a" }
+#     - { key: K,        mods: Command,       chars: "\x06\x6b" }
+#     - { key: L,        mods: Command,       chars: "\x06\x6c" }
+#     - { key: T,        mods: Command,       chars: "\x06\x63" }
+#     - { key: Key1,     mods: Command,       chars: "\x06\x31" }
+#     - { key: Key2,     mods: Command,       chars: "\x06\x32" }
+#     - { key: Key3,     mods: Command,       chars: "\x06\x33" }
+#     - { key: Key4,     mods: Command,       chars: "\x06\x34" }
+#     - { key: Key5,     mods: Command,       chars: "\x06\x35" }
+#     - { key: Key6,     mods: Command,       chars: "\x06\x36" }
+#     - { key: Key7,     mods: Command,       chars: "\x06\x37" }
+#     - { key: Key8,     mods: Command,       chars: "\x06\x38" }
+#     - { key: Key9,     mods: Command,       chars: "\x06\x39" }
+#     - { key: Left,     mods: Command,       chars: "\x06\x48" }
+#     - { key: Down,     mods: Command,       chars: "\x06\x4a" }
+#     - { key: Up,       mods: Command,       chars: "\x06\x4b" }
+#     - { key: Right,    mods: Command,       chars: "\x06\x4c" }
 #
 # Finally, inside the iTerm2 Key settings, I'm adding just various shortcuts,
 # such as cmd-j, cmd-left, etc.. , select the option "send hex code" and the

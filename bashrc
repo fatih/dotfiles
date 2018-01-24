@@ -1,4 +1,11 @@
+### Install
+# 1. Install latest bash via brew: brew install bash
+# 2. To source .bashrc, create .bash_profile with content:
+#
+#    if [ -f ~/.bashrc ]; then . ~/.bashrc; fi 
+#
 ###############
+
 # Source other files
 
 # Senstive functions which are not pushed to Github
@@ -22,8 +29,8 @@ if [ -f ~/.git-prompt.sh ]; then
   source ~/.git-prompt.sh
 fi
 
-# Get it from the original Git repo: 
-# https://github.com/git/git/blob/master/contrib/completion/git-completion.bash
+# # Get it from the original Git repo: 
+# https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash
 if [ -f ~/.git-completion.bash ]; then
   source ~/.git-completion.bash
 fi
@@ -39,11 +46,19 @@ alias t="tig status"
 alias tigs="tig status" #old habits don't die
 alias d='git diff' 
 
+# alias vi='nvim'
+# alias vim='nvim'
+alias vi='vim'
+ 
 #################
 # Git
 #################
 
 alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
+alias co='git checkout master'
+alias po='git pull origin master'
+alias b='git branch'
+alias hc='hub compare'
 
 ###############
 # Exports (custom)
@@ -67,9 +82,8 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 
 # -- Prompt
 
-# This is not used anymore as we use __git_ps1 for evaluatin the PS1, just here
-# in case we might need it in the future
-# PS1="\[$(tput setaf 6)\]\w\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
+# If we don't use the below git master one, use this simple
+# PS1="\[$(tput setaf 6)\]\W\[$(tput sgr0)\]\[$(tput sgr0)\] \$ "
 
 # 1. Git branch is being showed
 # 2. Title of terminal is changed for each new shell
@@ -94,8 +108,6 @@ shopt -s cmdhist    # save multi line commands as one command
 shopt -s lithist
 
 # -- Completion
-
-
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 bind "set completion-ignore-case on" # note: bind used instead of sticking these in .inputrc

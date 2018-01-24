@@ -1,4 +1,4 @@
-call plug#begin('~/.vim/plugged')
+call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -24,7 +24,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-" Plug 'maralla/completor.vim'
+" Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 
@@ -34,13 +34,6 @@ call plug#end()
 set nocompatible
 filetype off
 filetype plugin indent on
-
-" set ttyfast
-
-if !has('nvim')
-  set ttymouse=xterm2
-  set ttyscroll=3
-endif
 
 set laststatus=2
 set encoding=utf-8              " Set default encoding to UTF-8
@@ -70,7 +63,6 @@ set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
 set updatetime=300
 set pumheight=10             " Completion window max size
-
 set lazyredraw
 
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
@@ -94,21 +86,8 @@ let g:molokai_original = 1
 let g:rehash256 = 1
 colorscheme molokai
 
-if has("mac")
-  set nocursorline
-
-  if exists("+relativenumber")
-    set norelativenumber
-  endif
-
-  set foldlevel=0
-  set foldmethod=manual
-endif
-
 " open help vertically
-
 augroup filetypedetect
-
   command! -nargs=* -complete=help Help vertical belowright help <args>
   autocmd FileType help wincmd L
   
