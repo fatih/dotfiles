@@ -222,6 +222,7 @@ shell:
   args:
     - --login
 
+
 # Key bindings
 #
 # Each binding is defined as an object with some properties. Most of the

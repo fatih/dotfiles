@@ -17,11 +17,6 @@ if [ -f $(brew --prefix)/etc/bash_completion ]; then
   . $(brew --prefix)/etc/bash_completion
 fi
 
-#Like autojump but written in pure bash: https://github.com/rupa/z 
-if [ -f $(brew --prefix)/etc/profile.d/z.sh ]; then
-  . $(brew --prefix)/etc/profile.d/z.sh
-  alias j='z' #because I'm used to autojump
-fi
 
 # Get it from the original Git repo: 
 # https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
@@ -46,9 +41,9 @@ alias t="tig status"
 alias tigs="tig status" #old habits don't die
 alias d='git diff' 
 
-# alias vi='nvim'
-# alias vim='nvim'
-alias vi='vim'
+alias vi='nvim'
+alias vim='nvim'
+# alias vi='vim'
  
 #################
 # Git
@@ -188,4 +183,11 @@ shopt -s no_empty_cmd_completion
 # Case-insensitive filename matching in filename expansion.
 shopt -s nocaseglob
 
+
+# brew install jump
+# https://github.com/gsamokovarov/jump
+eval "$(jump shell)"
+
+# brew install direnv
+# https://github.com/direnv/direnv
 eval "$(direnv hook bash)"

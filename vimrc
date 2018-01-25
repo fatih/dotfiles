@@ -35,7 +35,7 @@ set nocompatible
 filetype off
 filetype plugin indent on
 
-" set ttyfast
+set ttyfast
 
 if !has('nvim')
   set ttymouse=xterm2
