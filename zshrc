@@ -8,7 +8,6 @@
 # =============
 #    ALIAS
 # =============
-alias zr='source ~/.zshrc'
 alias ..='cd ..'
 alias ls='ls -GpF' # Mac OSX specific
 alias ll='ls -alGpF' # Mac OSX specific
@@ -190,7 +189,6 @@ else
   bindkey "\e[3~" delete-char
 fi
 
-
 # ===================
 #    MISC SETTINGS
 # ===================
@@ -198,7 +196,15 @@ fi
 # automatically remove duplicates from these arrays
 typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
+# ===================
+#    PLUGINS
+# ===================
 
+# brew install zsh-syntax-highlighting
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# brew install zsh-autosuggestions
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # ===================
 #    THIRD PARTY
