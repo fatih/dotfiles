@@ -80,7 +80,7 @@ render_timer: false
 
 # Use custom cursor colors. If true, display the cursor in the cursor.foreground
 # and cursor.background colors, otherwise invert the colors of the cursor.
-custom_cursor_colors: false
+custom_cursor_colors: true
 
 # Colors (Tomorrow Night Bright)
 colors:
@@ -91,8 +91,8 @@ colors:
 
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
-    text: '0x000000'
-    cursor: '0xffffff'
+    text:   '0xf1c1c1'
+    cursor: '0xff2600'
 
   # Normal colors
   normal:
@@ -214,11 +214,11 @@ live_config_reload: true
 
 # Shell
 #
-# You can set shell.program to the path of your favorite shell, e.g. /bin/fish.
+# You can set shell.program to the path of your favorite shell, e.g. /bin/zsh.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 shell:
-  program: /usr/local/bin/bash
+  program: /usr/local/bin/zsh
   args:
     - --login
 

@@ -24,7 +24,6 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-" Plug 'maralla/completor.vim'
 
 call plug#end()
 
@@ -73,6 +72,7 @@ set pumheight=10             " Completion window max size
 
 set lazyredraw
 
+
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
@@ -89,7 +89,6 @@ endif
 syntax enable
 set t_Co=256
 set background=dark
-
 let g:molokai_original = 1
 let g:rehash256 = 1
 colorscheme molokai
@@ -238,6 +237,9 @@ augroup END
 
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
+
+" Automatically resize screens to be equally the same
+autocmd VimResized * wincmd =
 
 " Fast saving
 nnoremap <leader>w :w!<cr>

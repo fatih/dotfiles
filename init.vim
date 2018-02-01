@@ -24,7 +24,6 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
-" Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 
@@ -217,6 +216,9 @@ augroup END
 
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
+
+" Automatically resize screens to be equally the same
+autocmd VimResized * wincmd =
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
