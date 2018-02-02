@@ -25,6 +25,8 @@ alias po='git pull origin master'
 alias b='git branch'
 alias hc='hub compare'
 
+alias -s go='go run'
+
 # =============
 #    EXPORT
 # =============
