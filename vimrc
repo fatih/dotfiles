@@ -1,4 +1,5 @@
-call plug#begin('~/.vim/plugged')
+" I use the same vimrc for both nvim and vim
+call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
@@ -93,25 +94,10 @@ let g:molokai_original = 1
 let g:rehash256 = 1
 colorscheme molokai
 
-if has("mac")
-  set nocursorline
-
-  if exists("+relativenumber")
-    set norelativenumber
-  endif
-
-  set foldlevel=0
-  set foldmethod=manual
-endif
-
-" open help vertically
-
 augroup filetypedetect
-
   command! -nargs=* -complete=help Help vertical belowright help <args>
   autocmd FileType help wincmd L
   
-  " filetypes
   autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
   autocmd BufNewFile,BufRead *.hcl setf conf
@@ -366,9 +352,9 @@ function! s:create_go_doc_comment()
 endfunction
 nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 
-"
+
 "===================== PLUGINS ======================
-"
+
 
 " ==================== Fugitive ====================
 vnoremap <leader>gb :Gblame<CR>
@@ -420,7 +406,6 @@ endfunction
 augroup go
   autocmd!
 
-
   autocmd FileType go nmap <silent> <Leader>v <Plug>(go-def-vertical)
   autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
   autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
@@ -445,26 +430,9 @@ augroup go
 augroup END
 
 
-" ==================== CtrlP ====================
-" let g:ctrlp_cmd = 'CtrlPMRU'
-" let g:ctrlp_working_path_mode = 'ra'
-" let g:ctrlp_switch_buffer = 'et'  " jump to a file if it's open already
-" let g:ctrlp_mruf_max=450    " number of recently opened files
-" let g:ctrlp_max_files=0     " do not limit the number of searchable files
-" let g:ctrlp_use_caching = 1
-" let g:ctrlp_clear_cache_on_exit = 0
-" let g:ctrlp_cache_dir = $HOME.'/.cache/ctrlp'
-" let g:ctrlp_match_window = 'bottom,order:btt,max:10,results:10'
-" let g:ctrlp_buftag_types = {'go' : '--language-force=go --golang-types=ftv'}
-
-" nmap <C-b> :CtrlPCurWD<cr>
-" imap <C-b> <esc>:CtrlPCurWD<cr>
-
 " ==================== FZF ====================
-
 let g:fzf_command_prefix = 'Fzf'
 let g:fzf_layout = { 'down': '~20%' }
-
 
 nmap <C-p> :FzfHistory<cr>
 imap <C-p> <esc>:<C-u>FzfHistory<cr>
