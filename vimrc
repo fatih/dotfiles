@@ -12,10 +12,12 @@ Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
+Plug 'godlygeek/tabular'
 Plug 'hashivim/vim-hashicorp-tools'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
+Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 't9md/vim-choosewin'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
@@ -70,6 +72,7 @@ set nocursorcolumn           " speed up syntax highlighting
 set nocursorline
 set updatetime=300
 set pumheight=10             " Completion window max size
+set conceallevel=2           " Concealed text is completely hidden
 
 set lazyredraw
 
@@ -467,8 +470,18 @@ noremap <Leader>f :NERDTreeFind<cr>
 
 let NERDTreeShowHidden=1
 
-" ==================== Ag ====================
+" ==================== ag ====================
 let g:ackprg = 'ag --vimgrep --smart-case'                                                   
+
+" ==================== markdown ====================
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_fenced_languages = ['go=go', 'viml=vim', 'bash=sh']
+let g:vim_markdown_toml_frontmatter = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 2
+let g:vim_markdown_no_extensions_in_markdown = 1
+
+
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
