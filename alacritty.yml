@@ -52,7 +52,7 @@ font:
   # The italic font face
   italic:
     family: SF Mono
-    style: Italic
+    style: Regular Italic
 
   # Point size of the font
   size: 12.0
