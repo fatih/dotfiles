@@ -521,7 +521,22 @@ function! s:create_front_matter()
   call append(0, fm)
 endfunction
 
-autocmd FileType markdown nmap <silent> <leader>m :<C-u>call <SID>create_front_matter()<CR>
+function! s:create_figure()
+  let fig = ["{{< figure"]
+  call add(fig, 'src="/images/image.jpg"')
+  call add(fig, 'class="left"')
+  call add(fig, 'caption="This looks good!"')
+  call add(fig, ">}}")
+
+  let res = [join(fig, " ")]
+  call append(line("."), res)
+endfunction
+
+augroup md
+  autocmd!
+  autocmd Filetype markdown command! -bang HugoFrontMatter call <SID>create_front_matter()
+  autocmd Filetype markdown command! -bang HugoFig call <SID>create_figure()
+augroup END
 
 
 " ==================== vim-json ====================
