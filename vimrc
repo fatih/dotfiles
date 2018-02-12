@@ -497,7 +497,7 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 function! s:create_front_matter()
   let fm = ["+++"]
   call add(fm, 'author = "Fatih Arslan"')
-  call add(fm, printf("date = %s", strftime("%Y-%m-%d %X")))
+  call add(fm, printf("date = \"%s\"", strftime("%Y-%m-%d %X")))
 
   let filename = expand("%:r")
   let tl = split(filename, "-")
@@ -521,6 +521,8 @@ function! s:create_front_matter()
   call append(0, fm)
 endfunction
 
+" create a shortcode that inserts an image holder with caption or class
+" attribute that defines on how to set the layout.
 function! s:create_figure()
   let fig = ["{{< figure"]
   call add(fig, 'src="/images/image.jpg"')
