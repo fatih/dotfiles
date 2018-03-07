@@ -21,7 +21,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'scrooloose/nerdtree'
 Plug 't9md/vim-choosewin'
 Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-Plug 'tomasr/molokai'
+Plug 'fatih/molokai'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
@@ -113,6 +113,7 @@ augroup filetypedetect
   autocmd BufNewFile,BufRead *.vim setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
   
   autocmd FileType json setlocal expandtab shiftwidth=2 tabstop=2
   autocmd FileType ruby setlocal expandtab shiftwidth=2 tabstop=2
@@ -221,14 +222,13 @@ augroup quickfix
     autocmd!
     autocmd FileType qf wincmd J
     autocmd FileType qf setlocal wrap
-
 augroup END
 
 " Enter automatically into the files directory
 autocmd BufEnter * silent! lcd %:p:h
 
 " Automatically resize screens to be equally the same
-autocmd VimResized * wincmd =
+" autocmd VimResized * wincmd =
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -369,18 +369,28 @@ let g:go_fmt_command = "goimports"
 let g:go_fmt_options = {
   \ 'goimports': '-local do/',
   \ }
+
+let g:go_debug_windows = {
+      \ 'vars':  'leftabove 35vnew',
+      \ 'stack': 'botright 10new',
+\ }
+
+
 let g:go_sameid_search_enabled = 1
 
 let g:go_test_prepend_name = 1
 let g:go_list_type = "quickfix"
+
 let g:go_auto_type_info = 0
+let g:go_auto_sameids = 0
+
 let g:go_def_mode = "guru"
 let g:go_echo_command_info = 1
-let g:go_gocode_autobuild = 0
-let g:go_gocode_unimported_packages = 0
+let g:go_gocode_autobuild = 1
+let g:go_gocode_unimported_packages = 1
 
 let g:go_autodetect_gopath = 1
-let g:go_info_mode = "guru"
+" let g:go_info_mode = "guru"
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -439,6 +449,9 @@ let g:fzf_layout = { 'down': '~20%' }
 
 nmap <C-p> :FzfHistory<cr>
 imap <C-p> <esc>:<C-u>FzfHistory<cr>
+
+nmap <C-b> :FzfFiles<cr>
+imap <C-b> <esc>:<C-u>FzfFiles<cr>
 
 let g:rg_command = '
   \ rg --column --line-number --no-heading --fixed-strings --ignore-case --no-ignore --hidden --follow --color "always"
