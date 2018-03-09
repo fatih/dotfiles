@@ -16,8 +16,7 @@ alias t="tig status"
 alias tigs="tig status" #old habits don't die
 alias d='git diff' 
 
-# alias vi='nvim'
-# alias vim='nvim'
+alias vi='vim'
 
 alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
 alias co='git checkout master'
