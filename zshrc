@@ -23,6 +23,7 @@ alias co='git checkout master'
 alias po='git pull origin master'
 alias b='git branch'
 alias hc='hub compare'
+alias hb='hub browse'
 
 alias -s go='go run'
 alias hs='hugo server'
