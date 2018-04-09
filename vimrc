@@ -238,7 +238,12 @@ nnoremap <silent> <leader>q :q!<CR>
 nnoremap <space> zz
 
 " Remove search highlight
-nnoremap <leader><space> :nohlsearch<CR>
+" nnoremap <leader><space> :nohlsearch<CR>
+function! s:clear_highlight()
+  let @/ = ""
+  call go#guru#ClearSameIds()
+endfunction
+nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
 
 " Source the current Vim file
 nnoremap <leader>pr :Runtime<CR>
@@ -493,7 +498,6 @@ let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_no_extensions_in_markdown = 1
-
 
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
