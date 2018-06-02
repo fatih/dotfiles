@@ -257,9 +257,6 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Print full path
-map <C-f> :echo expand("%:p")<cr>
-
 " Terminal settings
 if has('terminal')
   " Kill job and close terminal window
