@@ -27,6 +27,7 @@ Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
+Plug 'rhysd/vim-grammarous'
 
 call plug#end()
 
@@ -76,7 +77,6 @@ set conceallevel=2           " Concealed text is completely hidden
 
 set lazyredraw
 
-
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
@@ -105,6 +105,8 @@ augroup filetypedetect
   autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
   autocmd BufNewFile,BufRead *.hcl setf conf
   autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=4 shiftwidth=4 
+
+  autocmd BufRead,BufNewFile *.gotmpl set filetype=gotexttmpl
   
   autocmd BufNewFile,BufRead *.ino setlocal noet ts=4 sw=4 sts=4
   autocmd BufNewFile,BufRead *.txt setlocal noet ts=4 sw=4
@@ -320,13 +322,18 @@ vnoremap L g_
 " Act like D and C
 nnoremap Y y$
 
-
 " Do not show stupid q: window
 map q: :q
 
 " Don't move on * I'd use a function for this but Vim clobbers the last search
 " when you're in a function so fuck it, practicality beats purity.
 nnoremap <silent> * :let stay_star_view = winsaveview()<cr>*:call winrestview(stay_star_view)<cr>
+
+" mimic the behavior of /%Vfoobar which searches within the previously
+" selected visual selection
+" while in search mode, pressing / will do this
+vnoremap / <Esc>/\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
+vnoremap ? <Esc>?\%><C-R>=line("'<")-1<CR>l\%<<C-R>=line("'>")+1<CR>l
 
 " Time out on key codes but not mappings.
 " Basically this makes terminal Vim work sanely.
@@ -381,35 +388,33 @@ let g:go_debug_windows = {
 \ }
 
 
-let g:go_sameid_search_enabled = 1
-
 let g:go_test_prepend_name = 1
 let g:go_list_type = "quickfix"
-
 let g:go_auto_type_info = 0
 let g:go_auto_sameids = 0
+let g:go_info_mode = "gocode"
 
 let g:go_def_mode = "guru"
 let g:go_echo_command_info = 1
-let g:go_gocode_autobuild = 1
-let g:go_gocode_unimported_packages = 1
-
 let g:go_autodetect_gopath = 1
-" let g:go_info_mode = "guru"
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
 let g:go_highlight_extra_types = 0
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_types = 0
+let g:go_highlight_operators = 1
 let g:go_highlight_format_strings = 0
+let g:go_highlight_function_calls = 0
 
 let g:go_modifytags_transform = 'camelcase'
 let g:go_fold_enable = []
 
 nmap <C-g> :GoDecls<cr>
 imap <C-g> <esc>:<C-u>GoDecls<cr>
+
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -420,6 +425,9 @@ function! s:build_go_files()
     call go#cmd#Build(0)
   endif
 endfunction
+
+
+autocmd FileType go inoreabbr iferr <C-R>=go#iferr#Generate()<CR><esc>x
 
 augroup go
   autocmd!
@@ -544,5 +552,9 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+
+nmap <Leader>gi <Plug>(grammarous-open-info-window)
+nmap <Leader>gc <Plug>(grammarous-close-info-window)
+nmap <Leader>gf <Plug>(grammarous-fixit)
 
 " vim: sw=2 sw=2 et
