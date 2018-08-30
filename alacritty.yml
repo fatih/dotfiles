@@ -368,6 +368,9 @@ key_bindings:
   - { key: K,        mods: Command,       chars: "\x06\x6b" }
   - { key: L,        mods: Command,       chars: "\x06\x6c" }
   - { key: T,        mods: Command,       chars: "\x06\x63" }
+  - { key: RBracket, mods: Command|Shift, chars: "\x06\x6e" }
+  - { key: LBracket, mods: Command|Shift, chars: "\x06\x70" }
+  - { key: Return,   mods: Command|Shift, chars: "\x06\x7a" }
   - { key: Key1,     mods: Command,       chars: "\x06\x31" }
   - { key: Key2,     mods: Command,       chars: "\x06\x32" }
   - { key: Key3,     mods: Command,       chars: "\x06\x33" }
