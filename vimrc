@@ -28,6 +28,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
 Plug 'rhysd/vim-grammarous'
+Plug 'ervandew/supertab'
 
 call plug#end()
 
@@ -75,14 +76,21 @@ set updatetime=300
 set pumheight=10             " Completion window max size
 set conceallevel=2           " Concealed text is completely hidden
 
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+
 set lazyredraw
 
 "http://stackoverflow.com/questions/20186975/vim-mac-how-to-copy-to-clipboard-without-pbcopy
 set clipboard^=unnamed
 set clipboard^=unnamedplus
 
-" ~/.viminfo needs to be writable and readable
-set viminfo='200
+" increase max memory to show syntax highlighting for large files 
+set maxmempattern=20000
+
+" ~/.viminfo needs to be writable and readable. Set oldfiles to 1000 last
+" recently opened files, :FzfHistory uses it
+set viminfo='1000
 
 if has('persistent_undo')
   set undofile
@@ -300,7 +308,7 @@ noremap k gk
 imap jj <Esc>
 
 " Source (reload configuration)
-nnoremap <silent> <F5> :source $MYNVIMRC<CR>
+nnoremap <silent> <F5> :source $MNVIMRC<CR>
 
 nnoremap <F6> :setlocal spell! spell?<CR>
 
@@ -398,6 +406,7 @@ let g:go_def_mode = "guru"
 let g:go_echo_command_info = 1
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
+let g:go_metalinter_enabled = ['vet', 'golint']
 
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
@@ -408,6 +417,7 @@ let g:go_highlight_types = 0
 let g:go_highlight_operators = 1
 let g:go_highlight_format_strings = 0
 let g:go_highlight_function_calls = 0
+let g:go_gocode_propose_source = 1
 
 let g:go_modifytags_transform = 'camelcase'
 let g:go_fold_enable = []
@@ -426,8 +436,6 @@ function! s:build_go_files()
   endif
 endfunction
 
-
-autocmd FileType go inoreabbr iferr <C-R>=go#iferr#Generate()<CR><esc>x
 
 augroup go
   autocmd!
@@ -460,9 +468,11 @@ augroup END
 let g:fzf_command_prefix = 'Fzf'
 let g:fzf_layout = { 'down': '~20%' }
 
+" search 
 nmap <C-p> :FzfHistory<cr>
 imap <C-p> <esc>:<C-u>FzfHistory<cr>
 
+" search across files in the current directory
 nmap <C-b> :FzfFiles<cr>
 imap <C-b> <esc>:<C-u>FzfFiles<cr>
 
@@ -502,6 +512,7 @@ let g:ackprg = 'ag --vimgrep --smart-case'
 " ==================== markdown ====================
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_fenced_languages = ['go=go', 'viml=vim', 'bash=sh']
+let g:vim_markdown_conceal = 0
 let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 2
@@ -570,42 +581,14 @@ augroup END
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
 
-" ==================== UltiSnips ====================
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
+" ==================== Completion + Snippet ====================
+" Ultisnips has native support for SuperTab. SuperTab does omnicompletion by
+" pressing tab. I like this better than autocompletion, but it's still fast.
+let g:SuperTabDefaultCompletionType = "context"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"  
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 
 
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
-
-  return ""
-endfunction
-
-
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
-
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
-
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
 
 " ==================== Various other plugin settings ====================
 nmap  -  <Plug>(choosewin)
