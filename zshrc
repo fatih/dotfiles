@@ -30,6 +30,9 @@ alias hb='hub browse'
 alias -s go='go run'
 alias hs='hugo server'
 
+export LC_ALL="en_US.UTF-8"
+export LANG="en_US.UTF-8"
+
 # =============
 #    EXPORT
 # =============
