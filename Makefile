@@ -1,4 +1,12 @@
-all:
+all: build
+
+build:
+	docker build -t fatih:dev .
+
+run:
+	docker run -it --rm -h dev fatih:dev
+
+sync:
 	mkdir -p ~/.config/nvim
 	mkdir -p ~/.config/alacritty
 
@@ -28,4 +36,4 @@ clean:
 	rm -f ~/.gitconfig
 	rm -f ~/.agiginore
 
-.PHONY: all
+.PHONY: all clean sync build run
