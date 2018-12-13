@@ -1,11 +1,10 @@
 FROM debian:sid
 
-RUN apt-get update && apt-get -qy upgrade
-RUN apt-get -qy install \
+RUN apt-get update && apt-get -qy upgrade && apt-get -qy install \
     build-essential apt-transport-https ca-certificates curl gnupg2 \ 
     software-properties-common locales tzdata ispell mysql-client \
     libssl-dev libreadline-dev zlib1g-dev libffi-dev \
-    wget mosh vim tmux zsh curl git jq direnv unzip htop dnsutils tig
+    wget mosh vim-nox tmux zsh curl git jq direnv unzip htop dnsutils tig
 
 RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 RUN locale-gen en_US.UTF-8 
@@ -34,6 +33,7 @@ RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 
+# vim plugins
 RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \ 
 	git clone 'https://github.com/AndrewRadev/splitjoin.vim' && \ 
 	git clone 'https://github.com/ConradIrwin/vim-bracketed-paste' && \
@@ -63,31 +63,27 @@ RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \
 	git clone 'https://github.com/ervandew/supertab'
 
 # install tools
-RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb
-RUN sudo dpkg -i jump_0.22.0_amd64.deb
+RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb
 
+# go
 RUN wget https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.2.linux-amd64.tar.gz
-
 ENV PATH="/usr/local/go/bin:${PATH}"
+
+# zsh plugins
+RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
+RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
 # RUN zsh -c "go get -u golang.org/x/tools/cmd/..."
 # RUN zsh -c "go get -u github.com/aybabtme/humanlog/cmd/..."
 
-RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
-RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
-
-COPY . /root
-
-RUN ln -s /root/vimrc ~/.vimrc
-RUN ln -s /root/zshrc ~/.zshrc
-RUN ln -s /root/tmuxconf ~/.tmux.conf
-RUN ln -s /root/tigrc ~/.tigrc
-RUN ln -s /root/git-prompt.sh ~/.git-prompt.sh
-RUN ln -s /root/gitconfig ~/.gitconfig
-RUN ln -s /root/agignore ~/.agignore
-
-
+COPY vimrc /root/.vimrc
+COPY zshrc /root/.zshrc
+COPY tmuxconf /root/.tmux.conf
+COPY tigrc /root/.tigrc
+COPY git-prompt.sh /root/.git-prompt.sh
+COPY gitconfig /root/.gitconfig
+COPY agignore /root/.agignore
 
 WORKDIR /root
 
