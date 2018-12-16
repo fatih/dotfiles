@@ -73,9 +73,26 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
-# RUN zsh -c "go get -u golang.org/x/tools/cmd/..."
-# RUN zsh -c "go get -u github.com/aybabtme/humanlog/cmd/..."
+# vim-go tools
+RUN go get -u github.com/davidrjenni/reftools/cmd/fillstruct
+RUN go get -u github.com/mdempsky/gocode
+RUN go get -u github.com/rogpeppe/godef
+RUN go get -u github.com/zmb3/gogetdoc
+RUN go get -u golang.org/x/tools/cmd/goimports
+RUN go get -u github.com/golang/lint/golint
+RUN go get -u github.com/alecthomas/gometalinter
+RUN go get -u github.com/fatih/gomodifytags
+RUN go get -u golang.org/x/tools/cmd/gorename
+RUN go get -u golang.org/x/tools/cmd/guru
+RUN go get -u github.com/josharian/impl
+RUN go get -u honnef.co/go/tools/cmd/keyify
+RUN go get -u github.com/fatih/motion
+RUN go get -u github.com/koron/iferr
 
+# generic tools
+RUN go get -u github.com/aybabtme/humanlog/cmd/...
+
+RUN cp /root/go/bin/* /usr/local/bin/ && rm -rf /root/go
 
 COPY vimrc /root/.vimrc
 COPY zshrc /root/.zshrc
@@ -87,7 +104,6 @@ COPY agignore /root/.agignore
 
 WORKDIR /root
 
-# COPY session-init.sh /bin/session-init
-CMD ["/usr/bin/zsh","-l"]
+CMD ["zsh", "-c", "/usr/bin/tmux attach || /usr/bin/tmux new"]
 
 
