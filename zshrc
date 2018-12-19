@@ -9,16 +9,22 @@
 #    ALIAS
 # =============
 alias ..='cd ..'
-alias ls='ls -GpF' # Mac OSX specific
-alias ll='ls -alGpF' # Mac OSX specific
 
 alias t="tig status"
 alias tigs="tig status" #old habits don't die
 alias d='git diff' 
-
 alias vi='vim'
 
-alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed'
+case `uname` in
+  Darwin)
+    alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed'
+    alias ls='ls -GpF' # Mac OSX specific
+    alias ll='ls -alGpF' # Mac OSX specific
+  ;;
+  Linux)
+    alias ll='ls -al'
+  ;;
+esac
 
 alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
 alias co='git checkout master'
@@ -214,7 +220,6 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-
 # ===================
 #    THIRD PARTY
 # ===================
@@ -225,9 +230,3 @@ eval "$(jump shell)"
 # brew install direnv
 # https://github.com/direnv/direnv
 eval "$(direnv hook zsh)"
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc'; fi

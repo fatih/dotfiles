@@ -1,40 +1,142 @@
-FROM debian:sid
+# install kubectl
+FROM debian:buster as kubectl_builder
+RUN apt-get update && apt-get install -y curl ca-certificates unzip
+RUN curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+RUN chmod 755 /usr/local/bin/kubectl
 
-RUN apt-get update && apt-get -qy upgrade && apt-get -qy install \
-    build-essential apt-transport-https ca-certificates curl gnupg2 \ 
-    software-properties-common locales tzdata ispell mysql-client \
-    libssl-dev libreadline-dev zlib1g-dev libffi-dev \
-    wget mosh vim-nox tmux zsh curl git jq direnv unzip htop dnsutils tig
+FROM debian:buster
+RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
+	apache2-utils \
+	apt-transport-https \
+	build-essential \
+	ca-certificates \
+	clang \
+	cmake \
+	curl \
+	default-libmysqlclient-dev \
+	default-mysql-client \
+	direnv \
+	dnsutils \
+	docker-compose \
+	docker.io \
+	fakeroot-ng \
+	fzf \
+	gdb \
+	git \
+	git-crypt \
+	gnupg \
+	golang-1.11 \
+	htop \
+	hub \
+	hugo \
+	ipcalc \
+	jq \
+	less \
+	libclang-dev \
+	liblzma-dev \
+	libpq-dev \
+	libprotoc-dev \
+	libsqlite3-dev \
+	libssl-dev \
+	lldb \
+	locales \
+	mosh \
+	mtr-tiny \
+	musl-tools \
+	ncdu \
+	netcat-openbsd \
+	openssh-server \
+	pkg-config \
+	protobuf-compiler \
+	pwgen \
+	python \
+	python3 \
+	python3-flake8 \
+	python3-pip \
+	python3-setuptools \
+	python3-venv \
+	python3-wheel \
+	qrencode \
+	quilt \
+	ripgrep \
+	shellcheck \
+	socat \
+	sqlite3 \
+	stow \
+	sudo \
+	tig \
+	tmate \
+	tmux \
+	unzip \
+	vim-nox \
+	wget \
+	zgen \
+	zip \
+	zlib1g-dev \
+	zsh \
+	--no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-RUN locale-gen en_US.UTF-8 
-ENV LANG=en_US.UTF-8
-ENV LC_CTYPE=en_US.UTF-8
-ENV LC_ALL=en_US.UTF-8
+RUN mkdir /var/run/sshd
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+RUN sed 's/#Port 22/Port 3222/' -i /etc/ssh/sshd_config
+
+ENV LANG="en_US.UTF-8"
+ENV LC_ALL="en_US.UTF-8"
+ENV LANGUAGE="en_US.UTF-8"
+
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
+	locale-gen --purge $LANG && \
+	dpkg-reconfigure --frontend=noninteractive locales && \
+	update-locale LANG=$LANG LC_ALL=$LC_ALL LANGUAGE=$LANGUAGE
 
 # for correct colours is tmux
 ENV TERM screen-256color
 
-# use buster because no repo exists for sid
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian buster stable"
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add
+# kubectl
+COPY --from=kubectl_builder /usr/local/bin/kubectl /usr/local/bin/
 
-RUN apt-get update && apt-get -y install docker-ce
+# install tools
+RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb
 
-RUN chsh -s /usr/bin/zsh
+# go
+RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz
+ENV PATH="/usr/local/go/bin:${PATH}"
 
-RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/v1.12.2/bin/linux/amd64/kubectl && chmod +x kubectl && mv kubectl /usr/local/bin/kubectl
+# vim-go tools
+RUN go get -u github.com/davidrjenni/reftools/cmd/fillstruct
+RUN go get -u github.com/mdempsky/gocode
+RUN go get -u github.com/rogpeppe/godef
+RUN go get -u github.com/zmb3/gogetdoc
+RUN go get -u golang.org/x/tools/cmd/goimports
+RUN go get -u github.com/golang/lint/golint
+RUN go get -u github.com/alecthomas/gometalinter
+RUN go get -u github.com/fatih/gomodifytags
+RUN go get -u golang.org/x/tools/cmd/gorename
+RUN go get -u golang.org/x/tools/cmd/guru
+RUN go get -u github.com/josharian/impl
+RUN go get -u honnef.co/go/tools/cmd/keyify
+RUN go get -u github.com/fatih/motion
+RUN go get -u github.com/koron/iferr
 
-RUN git clone https://github.com/junegunn/fzf /root/.fzf
-RUN cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
-RUN /root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
+# generic tools
+RUN go get -u github.com/aybabtme/humanlog/cmd/...
+
+RUN rm -rf /home/fatih/go
+
+# user setup
+ARG user=fatih
+ARG uid=1000
+ARG github_user=fatih
+RUN useradd -m $user -u $uid -G users,sudo,docker -s /bin/zsh
+USER $user
+RUN mkdir ~/.ssh && curl -fsL https://github.com/$github_user.keys > ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-
 # vim plugins
-RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \ 
+RUN mkdir -p /home/fatih/.vim/plugged && cd /home/fatih/.vim/plugged && \ 
 	git clone 'https://github.com/AndrewRadev/splitjoin.vim' && \ 
 	git clone 'https://github.com/ConradIrwin/vim-bracketed-paste' && \
 	git clone 'https://github.com/Raimondi/delimitMate' && \
@@ -62,48 +164,24 @@ RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \
 	git clone 'https://github.com/tpope/vim-scriptease' && \
 	git clone 'https://github.com/ervandew/supertab'
 
-# install tools
-RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb
-
-# go
-RUN wget https://dl.google.com/go/go1.11.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.2.linux-amd64.tar.gz
-ENV PATH="/usr/local/go/bin:${PATH}"
 
 # zsh plugins
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
-# vim-go tools
-RUN go get -u github.com/davidrjenni/reftools/cmd/fillstruct
-RUN go get -u github.com/mdempsky/gocode
-RUN go get -u github.com/rogpeppe/godef
-RUN go get -u github.com/zmb3/gogetdoc
-RUN go get -u golang.org/x/tools/cmd/goimports
-RUN go get -u github.com/golang/lint/golint
-RUN go get -u github.com/alecthomas/gometalinter
-RUN go get -u github.com/fatih/gomodifytags
-RUN go get -u golang.org/x/tools/cmd/gorename
-RUN go get -u golang.org/x/tools/cmd/guru
-RUN go get -u github.com/josharian/impl
-RUN go get -u honnef.co/go/tools/cmd/keyify
-RUN go get -u github.com/fatih/motion
-RUN go get -u github.com/koron/iferr
 
-# generic tools
-RUN go get -u github.com/aybabtme/humanlog/cmd/...
-
-RUN cp /root/go/bin/* /usr/local/bin/ && rm -rf /root/go
-
-COPY vimrc /root/.vimrc
-COPY zshrc /root/.zshrc
-COPY tmuxconf /root/.tmux.conf
-COPY tigrc /root/.tigrc
-COPY git-prompt.sh /root/.git-prompt.sh
-COPY gitconfig /root/.gitconfig
-COPY agignore /root/.agignore
-
-WORKDIR /root
-
-CMD ["zsh", "-c", "/usr/bin/tmux attach || /usr/bin/tmux new"]
+COPY vimrc /home/fatih/.vimrc
+COPY zshrc /home/fatih/.zshrc
+COPY tmuxconf /home/fatih/.tmux.conf
+COPY tigrc /home/fatih/.tigrc
+COPY git-prompt.sh /home/fatih/.git-prompt.sh
+COPY gitconfig /home/fatih/.gitconfig
+COPY agignore /home/fatih/.agignore
 
 
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+# make sure we start sshd at the end - always keep this at the bottom
+USER root
+EXPOSE 3222 63200-63220/udp
+CMD ["/usr/sbin/sshd", "-D"]

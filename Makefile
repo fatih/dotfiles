@@ -3,8 +3,11 @@ all: build
 build:
 	docker build -t fatih:dev .
 
-run:
-	docker run -it --rm -h dev fatih:dev
+run: kill
+	docker run -d -P -p 3222:3222 -h dev --rm  -v /var/run/docker.sock:/var/run/docker.sock -v /Users/fatih/Code:/mnt/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev && ssh -i ~/.ssh/github_rsa fatih@localhost -p 3222
+
+kill:
+	docker kill dev
 
 sync:
 	mkdir -p ~/.config/nvim
