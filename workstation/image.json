@@ -1,15 +1,12 @@
 {
-  "variables": {
-    "region": "",
-  },
   "builders": [
     {
       "type": "digitalocean",
       "image": "debian-9-x64",
-      "region": "{{user `region`}}",
+      "region": "fra1",
       "size": "512mb",
       "ssh_username": "root",
-      "snapshot_name": "fatih-dev-{{{{timestamp}}}}",
+      "snapshot_name": "fatih-dev-{{timestamp}}",
       "state_timeout": "20m"
     }
   ],
