@@ -23,6 +23,7 @@ case `uname` in
   ;;
   Linux)
     alias ll='ls -al'
+    alias ls='ls --color=auto' 
   ;;
 esac
 

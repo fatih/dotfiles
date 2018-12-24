@@ -4,10 +4,10 @@ build:
 	docker build -t fatih:dev .
 
 run: kill
-	docker run -d -P -p 3222:3222 -h dev --rm  -v /var/run/docker.sock:/var/run/docker.sock -v /Users/fatih/Code:/mnt/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev && ssh -i ~/.ssh/github_rsa fatih@localhost -p 3222
+	docker run -d -P -p 3222:3222 -h dev --rm  -v /var/run/docker.sock:/var/run/docker.sock -v /Users/fatih/Code:/home/fatih/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev && ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa fatih@localhost -p 3222
 
 kill:
-	docker kill dev
+	docker kill dev | true
 
 sync:
 	mkdir -p ~/.config/nvim
@@ -39,4 +39,4 @@ clean:
 	rm -f ~/.gitconfig
 	rm -f ~/.agiginore
 
-.PHONY: all clean sync build run
+.PHONY: all clean sync build run kill
