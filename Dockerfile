@@ -68,6 +68,7 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	apache2-utils \
 	apt-transport-https \
 	build-essential \
+	bzr \
 	ca-certificates \
 	clang \
 	cmake \
@@ -201,5 +202,5 @@ ENV PATH="/usr/local/go/bin:${PATH}"
 
 # make sure we start sshd at the end - always keep this at the bottom
 USER root
-EXPOSE 3222 63200-63220/udp
+EXPOSE 3222
 CMD ["/usr/sbin/sshd", "-D"]

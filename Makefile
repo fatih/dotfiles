@@ -4,10 +4,13 @@ build:
 	docker build -t fatih:dev .
 
 run: kill
-	docker run -d -P -p 3222:3222 -h dev --rm  -v /var/run/docker.sock:/var/run/docker.sock -v /Users/fatih/Code:/home/fatih/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev && ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa fatih@localhost -p 3222
+	docker run -it -d -p 3222:3222 -h dev --rm -v /Users/fatih/Code:/home/fatih/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev 
 
 kill:
 	docker kill dev | true
+
+login:
+	ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa fatih@localhost -p 3222
 
 sync:
 	mkdir -p ~/.config/nvim
