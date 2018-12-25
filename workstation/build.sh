@@ -91,9 +91,9 @@ systemctl restart docker
 
 
 echo "Installing fzf"
-RUN git clone https://github.com/junegunn/fzf /root/.fzf
-RUN cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
-RUN /root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
+git clone https://github.com/junegunn/fzf /root/.fzf
+cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
+/root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
 
 # hub \
 # ripgrep \
@@ -193,14 +193,13 @@ rm -rf /root/go
 wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
 # user setup
-curl -fsL https://github.com/$github_user.keys > ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
+curl -fsL https://github.com/fatih.keys > ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # zsh plugins
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestionsgo ~/.zsh/zsh-autosuggestions
-
+git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosuggestions
 
 mkdir /root/code/
 cd /root/code

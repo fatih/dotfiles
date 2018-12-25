@@ -5,7 +5,7 @@ variable "region" {
 
 variable "image" {
   description = "Fatih's Dev Image"
-  default     = "41745985"
+  default     = "41750105"
 }
 
 provider "digitalocean" {}
