@@ -5,7 +5,7 @@ variable "region" {
 
 variable "image" {
   description = "Fatih's Dev Image"
-  default     = "41750105"
+  default     = "41753048"
 }
 
 provider "digitalocean" {}
@@ -30,6 +30,42 @@ resource "digitalocean_droplet" "dev" {
   }
 }
 
+resource "digitalocean_firewall" "dev" {
+  name = "dev"
+
+  droplet_ids = ["${digitalocean_droplet.dev.id}"]
+
+  inbound_rule = [
+    {
+      protocol         = "tcp"
+      port_range       = "22"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol         = "udp"
+      port_range       = "60000-60100"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+  ]
+
+  outbound_rule = [
+    {
+      protocol              = "tcp"
+      port_range            = "1-65535"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "udp"
+      port_range            = "1-65535"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
+      protocol              = "icmp"
+      destination_addresses = ["0.0.0.0/0", "::/0"]
+    },
+  ]
+}
+
 output "public_ip" {
-  value = "dev"
+  value = "${digitalocean_droplet.dev.ipv4_address}"
 }

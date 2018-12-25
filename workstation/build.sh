@@ -2,7 +2,6 @@
 
 set -eu
 
-apt-get update
 apt-get upgrade -y
 apt-get install -qq -y \
 	apache2-utils \
@@ -137,6 +136,8 @@ export PATH="/usr/local/go/bin:${PATH}"
 
 wget https://dl.google.com/go/go${GOLANG_VERSION}.linux-amd64.tar.gz && tar -C /usr/local -xzf go${GOLANG_VERSION}.linux-amd64.tar.gz && rm go${GOLANG_VERSION}.linux-amd64.tar.gz
 
+export GO111MODULE=off
+
 # install go tools
 go get -u github.com/davidrjenni/reftools/cmd/fillstruct
 go get -u github.com/mdempsky/gocode
@@ -144,7 +145,6 @@ go get -u github.com/rogpeppe/godef
 go get -u github.com/zmb3/gogetdoc
 go get -u golang.org/x/tools/cmd/goimports
 go get -u github.com/golang/lint/golint
-go get -u github.com/alecthomas/gometalinter
 go get -u github.com/fatih/gomodifytags
 go get -u golang.org/x/tools/cmd/gorename
 go get -u golang.org/x/tools/cmd/guru
@@ -161,55 +161,3 @@ rm -rf /root/go
 
 # install tools
 wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
-
-
-# install vim plugins
-mkdir -p /home/fatih/.vim/plugged && cd /home/fatih/.vim/plugged
-git clone 'https://github.com/AndrewRadev/splitjoin.vim'
-git clone 'https://github.com/ConradIrwin/vim-bracketed-paste'
-git clone 'https://github.com/Raimondi/delimitMate'
-git clone 'https://github.com/SirVer/ultisnips'
-git clone 'https://github.com/cespare/vim-toml'
-git clone 'https://github.com/corylanou/vim-present'
-git clone 'https://github.com/ekalinin/Dockerfile.vim'
-git clone 'https://github.com/elzr/vim-json'
-git clone 'https://github.com/fatih/vim-go'
-git clone 'https://github.com/fatih/vim-hclfmt'
-git clone 'https://github.com/fatih/vim-nginx'
-git clone 'https://github.com/godlygeek/tabular'
-git clone 'https://github.com/hashivim/vim-hashicorp-tools'
-git clone 'https://github.com/junegunn/fzf.vim'
-git clone 'https://github.com/mileszs/ack.vim'
-git clone 'https://github.com/plasticboy/vim-markdown'
-git clone 'https://github.com/scrooloose/nerdtree'
-git clone 'https://github.com/t9md/vim-choosewin'
-git clone 'https://github.com/tmux-plugins/vim-tmux'
-git clone 'https://github.com/fatih/molokai'
-git clone 'https://github.com/tpope/vim-commentary'
-git clone 'https://github.com/tpope/vim-eunuch'
-git clone 'https://github.com/tpope/vim-fugitive'
-git clone 'https://github.com/tpope/vim-repeat'
-git clone 'https://github.com/tpope/vim-scriptease'
-git clone 'https://github.com/ervandew/supertab'
-
-# user setup
-curl -fsL https://github.com/fatih.keys > ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
-
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
-# zsh plugins
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosuggestions
-
-mkdir /home/fatih/code/
-cd /home/fatih/code
-
-git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
-
-ln -s vimrc /home/fatih/.vimrc
-ln -s zshrc /home/fatih/.zshrc
-ln -s tmuxconf /home/fatih/.tmux.conf
-ln -s tigrc /home/fatih/.tigrc
-ln -s git-prompt.sh /home/fatih/.git-prompt.sh
-ln -s gitconfig /home/fatih/.gitconfig
-ln -s agignore /home/fatih/.agignore
