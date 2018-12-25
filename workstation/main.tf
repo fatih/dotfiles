@@ -10,7 +10,7 @@ variable "image" {
 
 provider "digitalocean" {}
 
-resource "digitalocean_droplet" "workstation" {
+resource "digitalocean_droplet" "dev" {
   ssh_keys           = [23737229]      # Key example
   image              = "${var.image}"
   region             = "${var.region}"
@@ -18,7 +18,7 @@ resource "digitalocean_droplet" "workstation" {
   private_networking = true
   backups            = true
   ipv6               = true
-  name               = "workstation"
+  name               = "dev"
 
   provisioner "remote-exec" {
     connection {
@@ -31,5 +31,5 @@ resource "digitalocean_droplet" "workstation" {
 }
 
 output "public_ip" {
-  value = "${digitalocean_droplet.workstation.ipv4_address}"
+  value = "dev"
 }

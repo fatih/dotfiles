@@ -132,36 +132,6 @@ ln -s /etc/ssl/certs/3513523f.0 /home/yyin/opensource/openssl/openssl-1.0.1t-bui
 # install 1password
 curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/local/bin && rm 1password.zip
 
-# install vim plugins
-mkdir -p /root/.vim/plugged && cd /root/.vim/plugged
-git clone 'https://github.com/AndrewRadev/splitjoin.vim'
-git clone 'https://github.com/ConradIrwin/vim-bracketed-paste'
-git clone 'https://github.com/Raimondi/delimitMate'
-git clone 'https://github.com/SirVer/ultisnips'
-git clone 'https://github.com/cespare/vim-toml'
-git clone 'https://github.com/corylanou/vim-present'
-git clone 'https://github.com/ekalinin/Dockerfile.vim'
-git clone 'https://github.com/elzr/vim-json'
-git clone 'https://github.com/fatih/vim-go'
-git clone 'https://github.com/fatih/vim-hclfmt'
-git clone 'https://github.com/fatih/vim-nginx'
-git clone 'https://github.com/godlygeek/tabular'
-git clone 'https://github.com/hashivim/vim-hashicorp-tools'
-git clone 'https://github.com/junegunn/fzf.vim'
-git clone 'https://github.com/mileszs/ack.vim'
-git clone 'https://github.com/plasticboy/vim-markdown'
-git clone 'https://github.com/scrooloose/nerdtree'
-git clone 'https://github.com/t9md/vim-choosewin'
-git clone 'https://github.com/tmux-plugins/vim-tmux'
-git clone 'https://github.com/fatih/molokai'
-git clone 'https://github.com/tpope/vim-commentary'
-git clone 'https://github.com/tpope/vim-eunuch'
-git clone 'https://github.com/tpope/vim-fugitive'
-git clone 'https://github.com/tpope/vim-repeat'
-git clone 'https://github.com/tpope/vim-scriptease'
-git clone 'https://github.com/ervandew/supertab'
-
-
 export GOLANG_VERSION="1.11.4"
 export PATH="/usr/local/go/bin:${PATH}"
 
@@ -192,6 +162,36 @@ rm -rf /root/go
 # install tools
 wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
+
+# install vim plugins
+mkdir -p /home/fatih/.vim/plugged && cd /home/fatih/.vim/plugged
+git clone 'https://github.com/AndrewRadev/splitjoin.vim'
+git clone 'https://github.com/ConradIrwin/vim-bracketed-paste'
+git clone 'https://github.com/Raimondi/delimitMate'
+git clone 'https://github.com/SirVer/ultisnips'
+git clone 'https://github.com/cespare/vim-toml'
+git clone 'https://github.com/corylanou/vim-present'
+git clone 'https://github.com/ekalinin/Dockerfile.vim'
+git clone 'https://github.com/elzr/vim-json'
+git clone 'https://github.com/fatih/vim-go'
+git clone 'https://github.com/fatih/vim-hclfmt'
+git clone 'https://github.com/fatih/vim-nginx'
+git clone 'https://github.com/godlygeek/tabular'
+git clone 'https://github.com/hashivim/vim-hashicorp-tools'
+git clone 'https://github.com/junegunn/fzf.vim'
+git clone 'https://github.com/mileszs/ack.vim'
+git clone 'https://github.com/plasticboy/vim-markdown'
+git clone 'https://github.com/scrooloose/nerdtree'
+git clone 'https://github.com/t9md/vim-choosewin'
+git clone 'https://github.com/tmux-plugins/vim-tmux'
+git clone 'https://github.com/fatih/molokai'
+git clone 'https://github.com/tpope/vim-commentary'
+git clone 'https://github.com/tpope/vim-eunuch'
+git clone 'https://github.com/tpope/vim-fugitive'
+git clone 'https://github.com/tpope/vim-repeat'
+git clone 'https://github.com/tpope/vim-scriptease'
+git clone 'https://github.com/ervandew/supertab'
+
 # user setup
 curl -fsL https://github.com/fatih.keys > ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
 
@@ -201,15 +201,15 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.c
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosuggestions
 
-mkdir /root/code/
-cd /root/code
+mkdir /home/fatih/code/
+cd /home/fatih/code
 
 git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
 
-ln -s vimrc /root/.vimrc
-ln -s zshrc /root/.zshrc
-ln -s tmuxconf /root/.tmux.conf
-ln -s tigrc /root/.tigrc
-ln -s git-prompt.sh /root/.git-prompt.sh
-ln -s gitconfig /root/.gitconfig
-ln -s agignore /root/.agignore
+ln -s vimrc /home/fatih/.vimrc
+ln -s zshrc /home/fatih/.zshrc
+ln -s tmuxconf /home/fatih/.tmux.conf
+ln -s tigrc /home/fatih/.tigrc
+ln -s git-prompt.sh /home/fatih/.git-prompt.sh
+ln -s gitconfig /home/fatih/.gitconfig
+ln -s agignore /home/fatih/.agignore
