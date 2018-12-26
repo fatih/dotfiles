@@ -221,8 +221,6 @@ git clone https://github.com/tmux-plugins/tmux-open.git ~/.tmux/plugins/tmux-ope
 git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
 
 git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
-#TODO(arslan): remove this
-git checkout dockerize
 
 ln -s \$(pwd)/vimrc /home/fatih/.vimrc
 ln -s \$(pwd)/zshrc /home/fatih/.zshrc
