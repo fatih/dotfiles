@@ -215,6 +215,11 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosu
 mkdir /home/fatih/code/
 cd /home/fatih/code
 
+# tmux plugins
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+git clone https://github.com/tmux-plugins/tmux-open.git ~/.tmux/plugins/tmux-open
+git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
+
 git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
 #TODO(arslan): remove this
 git checkout dockerize
