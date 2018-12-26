@@ -1,5 +1,11 @@
 # Workstation build
 
+This terraform setup creates a workstation on DigitalOcean with my personal
+setup and ready to use mosh setup.
+
+## Install
+
+
 1. Create workstation droplet
 
 ```
