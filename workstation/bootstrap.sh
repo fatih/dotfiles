@@ -66,7 +66,6 @@ apt-get install -qq -y \
 	sudo \
 	tig \
 	tmate \
-	tmux \
 	tree \
 	unzip \
 	vim-nox \
@@ -85,23 +84,23 @@ apt-get install -qq -y \
 
 chsh -s /usr/bin/zsh
 
+# enable backports to install latest tmux
+add-apt-repository "deb http://mirrors.digitalocean.com/debian stretch-backports main contrib non-free" -s
+apt-get update && apt-get install -y -t stretch-backports tmux
+
 # install docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-apt-get update &&  apt-get install -qy docker-ce
+apt-get update && apt-get install -qy docker-ce
 
 echo "Configure custom ip block for docker..."
 echo '{"bip":"172.24.0.1/24","fixed-cidr":"172.24.0.0/24"}' > /etc/docker/daemon.json
 systemctl restart docker
 
-
 echo "Installing fzf"
 git clone https://github.com/junegunn/fzf /root/.fzf
 cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
 /root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
-
-# hub \
-# ripgrep \
 
 echo "Installing kubectl"
 curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl

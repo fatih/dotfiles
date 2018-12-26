@@ -13,7 +13,7 @@ resource "digitalocean_droplet" "dev" {
   # I really hate user-data, don't @ me. This is powerful and works fine for my
   # needs
   provisioner "remote-exec" {
-    script = "bootsrap.sh"
+    script = "bootstrap.sh"
 
     connection {
       type        = "ssh"
