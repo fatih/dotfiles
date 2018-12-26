@@ -97,11 +97,6 @@ echo "Configure custom ip block for docker..."
 echo '{"bip":"172.24.0.1/24","fixed-cidr":"172.24.0.0/24"}' > /etc/docker/daemon.json
 systemctl restart docker
 
-echo "Installing fzf"
-git clone https://github.com/junegunn/fzf /root/.fzf
-cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
-/root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
-
 echo "Installing kubectl"
 curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod 755 /usr/local/bin/kubectl
@@ -206,6 +201,11 @@ git clone 'https://github.com/ervandew/supertab'
 # user setup
 mkdir ~/.ssh && curl -fsL https://github.com/fatih.keys > ~/.ssh/authorized_keys && chmod 600 ~/.ssh/authorized_keys
 
+# fzf
+git clone https://github.com/junegunn/fzf /home/fatih/.fzf
+cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
+/home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
+
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # zsh plugins
@@ -214,6 +214,7 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosu
 
 mkdir /home/fatih/code/
 cd /home/fatih/code
+
 
 # tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -229,6 +230,7 @@ ln -s \$(pwd)/tigrc /home/fatih/.tigrc
 ln -s \$(pwd)/git-prompt.sh /home/fatih/.git-prompt.sh
 ln -s \$(pwd)/gitconfig /home/fatih/.gitconfig
 ln -s \$(pwd)/agignore /home/fatih/.agignore
+
 EOF
 
 echo "Done!"
