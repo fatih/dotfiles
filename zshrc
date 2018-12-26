@@ -9,16 +9,23 @@
 #    ALIAS
 # =============
 alias ..='cd ..'
-alias ls='ls -GpF' # Mac OSX specific
-alias ll='ls -alGpF' # Mac OSX specific
 
 alias t="tig status"
 alias tigs="tig status" #old habits don't die
 alias d='git diff' 
-
 alias vi='vim'
 
-alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed'
+case `uname` in
+  Darwin)
+    alias flushdns='sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed'
+    alias ls='ls -GpF' # Mac OSX specific
+    alias ll='ls -alGpF' # Mac OSX specific
+  ;;
+  Linux)
+    alias ll='ls -al'
+    alias ls='ls --color=auto' 
+  ;;
+esac
 
 alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
 alias co='git checkout master'
@@ -121,6 +128,9 @@ function parse_git_dirty() {
 autoload -Uz compinit
 compinit
 
+autoload bashcompinit
+bashcompinit
+
 zmodload -i zsh/complist
 
 WORDCHARS=''
@@ -208,11 +218,8 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 #    PLUGINS
 # ===================
 
-# brew install zsh-syntax-highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-# brew install zsh-autosuggestions
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # ===================
 #    THIRD PARTY

@@ -151,11 +151,6 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-open'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
-####
-# Smart pane switching with awareness of Nvim/Vim splits.
-# See: https://github.com/christoomey/vim-tmux-navigator
-# set -g @plugin 'christoomey/vim-tmux-navigator'
-
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'
 
