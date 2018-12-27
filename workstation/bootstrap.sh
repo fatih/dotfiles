@@ -59,8 +59,8 @@ apt-get install -qq -y \
 	python3-wheel \
 	qrencode \
 	quilt \
-	silversearcher-ag \
 	shellcheck \
+	silversearcher-ag \
 	socat \
 	sqlite3 \
 	stow \
@@ -71,6 +71,7 @@ apt-get install -qq -y \
 	unzip \
 	vim-nox \
 	wget \
+	xsel \
 	zgen \
 	zip \
 	zlib1g-dev \
