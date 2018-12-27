@@ -69,7 +69,6 @@ apt-get install -qq -y \
 	tmate \
 	tree \
 	unzip \
-	vim-nox \
 	wget \
 	xsel \
 	zgen \
@@ -90,7 +89,22 @@ chsh -s /usr/bin/zsh
 add-apt-repository "deb http://mirrors.digitalocean.com/debian stretch-backports main contrib non-free" -s
 apt-get update && apt-get install -y -t stretch-backports tmux
 
-# install docker
+# install latest vim with clipboard and python support
+apt remove vim vim-runtime gvim -y
+mkdir -p /tmp/vim-src
+git clone --branch "v8.1.0644" --depth 1 "https://github.com/vim/vim" "/tmp/vim-src"
+cd /tmp/vim-src
+
+./configure --with-features=huge \
+        --disable-gui \
+        --enable-python3interp=yes \
+        --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
+        --prefix=/usr/local
+make -j8
+make install
+cd /root && rm -rf /tmp/vim-src
+
+install docker
 curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 apt-get update && apt-get install -qy docker-ce
