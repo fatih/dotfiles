@@ -59,6 +59,7 @@ apt-get install -qq -y \
 	python3-wheel \
 	qrencode \
 	quilt \
+	silversearcher-ag \
 	shellcheck \
 	socat \
 	sqlite3 \
