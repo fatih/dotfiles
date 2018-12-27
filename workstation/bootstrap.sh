@@ -2,14 +2,11 @@
 
 set -eu
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get upgrade -y
 
-# get rid of "exiting sent invalidate(group) request, exiting" issues
-# https://www.digitalocean.com/community/questions/debian-9-3-droplet-issues-with-useradd
-apt-get remove unscd -y
-
-apt-get install -qq -y \
+apt-get install -qq -y --force-yes \
 	apache2-utils \
 	apt-transport-https \
 	build-essential \
@@ -18,6 +15,7 @@ apt-get install -qq -y \
 	clang \
 	cmake \
 	curl \
+  docker.io \
 	default-libmysqlclient-dev \
 	default-mysql-client \
 	direnv \
@@ -46,7 +44,6 @@ apt-get install -qq -y \
 	musl-tools \
 	ncdu \
 	netcat-openbsd \
-	openssh-server \
 	pkg-config \
 	protobuf-compiler \
 	pwgen \
@@ -71,10 +68,12 @@ apt-get install -qq -y \
 	unzip \
 	wget \
 	xsel \
+	xclip \
 	zgen \
 	zip \
 	zlib1g-dev \
 	zsh \
+  neovim \
   gnupg2 \
   libvirt-clients \
   libvirt-daemon-system \
@@ -86,65 +85,40 @@ apt-get install -qq -y \
 chsh -s /usr/bin/zsh
 
 # enable backports to install latest tmux
-add-apt-repository "deb http://mirrors.digitalocean.com/debian stretch-backports main contrib non-free" -s
-apt-get update && apt-get install -y -t stretch-backports tmux
 
 # install latest vim with clipboard and python support
-apt remove vim vim-runtime gvim -y
-mkdir -p /tmp/vim-src
-git clone --branch "v8.1.0644" --depth 1 "https://github.com/vim/vim" "/tmp/vim-src"
-cd /tmp/vim-src
+add-apt-repository ppa:jonathonf/vim -y
+apt-get update
+apt-get install vim-gtk3 -y
 
-./configure --with-features=huge \
-        --disable-gui \
-        --enable-python3interp=yes \
-        --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-        --prefix=/usr/local
-make -j8
-make install
-cd /root && rm -rf /tmp/vim-src
+# add-apt-repository ppa:neovim-ppa/stable -y
+# apt-get update
+# apt-get install neovim python-dev python-pip python3-dev python3-pip -y
 
-install docker
-curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-apt-get update && apt-get install -qy docker-ce
+# apt remove vim vim-runtime gvim -y
+# mkdir -p /tmp/vim-src
+# git clone --branch "v8.1.0644" --depth 1 "https://github.com/vim/vim" "/tmp/vim-src"
+# cd /tmp/vim-src
 
-echo "Configure custom ip block for docker..."
-echo '{"bip":"172.24.0.1/24","fixed-cidr":"172.24.0.0/24"}' > /etc/docker/daemon.json
-systemctl restart docker
+# ./configure --with-features=huge \
+#         --disable-gui \
+#         --enable-python3interp=yes \
+#         --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
+#         --prefix=/usr/local
+# make -j8
+# make install
+# cd /root && rm -rf /tmp/vim-src
+
+#install docker
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+# apt-get update && apt-get install -qy docker-ce
 
 echo "Installing kubectl"
 curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 chmod 755 /usr/local/bin/kubectl
 
-echo "Configure routes to preserve networking for vpn..."
-ip=$(ip addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-subnet=$(ip route | grep -Po '^\d+(.\d+){3}/\d+(?= dev eth0)')
-gateway=$(ip route | grep -Po '(?<=default via )[.\d]+')
-ip rule add from $ip table 128 > /dev/null 2>&1 || true
-ip route add table 128 to $subnet dev eth0 > /dev/null 2>&1 || true
-ip route add table 128 default via $gateway > /dev/null 2>&1 || true
-
-echo "128	mgmt" > /etc/iproute2/rt_tables.d/mgmt.conf
-grep -q '# routing rules for vpn' /etc/network/interfaces || {
-    echo "	# routing rules for vpn" >> /etc/network/interfaces
-    echo "	post-up ip rule add from $ip table 128" >> /etc/network/interfaces
-    echo "	post-up ip route add table 128 to $subnet dev eth0" >> /etc/network/interfaces
-    echo "	post-up ip route add table 128 default via $gateway" >> /etc/network/interfaces
-}
-
-echo "Installing vpn..."
-mkdir vpn && cd vpn
-curl -Lo vpn.tgz https://security.nyc3.digitaloceanspaces.com/VPN/PanGPLinux-4.1.6-c3.tgz
-tar -zxvf vpn.tgz
-apt-get install -qy ./GlobalProtect_deb-4.1.6.0-3.deb
-rm -rf vpn
-cd ../
-# workaround for vpn cert issue
-mkdir -p /home/yyin/opensource/openssl/openssl-1.0.1t-build/ssl/certs
-ln -s /etc/ssl/certs/3513523f.0 /home/yyin/opensource/openssl/openssl-1.0.1t-build/ssl/certs/. > /dev/null 2>&1
-
-# install 1password
+echo "Installing 1password"
 curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/local/bin && rm 1password.zip
 
 export GOLANG_VERSION="1.11.4"
@@ -184,7 +158,7 @@ wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_
 useradd -m fatih -u 1001 -G users,sudo,docker -s /bin/zsh
 
 # continue installing specific things as user
-sudo -u fatih bash << EOF
+sudo su -u fatih bash << EOF
 # install vim plugins
 mkdir -p /home/fatih/.vim/plugged && cd /home/fatih/.vim/plugged
 git clone 'https://github.com/AndrewRadev/splitjoin.vim'
@@ -223,6 +197,7 @@ cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
 /home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # zsh plugins
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
@@ -230,7 +205,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosu
 
 mkdir /home/fatih/code/
 cd /home/fatih/code
-
 
 # tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -241,13 +215,13 @@ git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plug
 git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
 
 ln -s \$(pwd)/vimrc /home/fatih/.vimrc
+ln -s \$(pwd)/vimrc ~/.config/nvim/init.vim
 ln -s \$(pwd)/zshrc /home/fatih/.zshrc
 ln -s \$(pwd)/tmuxconf /home/fatih/.tmux.conf
 ln -s \$(pwd)/tigrc /home/fatih/.tigrc
 ln -s \$(pwd)/git-prompt.sh /home/fatih/.git-prompt.sh
 ln -s \$(pwd)/gitconfig /home/fatih/.gitconfig
 ln -s \$(pwd)/agignore /home/fatih/.agignore
-
 EOF
 
 echo "Done!"
