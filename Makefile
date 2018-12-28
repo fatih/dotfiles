@@ -26,6 +26,7 @@ sync:
 	[ -f ~/.git-prompt.sh ] || ln -s $(PWD)/git-prompt.sh ~/.git-prompt.sh
 	[ -f ~/.gitconfig ] || ln -s $(PWD)/gitconfig ~/.gitconfig
 	[ -f ~/.agignore ] || ln -s $(PWD)/agignore ~/.agignore
+	[ -f ~/.ssh/config ] || ln -s $(PWD)/sshconfig ~/.ssh/config
 
 	# don't show last login message
 	touch ~/.hushlogin
@@ -41,5 +42,6 @@ clean:
 	rm -f ~/.git-prompt.sh
 	rm -f ~/.gitconfig
 	rm -f ~/.agignore
+	rm -f ~/.ssh/config
 
 .PHONY: all clean sync build run kill

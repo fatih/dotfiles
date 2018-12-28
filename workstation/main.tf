@@ -1,8 +1,8 @@
 provider "digitalocean" {}
 
 resource "digitalocean_droplet" "dev" {
-  ssh_keys           = [23737229]     # Key example
-  image              = "debian-9-x64"
+  ssh_keys           = [23737229]         # Key example
+  image              = "ubuntu-18-10-x64"
   region             = "fra1"
   size               = "s-4vcpu-8gb"
   private_networking = true

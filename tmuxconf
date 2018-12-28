@@ -9,6 +9,10 @@ bind C-f send-prefix
 # toogle last window by hitting again C-f
 bind-key C-f last-window
 
+# if multiple clients are attached to the same window, maximize it to the
+# bigger one
+set-window-option -g aggressive-resize
+
 # Start windows and pane numbering with index 1 instead of 0
 set -g base-index 1
 setw -g pane-base-index 1
