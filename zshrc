@@ -226,7 +226,7 @@ exit() {
     return
   fi
 
-  nr=$(tmux list-panes | wc -l)
+  count=$(tmux list-panes | wc -l)
   if [ $count -eq 1 ]; then
     tmux detach
   else
