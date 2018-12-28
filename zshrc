@@ -218,6 +218,22 @@ fi
 # automatically remove duplicates from these arrays
 typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 
+# only exit if we're not on the last pane
+	
+exit() {
+  if [[ -z $TMUX ]]; then
+    builtin exit
+    return
+  fi
+
+  nr=$(tmux list-panes | wc -l)
+  if [ $count -eq 1 ]; then
+    tmux detach
+  else
+    builtin exit
+  fi
+}
+
 # ===================
 #    PLUGINS
 # ===================
