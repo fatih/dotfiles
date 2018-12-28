@@ -199,6 +199,7 @@ ln -s \$(pwd)/tigrc /home/fatih/.tigrc
 ln -s \$(pwd)/git-prompt.sh /home/fatih/.git-prompt.sh
 ln -s \$(pwd)/gitconfig /home/fatih/.gitconfig
 ln -s \$(pwd)/agignore /home/fatih/.agignore
+ln -s \$(pwd)/sshconfig /home/fatih/.ssh/config
 EOF
 
 echo "Done!"
