@@ -81,38 +81,14 @@ apt-get install -qq -y --force-yes \
   software-properties-common \
 	--no-install-recommends
 
-
 chsh -s /usr/bin/zsh
 
-# enable backports to install latest tmux
 
+echo "Installing vim"
 # install latest vim with clipboard and python support
 add-apt-repository ppa:jonathonf/vim -y
 apt-get update
 apt-get install vim-gtk3 -y
-
-# add-apt-repository ppa:neovim-ppa/stable -y
-# apt-get update
-# apt-get install neovim python-dev python-pip python3-dev python3-pip -y
-
-# apt remove vim vim-runtime gvim -y
-# mkdir -p /tmp/vim-src
-# git clone --branch "v8.1.0644" --depth 1 "https://github.com/vim/vim" "/tmp/vim-src"
-# cd /tmp/vim-src
-
-# ./configure --with-features=huge \
-#         --disable-gui \
-#         --enable-python3interp=yes \
-#         --with-python3-config-dir=/usr/lib/python3.5/config-3.5m-x86_64-linux-gnu \
-#         --prefix=/usr/local
-# make -j8
-# make install
-# cd /root && rm -rf /tmp/vim-src
-
-#install docker
-# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-# add-apt-repository  "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-# apt-get update && apt-get install -qy docker-ce
 
 echo "Installing kubectl"
 curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
@@ -121,6 +97,7 @@ chmod 755 /usr/local/bin/kubectl
 echo "Installing 1password"
 curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/local/bin && rm 1password.zip
 
+echo "Installing Go"
 export GOLANG_VERSION="1.11.4"
 export PATH="/usr/local/go/bin:${PATH}"
 export GOBIN="/usr/local/bin"
@@ -153,12 +130,11 @@ rm -rf /root/go
 # install tools
 wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
-
 # create our user
 useradd -m fatih -u 1001 -G users,sudo,docker -s /bin/zsh
 
 # continue installing specific things as user
-sudo su -u fatih bash << EOF
+sudo -u fatih bash << EOF
 # install vim plugins
 mkdir -p /home/fatih/.vim/plugged && cd /home/fatih/.vim/plugged
 git clone 'https://github.com/AndrewRadev/splitjoin.vim'
@@ -197,14 +173,15 @@ cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git
 /home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
 
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# in case I want to use neovim
 curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # zsh plugins
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.zsh/zsh-autosuggestions
 
-mkdir /home/fatih/code/
-cd /home/fatih/code
+mkdir /home/fatih/code/ && cd /home/fatih/code
 
 # tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -215,7 +192,7 @@ git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plug
 git clone --recursive https://github.com/fatih/dotfiles.git  && cd dotfiles
 
 ln -s \$(pwd)/vimrc /home/fatih/.vimrc
-ln -s \$(pwd)/vimrc ~/.config/nvim/init.vim
+ln -s \$(pwd)/vimrc /home/faith/.config/nvim/init.vim
 ln -s \$(pwd)/zshrc /home/fatih/.zshrc
 ln -s \$(pwd)/tmuxconf /home/fatih/.tmux.conf
 ln -s \$(pwd)/tigrc /home/fatih/.tigrc
