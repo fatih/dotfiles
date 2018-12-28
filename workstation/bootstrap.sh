@@ -130,6 +130,18 @@ rm -rf /root/go
 # install tools
 wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
+# install doctl
+wget https://github.com/digitalocean/doctl/releases/download/v1.12.2/doctl-1.12.2-linux-amd64.tar.gz
+tar xf ~/doctl-1.12.2-linux-amd64.tar.gz
+chmod +x doctl
+mv doctl /usr/local/bin
+
+# install gcloud
+export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
+echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+sudo apt-get update && sudo apt-get install google-cloud-sdk
+
 # create our user
 useradd -m fatih -u 1001 -G users,sudo,docker -s /bin/zsh
 
