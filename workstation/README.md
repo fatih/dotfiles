@@ -17,5 +17,5 @@ $ terraform apply -auto-approve
 2. SSH via mosh:
 
 ```
-mosh --no-init --ssh="ssh -i /Users/fatih/.ssh/github_rsa" fatih@<DROPLET_ID> -- tmux new-session -AD -s main
+mosh --no-init --ssh="ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa -p 3222" fatih@<DROPLET_ID> -- tmux new-session -AD -s main
 ```

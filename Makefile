@@ -1,17 +1,5 @@
 all: build
 
-build:
-	docker build -t fatih:dev .
-
-run: kill
-	docker run -it -h dev -d --net=host --rm -v /home/fatih/code:/home/fatih/code -v /home/fatih/.ssh:/home/fatih/.ssh -v /home/fatih/.zsh_private:/home/fatih/.zsh_private -v /home/fatih/.zsh_history:/home/fatih/.zsh_history --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev 
-
-kill:
-	docker kill dev | true
-
-login:
-	ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa fatih@localhost -p 3222
-
 sync:
 	mkdir -p ~/.config/nvim
 	mkdir -p ~/.config/alacritty
