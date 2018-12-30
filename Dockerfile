@@ -144,6 +144,9 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 
 
 RUN mkdir /run/sshd
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+RUN sed 's/#Port 22/Port 3222/' -i /etc/ssh/sshd_config
+
 RUN add-apt-repository ppa:jonathonf/vim -y && apt-get update && apt-get install vim-gtk3 -y
 
 RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz && rm go1.11.4.linux-amd64.tar.gz
@@ -193,10 +196,9 @@ USER $user
 
 RUN mkdir ~/.ssh && curl -fsL https://github.com/$github_user.keys > ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
-RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # vim plugins
+RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 COPY --from=vim_plugins_builder /root/.vim/plugged /home/fatih/.vim/plugged
 
 RUN git clone https://github.com/junegunn/fzf /home/fatih/.fzf && cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git && /home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
@@ -223,5 +225,7 @@ RUN ln -s /home/fatih/code/dotfiles/gitconfig /home/fatih/.gitconfig
 RUN ln -s /home/fatih/code/dotfiles/agignore /home/fatih/.agignore
 RUN ln -s /home/fatih/code/dotfiles/sshconfig /home/fatih/.ssh/config
 
-WORKDIR /home/fatih
-CMD ["/usr/bin/tmux"]
+USER root
+EXPOSE 3222 63200-63220/udp
+CMD ["/usr/sbin/sshd", "-D"]
+
