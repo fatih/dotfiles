@@ -140,7 +140,7 @@ mv doctl /usr/local/bin
 export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
 echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-sudo apt-get update && sudo apt-get install google-cloud-sdk
+sudo apt-get update && sudo apt-get install google-cloud-sdk google-cloud-sdk-app-engine-go
 
 # create our user
 useradd -m fatih -u 1001 -G users,sudo,docker -s /bin/zsh

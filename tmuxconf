@@ -31,7 +31,7 @@ set -g display-panes-time 2000
 set -g display-time 4000
 
 # {n}vim compability
-set -g default-terminal "xterm-256color"
+set -g default-terminal "screen-256color"
 
 # Split horiziontal and vertical splits, instead of % and "
 # Also open them in the same directory
@@ -92,8 +92,8 @@ set -s escape-time 0
 set -g history-limit 1000000
 
 # Mouse mode on
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
-set -g mouse on
+# set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+# set -g mouse on
 
 # Set title
 set -g set-titles on
@@ -155,7 +155,10 @@ setw -g window-status-current-format "#[fg=colour236,bg=colour240,nobold,nounder
 # see this https://github.com/tmux-plugins/tpm to installation
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-open'
+
 set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @yank_with_mouse off
+
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
