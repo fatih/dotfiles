@@ -142,6 +142,11 @@ echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee 
 curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 sudo apt-get update && sudo apt-get install google-cloud-sdk google-cloud-sdk-app-engine-go
 
+# install cloud_sql_proxy
+wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+chmod +x cloud_sql_proxy
+cp cloud_sql_proxy /usr/local/bin
+
 # create our user
 useradd -m fatih -u 1001 -G users,sudo,docker -s /bin/zsh
 

@@ -1,18 +1,18 @@
 ARG GOLANG_VERSION=1.11.4
 
 # install kubectl
-FROM debian:buster as kubectl_builder
-RUN apt-get update && apt-get install -y curl ca-certificates unzip
+FROM ubuntu:18.10 as kubectl_builder
+RUN apt-get update && apt-get install -y curl ca-certificates
 RUN curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
 RUN chmod 755 /usr/local/bin/kubectl
 
 # install 1password
-FROM debian:buster as onepassword_builder
+FROM ubuntu:18.10 as onepassword_builder
 RUN apt-get update && apt-get install -y curl ca-certificates unzip
 RUN curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/bin &&  rm 1password.zip
 
 # install vim plugins
-FROM debian:buster as vim_plugins_builder
+FROM ubuntu:18.10 as vim_plugins_builder
 RUN apt-get update && apt-get install -y git ca-certificates
 RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \ 
 	git clone 'https://github.com/AndrewRadev/splitjoin.vim' && \ 
@@ -30,6 +30,7 @@ RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \
 	git clone 'https://github.com/hashivim/vim-hashicorp-tools' && \
 	git clone 'https://github.com/junegunn/fzf.vim' && \
 	git clone 'https://github.com/mileszs/ack.vim' && \
+	git clone 'https://github.com/roxma/vim-tmux-clipboard' && \
 	git clone 'https://github.com/plasticboy/vim-markdown' && \
 	git clone 'https://github.com/scrooloose/nerdtree' && \
 	git clone 'https://github.com/t9md/vim-choosewin' && \
@@ -63,7 +64,8 @@ RUN go get -u github.com/koron/iferr
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
 
 # base OS
-FROM debian:buster
+FROM ubuntu:18.10
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	apache2-utils \
 	apt-transport-https \
@@ -77,17 +79,14 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	default-mysql-client \
 	direnv \
 	dnsutils \
-	docker-compose \
 	docker.io \
 	fakeroot-ng \
-	fzf \
 	gdb \
 	git \
 	git-crypt \
 	gnupg \
-	golang-1.11 \
+	gnupg2 \
 	htop \
-	hub \
 	hugo \
 	ipcalc \
 	jq \
@@ -98,6 +97,8 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	libprotoc-dev \
 	libsqlite3-dev \
 	libssl-dev \
+	libvirt-clients \
+	libvirt-daemon-system \
 	lldb \
 	locales \
 	man \
@@ -117,11 +118,14 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	python3-setuptools \
 	python3-venv \
 	python3-wheel \
+	qemu-kvm \
 	qrencode \
 	quilt \
 	ripgrep \
 	shellcheck \
+	silversearcher-ag \
 	socat \
+	software-properties-common \
 	sqlite3 \
 	stow \
 	sudo \
@@ -130,7 +134,6 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	tmux \
 	tree \
 	unzip \
-	vim-nox \
 	wget \
 	zgen \
 	zip \
@@ -139,9 +142,11 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	--no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /var/run/sshd
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-RUN sed 's/#Port 22/Port 3222/' -i /etc/ssh/sshd_config
+
+RUN mkdir /run/sshd
+RUN add-apt-repository ppa:jonathonf/vim -y && apt-get update && apt-get install vim-gtk3 -y
+
+RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz && rm go1.11.4.linux-amd64.tar.gz
 
 ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
@@ -151,6 +156,17 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 	locale-gen --purge $LANG && \
 	dpkg-reconfigure --frontend=noninteractive locales && \
 	update-locale LANG=$LANG LC_ALL=$LC_ALL LANGUAGE=$LANGUAGE
+
+# gcloud
+RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
+  echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && \
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add - && \
+  apt-get update -y && apt-get install google-cloud-sdk google-cloud-sdk-app-engine-go -y
+
+RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy &&  cp cloud_sql_proxy /usr/local/bin
+
+# doctl
+RUN wget https://github.com/digitalocean/doctl/releases/download/v1.12.2/doctl-1.12.2-linux-amd64.tar.gz && tar xf doctl-1.12.2-linux-amd64.tar.gz && chmod +x doctl && mv doctl /usr/local/bin && rm doctl-1.12.2-linux-amd64.tar.gz
 
 # for correct colours is tmux
 ENV TERM screen-256color
@@ -167,40 +183,45 @@ COPY --from=golang_builder /go/bin/* /usr/local/bin/
 # install tools
 RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
-# go
-RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz && rm go1.11.4.linux-amd64.tar.gz
-ENV PATH="/usr/local/go/bin:${PATH}"
-
 # user setup
 ARG user=fatih
-ARG uid=1000
+ARG uid=1001
 ARG github_user=fatih
 RUN useradd -m $user -u $uid -G users,sudo,docker -s /bin/zsh
 # RUN echo "fatih:Docker!" | sudo chpasswd # only enable if you need testing
 USER $user
+
 RUN mkdir ~/.ssh && curl -fsL https://github.com/$github_user.keys > ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # vim plugins
-COPY --from=vim_plugins_builder /root/.vim/plugged /home/fatih/.vim/
+COPY --from=vim_plugins_builder /root/.vim/plugged /home/fatih/.vim/plugged
+
+RUN git clone https://github.com/junegunn/fzf /home/fatih/.fzf && cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git && /home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
 
 # zsh plugins
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
 
-COPY vimrc /home/fatih/.vimrc
-COPY zshrc /home/fatih/.zshrc
-COPY tmuxconf /home/fatih/.tmux.conf
-COPY tigrc /home/fatih/.tigrc
-COPY git-prompt.sh /home/fatih/.git-prompt.sh
-COPY gitconfig /home/fatih/.gitconfig
-COPY agignore /home/fatih/.agignore
+# tmux plugins
+RUN git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+RUN git clone https://github.com/tmux-plugins/tmux-open.git ~/.tmux/plugins/tmux-open
+RUN git clone https://github.com/tmux-plugins/tmux-yank.git ~/.tmux/plugins/tmux-yank
+RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
 
-ENV PATH="/usr/local/go/bin:${PATH}"
+# the reason we dont't copy the files individually is, to easily push changes if needed
+RUN git clone --recursive https://github.com/fatih/dotfiles.git /home/fatih/code/dotfiles
 
-# make sure we start sshd at the end - always keep this at the bottom
-USER root
-EXPOSE 3222
-CMD ["/usr/sbin/sshd", "-D"]
+RUN ln -s /home/fatih/code/dotfiles/vimrc /home/fatih/.vimrc
+RUN ln -s /home/fatih/code/dotfiles/zshrc /home/fatih/.zshrc
+RUN ln -s /home/fatih/code/dotfiles/tmuxconf /home/fatih/.tmux.conf
+RUN ln -s /home/fatih/code/dotfiles/tigrc /home/fatih/.tigrc
+RUN ln -s /home/fatih/code/dotfiles/git-prompt.sh /home/fatih/.git-prompt.sh
+RUN ln -s /home/fatih/code/dotfiles/gitconfig /home/fatih/.gitconfig
+RUN ln -s /home/fatih/code/dotfiles/agignore /home/fatih/.agignore
+RUN ln -s /home/fatih/code/dotfiles/sshconfig /home/fatih/.ssh/config
+
+WORKDIR /home/fatih
+CMD ["/usr/bin/tmux"]
