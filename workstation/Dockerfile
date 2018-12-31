@@ -18,7 +18,7 @@ RUN wget https://github.com/digitalocean/doctl/releases/download/v1.12.2/doctl-1
 
 # install terraform
 FROM ubuntu:18.10 as terraform_builder
-RUN apt-get update && apt-get install -y wget ca-certificates
+RUN apt-get update && apt-get install -y wget ca-certificates unzip
 RUN wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip && unzip terraform_0.11.11_linux_amd64.zip && chmod +x terraform && mv terraform /usr/local/bin && rm terraform_0.11.11_linux_amd64.zip
 
 # install vim plugins
