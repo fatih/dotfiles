@@ -28,3 +28,8 @@ $ ./pull-secrets.sh
 ```
 $ mosh --no-init --ssh="ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa -p 3222" root@<DROPLET_IP> -- tmux new-session -AD -s main
 ```
+
+## Todo
+
+* Encrypt /mnt/secrets
+* Resync back some dynamic files (such as `.zsh_history`) back to 1password occasionally
