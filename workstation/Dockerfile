@@ -219,16 +219,16 @@ RUN git clone https://github.com/tmux-plugins/tmux-yank.git ~/.tmux/plugins/tmux
 RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
 
 # the reason we dont't copy the files individually is, to easily push changes if needed
-RUN git clone --recursive https://github.com/fatih/dotfiles.git /home/fatih/code/dotfiles
+RUN git clone --recursive https://github.com/fatih/dotfiles.git /home/fatih/dotfiles
 
-RUN ln -s /home/fatih/code/dotfiles/vimrc /home/fatih/.vimrc
-RUN ln -s /home/fatih/code/dotfiles/zshrc /home/fatih/.zshrc
-RUN ln -s /home/fatih/code/dotfiles/tmuxconf /home/fatih/.tmux.conf
-RUN ln -s /home/fatih/code/dotfiles/tigrc /home/fatih/.tigrc
-RUN ln -s /home/fatih/code/dotfiles/git-prompt.sh /home/fatih/.git-prompt.sh
-RUN ln -s /home/fatih/code/dotfiles/gitconfig /home/fatih/.gitconfig
-RUN ln -s /home/fatih/code/dotfiles/agignore /home/fatih/.agignore
-RUN ln -s /home/fatih/code/dotfiles/sshconfig /home/fatih/.ssh/config
+RUN ln -s /home/fatih/dotfiles/vimrc /home/fatih/.vimrc
+RUN ln -s /home/fatih/dotfiles/zshrc /home/fatih/.zshrc
+RUN ln -s /home/fatih/dotfiles/tmuxconf /home/fatih/.tmux.conf
+RUN ln -s /home/fatih/dotfiles/tigrc /home/fatih/.tigrc
+RUN ln -s /home/fatih/dotfiles/git-prompt.sh /home/fatih/.git-prompt.sh
+RUN ln -s /home/fatih/dotfiles/gitconfig /home/fatih/.gitconfig
+RUN ln -s /home/fatih/dotfiles/agignore /home/fatih/.agignore
+RUN ln -s /home/fatih/dotfiles/sshconfig /home/fatih/.ssh/config
 
 USER root
 EXPOSE 3222 63200-63220/udp
