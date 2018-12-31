@@ -9,7 +9,7 @@ case `uname` in
     [ -r ~/.zsh_private ] && source ~/.zsh_private
   ;;
   Linux)
-    [ -r /mnt/secrets/zsh_private ] && source /mnt/secrets/zsh_private
+    [ -r ~/secrets/zsh_private ] && source ~/secrets/zsh_private
   ;;
 esac
 
@@ -78,7 +78,7 @@ case `uname` in
     HISTFILE=$HOME/.zsh_history
   ;;
   Linux)
-    HISTFILE=/mnt/secrets/zsh_history
+    HISTFILE=~/secrets/zsh_history
   ;;
 esac
 
