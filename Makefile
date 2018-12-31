@@ -1,17 +1,5 @@
 all: build
 
-build:
-	docker build -t fatih:dev .
-
-run: kill
-	docker run -it -d -p 3222:3222 -h dev --rm -v /Users/fatih/Code:/home/fatih/code --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev 
-
-kill:
-	docker kill dev | true
-
-login:
-	ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa fatih@localhost -p 3222
-
 sync:
 	mkdir -p ~/.config/nvim
 	mkdir -p ~/.config/alacritty
@@ -26,7 +14,6 @@ sync:
 	[ -f ~/.git-prompt.sh ] || ln -s $(PWD)/git-prompt.sh ~/.git-prompt.sh
 	[ -f ~/.gitconfig ] || ln -s $(PWD)/gitconfig ~/.gitconfig
 	[ -f ~/.agignore ] || ln -s $(PWD)/agignore ~/.agignore
-	[ -f ~/.ssh/config ] || ln -s $(PWD)/sshconfig ~/.ssh/config
 
 	# don't show last login message
 	touch ~/.hushlogin

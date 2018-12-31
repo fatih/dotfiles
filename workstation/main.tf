@@ -1,7 +1,7 @@
 provider "digitalocean" {}
 
 resource "digitalocean_droplet" "dev" {
-  ssh_keys           = [23737229]         # Key example
+  ssh_keys           = [23737229]         # doctl compute ssh-key list
   image              = "ubuntu-18-10-x64"
   region             = "fra1"
   size               = "s-4vcpu-8gb"
@@ -14,6 +14,31 @@ resource "digitalocean_droplet" "dev" {
   # needs
   provisioner "remote-exec" {
     script = "bootstrap.sh"
+
+    connection {
+      type        = "ssh"
+      private_key = "${file("~/.ssh/ipad_rsa")}"
+      user        = "root"
+      timeout     = "2m"
+    }
+  }
+
+  provisioner "file" {
+    source      = "pull-secrets.sh"
+    destination = "/mnt/secrets/pull-secrets.sh"
+
+    connection {
+      type        = "ssh"
+      private_key = "${file("~/.ssh/ipad_rsa")}"
+      user        = "root"
+      timeout     = "2m"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod +x /mnt/secrets/pull-secrets.sh",
+    ]
 
     connection {
       type        = "ssh"
@@ -36,8 +61,13 @@ resource "digitalocean_firewall" "dev" {
       source_addresses = ["0.0.0.0/0", "::/0"]
     },
     {
+      protocol         = "tcp"
+      port_range       = "3222"
+      source_addresses = ["0.0.0.0/0", "::/0"]
+    },
+    {
       protocol         = "udp"
-      port_range       = "60000-60100"
+      port_range       = "60000-60010"
       source_addresses = ["0.0.0.0/0", "::/0"]
     },
   ]

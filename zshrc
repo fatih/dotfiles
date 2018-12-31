@@ -1,9 +1,17 @@
 # =============
 #    INIT
 # =============
+
 # Senstive functions which are not pushed to Github
 # It contains GOPATH, some functions, aliases etc...
-[ -r ~/.zsh_private ] && source ~/.zsh_private
+case `uname` in
+  Darwin)
+    [ -r ~/.zsh_private ] && source ~/.zsh_private
+  ;;
+  Linux)
+    [ -r ~/secrets/zsh_private ] && source ~/secrets/zsh_private
+  ;;
+esac
 
 # =============
 #    ALIAS
@@ -65,9 +73,14 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # =============
 
 ## Command history configuration
-if [ -z "$HISTFILE" ]; then
+case `uname` in
+  Darwin)
     HISTFILE=$HOME/.zsh_history
-fi
+  ;;
+  Linux)
+    HISTFILE=~/secrets/zsh_history
+  ;;
+esac
 
 HISTSIZE=1000000
 SAVEHIST=1000000
@@ -226,7 +239,9 @@ exit() {
     return
   fi
 
-  count=$(tmux list-panes | wc -l)
+  panes=$(tmux list-panes | wc -l)
+  wins=$(tmux list-windows | wc -l) 
+  count=$(($panes + $wins - 1))
   if [ $count -eq 1 ]; then
     tmux detach
   else
