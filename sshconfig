@@ -1,3 +1,3 @@
 Host github.com
-  IdentityFile ~/.ssh/github_rsa
+  IdentityFile /mnt/secrets/github_rsa
   IdentitiesOnly yes
