@@ -225,7 +225,9 @@ RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/
 
 # the reason we dont't copy the files individually is, to easily push changes if needed
 RUN git clone --recursive https://github.com/fatih/dotfiles.git /root/dotfiles
+RUN cd /root/dotfiles && git fetch origin && git checkout dockerize-2
 RUN cd /root/dotfiles && git remote set-url origin git@github.com:fatih/dotfiles.git
+
 
 RUN ln -s /root/dotfiles/vimrc /root/.vimrc
 RUN ln -s /root/dotfiles/zshrc /root/.zshrc
