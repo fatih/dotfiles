@@ -72,7 +72,7 @@ RUN go get -u github.com/koron/iferr
 
 # generic tools
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
-RUN go get -u go get github.com/fatih/hclfmt
+RUN go get -u github.com/fatih/hclfmt
 
 
 
