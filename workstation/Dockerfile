@@ -9,7 +9,7 @@ RUN chmod 755 /usr/local/bin/kubectl
 # install 1password
 FROM ubuntu:18.10 as onepassword_builder
 RUN apt-get update && apt-get install -y curl ca-certificates unzip
-RUN curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/bin &&  rm 1password.zip
+RUN curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.5/op_linux_amd64_v0.5.5.zip && unzip 1password.zip op -d /usr/bin &&  rm 1password.zip
 
 # install doctl
 FROM ubuntu:18.10 as doctl_builder
