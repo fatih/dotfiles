@@ -191,22 +191,14 @@ COPY --from=golang_builder /go/bin/* /usr/local/bin/
 # install tools
 RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
 
-# user setup
-ARG user=fatih
-ARG uid=1001
-ARG github_user=fatih
-RUN useradd -m $user -u $uid -G users,sudo,docker -s /bin/zsh
-# RUN echo "fatih:Docker!" | sudo chpasswd # only enable if you need testing
-USER $user
-
 RUN mkdir ~/.ssh && curl -fsL https://github.com/$github_user.keys > ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
 
 # vim plugins
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-COPY --from=vim_plugins_builder /root/.vim/plugged /home/fatih/.vim/plugged
+COPY --from=vim_plugins_builder /root/.vim/plugged /root/.vim/plugged
 
-RUN git clone https://github.com/junegunn/fzf /home/fatih/.fzf && cd /home/fatih/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git && /home/fatih/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
+RUN git clone https://github.com/junegunn/fzf /root/.fzf && cd /root/.fzf && git remote set-url origin git@github.com:junegunn/fzf.git && /root/.fzf/install --bin --64 --no-bash --no-zsh --no-fish
 
 # zsh plugins
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.zsh/zsh-syntax-highlighting
@@ -219,16 +211,16 @@ RUN git clone https://github.com/tmux-plugins/tmux-yank.git ~/.tmux/plugins/tmux
 RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
 
 # the reason we dont't copy the files individually is, to easily push changes if needed
-RUN git clone --recursive https://github.com/fatih/dotfiles.git /home/fatih/dotfiles
+RUN git clone --recursive https://github.com/fatih/dotfiles.git /root/dotfiles
 
-RUN ln -s /home/fatih/dotfiles/vimrc /home/fatih/.vimrc
-RUN ln -s /home/fatih/dotfiles/zshrc /home/fatih/.zshrc
-RUN ln -s /home/fatih/dotfiles/tmuxconf /home/fatih/.tmux.conf
-RUN ln -s /home/fatih/dotfiles/tigrc /home/fatih/.tigrc
-RUN ln -s /home/fatih/dotfiles/git-prompt.sh /home/fatih/.git-prompt.sh
-RUN ln -s /home/fatih/dotfiles/gitconfig /home/fatih/.gitconfig
-RUN ln -s /home/fatih/dotfiles/agignore /home/fatih/.agignore
-RUN ln -s /home/fatih/dotfiles/sshconfig /home/fatih/.ssh/config
+RUN ln -s /root/dotfiles/vimrc /root/.vimrc
+RUN ln -s /root/dotfiles/zshrc /root/.zshrc
+RUN ln -s /root/dotfiles/tmuxconf /root/.tmux.conf
+RUN ln -s /root/dotfiles/tigrc /root/.tigrc
+RUN ln -s /root/dotfiles/git-prompt.sh /root/.git-prompt.sh
+RUN ln -s /root/dotfiles/gitconfig /root/.gitconfig
+RUN ln -s /root/dotfiles/agignore /root/.agignore
+RUN ln -s /root/dotfiles/sshconfig /root/.ssh/config
 
 USER root
 EXPOSE 3222 63200-63220/udp
