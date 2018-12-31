@@ -20,9 +20,6 @@ echo "Creating directories"
 
 mkdir -p /mnt/code /mnt/secrets
 
-echo "Installing 1password"
-curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.5/op_linux_amd64_v0.5.5.zip && unzip 1password.zip op -d /usr/local/bin && rm 1password.zip
-
 echo "=> Setting up dev service"
 cat > dockerdev.service <<EOF
 [Unit]

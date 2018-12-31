@@ -11,7 +11,4 @@ op get document 'github_rsa' > github_rsa
 op get document 'zsh_private' > zsh_private
 op get document 'zsh_history' > zsh_history
 
-# restart our dev env so these are synced
-sudo systemctl restart dockerdev
-
 echo "Done!"

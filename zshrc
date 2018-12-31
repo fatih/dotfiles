@@ -4,14 +4,7 @@
 
 # Senstive functions which are not pushed to Github
 # It contains GOPATH, some functions, aliases etc...
-case `uname` in
-  Darwin)
-    [ -r ~/.zsh_private ] && source ~/.zsh_private
-  ;;
-  Linux)
-    [ -r ~/secrets/zsh_private ] && source ~/secrets/zsh_private
-  ;;
-esac
+[ -r ~/.zsh_private ] && source ~/.zsh_private
 
 # =============
 #    ALIAS
@@ -73,15 +66,7 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # =============
 
 ## Command history configuration
-case `uname` in
-  Darwin)
-    HISTFILE=$HOME/.zsh_history
-  ;;
-  Linux)
-    HISTFILE=~/secrets/zsh_history
-  ;;
-esac
-
+HISTFILE=$HOME/.zsh_history
 HISTSIZE=1000000
 SAVEHIST=1000000
 
