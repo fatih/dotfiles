@@ -11,6 +11,16 @@ FROM ubuntu:18.10 as onepassword_builder
 RUN apt-get update && apt-get install -y curl ca-certificates unzip
 RUN curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/v0.5.4/op_linux_amd64_v0.5.4.zip && unzip 1password.zip op -d /usr/bin &&  rm 1password.zip
 
+# install doctl
+FROM ubuntu:18.10 as doctl_builder
+RUN apt-get update && apt-get install -y wget ca-certificates
+RUN wget https://github.com/digitalocean/doctl/releases/download/v1.12.2/doctl-1.12.2-linux-amd64.tar.gz && tar xf doctl-1.12.2-linux-amd64.tar.gz && chmod +x doctl && mv doctl /usr/local/bin && rm doctl-1.12.2-linux-amd64.tar.gz
+
+# install terraform
+FROM ubuntu:18.10 as terraform_builder
+RUN apt-get update && apt-get install -y wget ca-certificates
+RUN wget https://releases.hashicorp.com/terraform/0.11.11/terraform_0.11.11_linux_amd64.zip && unzip terraform_0.11.11_linux_amd64.zip && chmod +x terraform && mv terraform /usr/local/bin && rm terraform_0.11.11_linux_amd64.zip
+
 # install vim plugins
 FROM ubuntu:18.10 as vim_plugins_builder
 RUN apt-get update && apt-get install -y git ca-certificates
@@ -62,6 +72,9 @@ RUN go get -u github.com/koron/iferr
 
 # generic tools
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
+RUN go get -u go get github.com/fatih/hclfmt
+
+
 
 # base OS
 FROM ubuntu:18.10
@@ -173,9 +186,6 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 
 RUN wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && chmod +x cloud_sql_proxy &&  cp cloud_sql_proxy /usr/local/bin
 
-# doctl
-RUN wget https://github.com/digitalocean/doctl/releases/download/v1.12.2/doctl-1.12.2-linux-amd64.tar.gz && tar xf doctl-1.12.2-linux-amd64.tar.gz && chmod +x doctl && mv doctl /usr/local/bin && rm doctl-1.12.2-linux-amd64.tar.gz
-
 # for correct colours is tmux
 ENV TERM screen-256color
 
@@ -187,6 +197,12 @@ COPY --from=onepassword_builder /usr/bin/op /usr/local/bin/
 
 # golang tools
 COPY --from=golang_builder /go/bin/* /usr/local/bin/
+
+# doctl tools
+COPY --from=doctl_builder /usr/local/bin/doctl /usr/local/bin/
+
+# terraform tools
+COPY --from=terraform_builder /usr/local/bin/terraform /usr/local/bin/
 
 # install tools
 RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.22.0_amd64.deb && sudo dpkg -i jump_0.22.0_amd64.deb && rm -rf jump_0.22.0_amd64.deb
@@ -212,6 +228,7 @@ RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/
 
 # the reason we dont't copy the files individually is, to easily push changes if needed
 RUN git clone --recursive https://github.com/fatih/dotfiles.git /root/dotfiles
+RUN cd /root/dotfiles && git remote set-url origin git@github.com:fatih/dotfiles.git
 
 RUN ln -s /root/dotfiles/vimrc /root/.vimrc
 RUN ln -s /root/dotfiles/zshrc /root/.zshrc
@@ -222,7 +239,8 @@ RUN ln -s /root/dotfiles/gitconfig /root/.gitconfig
 RUN ln -s /root/dotfiles/agignore /root/.agignore
 RUN ln -s /root/dotfiles/sshconfig /root/.ssh/config
 
-USER root
-EXPOSE 3222 63200-63220/udp
+RUN chsh -s /usr/bin/zsh
+
+EXPOSE 3222 60000-60010/udp
 CMD ["/usr/sbin/sshd", "-D"]
 
