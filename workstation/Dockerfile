@@ -74,8 +74,6 @@ RUN go get -u github.com/koron/iferr
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
 RUN go get -u github.com/fatih/hclfmt
 
-
-
 # base OS
 FROM ubuntu:18.10
 ARG DOCKER_GROUP_ID
@@ -209,7 +207,6 @@ RUN wget https://github.com/gsamokovarov/jump/releases/download/v0.22.0/jump_0.2
 
 RUN mkdir ~/.ssh && curl -fsL https://github.com/fatih.keys > ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys
 
-
 # vim plugins
 RUN curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 COPY --from=vim_plugins_builder /root/.vim/plugged /root/.vim/plugged
@@ -242,7 +239,6 @@ RUN ln -s /root/dotfiles/sshconfig /root/.ssh/config
 RUN chsh -s /usr/bin/zsh
 
 EXPOSE 3222 60000-60010/udp
-# CMD ["/usr/sbin/sshd", "-D"]
 
 COPY entrypoint.sh /bin/entrypoint.sh
 CMD ["entrypoint.sh"]
