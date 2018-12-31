@@ -11,9 +11,4 @@ op get document 'github_rsa' > github_rsa
 op get document 'zsh_private' > zsh_private
 op get document 'zsh_history' > zsh_history
 
-ln -s /mnt/secrets/github_rsa ~/.ssh/github_rsa
-chmod 0600 ~/.ssh/github_rsa
-ln -s /mnt/secrets/zsh_private ~/.zsh_private
-ln -s /mnt/secrets/zsh_history ~/.zsh_history
-
 echo "Done!"

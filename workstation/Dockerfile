@@ -242,5 +242,8 @@ RUN ln -s /root/dotfiles/sshconfig /root/.ssh/config
 RUN chsh -s /usr/bin/zsh
 
 EXPOSE 3222 60000-60010/udp
-CMD ["/usr/sbin/sshd", "-D"]
+# CMD ["/usr/sbin/sshd", "-D"]
+
+COPY entrypoint.sh /bin/entrypoint.sh
+CMD ["entrypoint.sh"]
 
