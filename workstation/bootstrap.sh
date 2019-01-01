@@ -7,17 +7,10 @@ apt-get update
 apt-get upgrade -y
 
 apt-get install -qq -y \
-  build-essential \
   docker.io \
-  git \
-  jq \
-  mosh \
-  curl \
-  unzip \
   openssh-server
 
 echo "Creating directories"
-
 mkdir -p /mnt/code /mnt/secrets
 
 echo "=> Setting up dev service"
@@ -31,8 +24,8 @@ After=docker.service
 TimeoutStartSec=0
 ExecStartPre=-/usr/bin/docker kill dev
 ExecStartPre=-/usr/bin/docker rm dev
-ExecStartPre=/usr/bin/docker pull fatih/dev
-ExecStart=/usr/bin/docker run -h dev -e TZ=Europe/Istanbul --net=host --rm -v /var/run/docker.sock:/var/run/docker.sock -v /mnt/code:/root/code -v /mnt/secrets:/root/secrets -v  --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih/dev
+ExecStartPre=/usr/bin/docker pull fatih/dev:fea8ceb
+ExecStart=/usr/bin/docker run -h dev -e TZ=Europe/Istanbul --net=host --rm -v /var/run/docker.sock:/var/run/docker.sock -v /mnt/code:/root/code -v /mnt/secrets:/root/secrets -v  --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih/dev:fea8ceb
 
 [Install]
 WantedBy=multi-user.target
