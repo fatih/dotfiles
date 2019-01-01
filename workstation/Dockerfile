@@ -76,11 +76,7 @@ RUN go get -u github.com/fatih/hclfmt
 
 # base OS
 FROM ubuntu:18.10
-ARG DOCKER_GROUP_ID
 ENV DEBIAN_FRONTEND=noninteractive
-
-# https://stackoverflow.com/questions/36185035/how-to-mount-docker-socket-as-volume-in-docker-container-with-correct-group
-RUN groupadd -g $DOCKER_GROUP_ID docker 
 
 RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	apache2-utils \

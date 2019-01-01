@@ -4,7 +4,7 @@ NAME=dev
 all: build
 
 build:
-	docker build --build-arg DOCKER_GROUP_ID=$(shell getent group docker 2>/dev/null | cut -d: -f3) -t fatih/${NAME}:${GITCOMMIT} .
+	docker build -t fatih/${NAME}:${GITCOMMIT} .
 
 push:
 	@echo "==> Publishing fatih/${NAME}:$(GITCOMMIT)"
