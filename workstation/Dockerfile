@@ -219,22 +219,12 @@ RUN git clone https://github.com/tmux-plugins/tmux-open.git ~/.tmux/plugins/tmux
 RUN git clone https://github.com/tmux-plugins/tmux-yank.git ~/.tmux/plugins/tmux-yank
 RUN git clone https://github.com/tmux-plugins/tmux-prefix-highlight.git ~/.tmux/plugins/tmux-prefix-highlight
 
-# the reason we dont't copy the files individually is, to easily push changes if needed
-RUN git clone --recursive https://github.com/fatih/dotfiles.git /root/dotfiles
-RUN cd /root/dotfiles && git remote set-url origin git@github.com:fatih/dotfiles.git
-
-
-RUN ln -s /root/dotfiles/vimrc /root/.vimrc
-RUN ln -s /root/dotfiles/zshrc /root/.zshrc
-RUN ln -s /root/dotfiles/tmuxconf /root/.tmux.conf
-RUN ln -s /root/dotfiles/tigrc /root/.tigrc
-RUN ln -s /root/dotfiles/git-prompt.sh /root/.git-prompt.sh
-RUN ln -s /root/dotfiles/gitconfig /root/.gitconfig
-RUN ln -s /root/dotfiles/agignore /root/.agignore
-RUN ln -s /root/dotfiles/sshconfig /root/.ssh/config
 
 RUN chsh -s /usr/bin/zsh
 
 EXPOSE 3222 60000-60010/udp
-CMD ["/usr/sbin/sshd", "-D"]
+
+WORKDIR /root
+COPY entrypoint.sh /bin/entrypoint.sh
+CMD ["/bin/entrypoint.sh"]
 
