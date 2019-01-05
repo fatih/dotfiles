@@ -45,6 +45,7 @@ RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \
 	git clone 'https://github.com/scrooloose/nerdtree' && \
 	git clone 'https://github.com/t9md/vim-choosewin' && \
 	git clone 'https://github.com/tmux-plugins/vim-tmux' && \
+	git clone 'https://github.com/tmux-plugins/vim-tmux-focus-events' && \
 	git clone 'https://github.com/fatih/molokai' && \
 	git clone 'https://github.com/tpope/vim-commentary' && \
 	git clone 'https://github.com/tpope/vim-eunuch' && \
@@ -69,10 +70,12 @@ RUN go get -u github.com/josharian/impl
 RUN go get -u honnef.co/go/tools/cmd/keyify
 RUN go get -u github.com/fatih/motion
 RUN go get -u github.com/koron/iferr
+RUN go get -v -d github.com/stamblerre/gocode && go build -o gocode-gomod github.com/stamblerre/gocode && mv gocode-gomod /go/bin
 
 # generic tools
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
 RUN go get -u github.com/fatih/hclfmt
+
 
 # base OS
 FROM ubuntu:18.10
