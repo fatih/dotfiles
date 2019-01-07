@@ -124,6 +124,7 @@ RUN apt-get update -qq && apt-get upgrade -y && apt-get install -qq -y \
 	netcat-openbsd \
 	openssh-server \
 	pkg-config \
+	postgresql-contrib \
 	protobuf-compiler \
 	pwgen \
 	python \
