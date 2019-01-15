@@ -21,8 +21,8 @@ setw -g pane-base-index 1
 set -g renumber-windows on
 
 # highlight window when it has new activity
-setw -g monitor-activity on
-set -g visual-activity on
+# setw -g monitor-activity on
+# set -g visual-activity on
 
 # Show times longer than supposed
 set -g display-panes-time 2000
