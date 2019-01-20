@@ -80,7 +80,8 @@ RUN go get -v -d github.com/stamblerre/gocode && go build -o gocode-gomod github
 # generic tools
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
 RUN go get -u github.com/fatih/hclfmt
-RUN go get -u github.com/golang/protobuf/protoc-gen-go
+RUN GIT_TAG="v1.2.0" && go get -d -u github.com/golang/protobuf/protoc-gen-go && git -C "$(go env GOPATH)"/src/github.com/golang/protobuf checkout $GIT_TAG && go install github.com/golang/protobuf/protoc-gen-go
+
 
 # base OS
 FROM ubuntu:18.10
