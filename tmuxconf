@@ -65,7 +65,7 @@ bind-key -T copy-mode-vi 'v' send-keys -X begin-selection
 bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
 
 # copy text with mouse selection without pressing any key
-# bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save -|pbcopy >/dev/null 2>&1"
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save -|pbcopy >/dev/null 2>&1"
 # bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel
 
 # emacs key bindings in tmux command prompt (prefix + :) are better than
@@ -155,10 +155,7 @@ setw -g window-status-current-format "#[fg=colour236,bg=colour240,nobold,nounder
 # see this https://github.com/tmux-plugins/tpm to installation
 set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-open'
-
 set -g @plugin 'tmux-plugins/tmux-yank'
-set -g @yank_with_mouse off
-
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
