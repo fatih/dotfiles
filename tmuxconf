@@ -20,9 +20,10 @@ setw -g pane-base-index 1
 # re-number windows when one is closed
 set -g renumber-windows on
 
-# highlight window when it has new activity
-# setw -g monitor-activity on
-# set -g visual-activity on
+ 
+# word separators for automatic word selection
+setw -g word-separators ' @"=()[]_-:,.'
+setw -ag word-separators "'"
 
 # Show times longer than supposed
 set -g display-panes-time 2000
