@@ -22,5 +22,4 @@ ln -s $(pwd)/gitconfig ~/.gitconfig
 ln -s $(pwd)/agignore ~/.agignore
 ln -s $(pwd)/sshconfig ~/.ssh/config
 
-
 /usr/sbin/sshd -D

@@ -4,7 +4,9 @@ NAME=dev
 all: build
 
 build:
+	@echo "==> Building fatih/${NAME}:$(GITCOMMIT)"
 	docker build -t fatih/${NAME}:${GITCOMMIT} .
+	docker tag fatih/${NAME}:$(GITCOMMIT) fatih/${NAME}:latest
 
 push:
 	@echo "==> Publishing fatih/${NAME}:$(GITCOMMIT)"
@@ -13,11 +15,12 @@ push:
 	@docker push fatih/${NAME}:latest
 	@echo "==> Your image is now available at fatih/${NAME}:$(GITCOMMIT)"
 
+
 run: kill
-	docker run -it -h dev -d --net=host --rm -v /var/run/docker.sock:/var/run/docker.sock -v /home/fatih/code:/home/fatih/code -v /home/fatih/.ssh:/home/fatih/.ssh -v /home/fatih/.zsh_private:/home/fatih/.zsh_private -v /home/fatih/.zsh_history:/home/fatih/.zsh_history --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --privileged --name dev fatih:dev 
+	docker run -d -h dev --net=host --rm -e TZ=Europe/Istanbul -v /var/run/docker.sock:/var/run/docker.sock  -v /mnt/code:/root/code -v /mnt/secrets:/root/secrets --privileged --name dev fatih/dev:8c0f74d
 
 ssh:
-	mosh --no-init --ssh="ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_rsa -p 3222" fatih@localhost -- tmux new-session -AD -s main
+	mosh --no-init --ssh="ssh -o StrictHostKeyChecking=no -i /root/.ssh/github_rsa -p 3222" root@localhost -- tmux new-session -AD -s main
 
 kill:
 	docker kill dev | true
