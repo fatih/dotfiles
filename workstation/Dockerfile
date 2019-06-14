@@ -1,4 +1,4 @@
-ARG GOLANG_VERSION=1.11.4
+ARG GOLANG_VERSION=1.12.6
 
 # install kubectl
 FROM ubuntu:18.10 as kubectl_builder
@@ -66,16 +66,15 @@ RUN go get -u github.com/mdempsky/gocode
 RUN go get -u github.com/rogpeppe/godef
 RUN go get -u github.com/zmb3/gogetdoc
 RUN go get -u golang.org/x/tools/cmd/goimports
-RUN go get -u github.com/golang/lint/golint
-RUN go get -u github.com/alecthomas/gometalinter
-RUN go get -u github.com/fatih/gomodifytags
 RUN go get -u golang.org/x/tools/cmd/gorename
 RUN go get -u golang.org/x/tools/cmd/guru
+RUN go get -u golang.org/x/tools/cmd/gopls
+RUN go get -u golang.org/x/lint/golint
 RUN go get -u github.com/josharian/impl
 RUN go get -u honnef.co/go/tools/cmd/keyify
+RUN go get -u github.com/fatih/gomodifytags
 RUN go get -u github.com/fatih/motion
 RUN go get -u github.com/koron/iferr
-RUN go get -v -d github.com/stamblerre/gocode && go build -o gocode-gomod github.com/stamblerre/gocode && mv gocode-gomod /go/bin
 
 # generic tools
 RUN go get -u github.com/aybabtme/humanlog/cmd/...
@@ -171,7 +170,7 @@ RUN sed 's/#Port 22/Port 3222/' -i /etc/ssh/sshd_config
 
 RUN add-apt-repository ppa:jonathonf/vim -y && apt-get update && apt-get install vim-gtk3 -y
 
-RUN wget https://dl.google.com/go/go1.11.4.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.11.4.linux-amd64.tar.gz && rm go1.11.4.linux-amd64.tar.gz
+RUN wget "https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz" && tar -C /usr/local -xzf "go1.12.6.linux-amd64.tar.gz" && rm "go1.12.6.linux-amd64.tar.gz"
 
 ENV LANG="en_US.UTF-8"
 ENV LC_ALL="en_US.UTF-8"
