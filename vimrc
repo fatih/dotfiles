@@ -257,6 +257,12 @@ function! s:clear_highlight()
 endfunction
 nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
 
+" echo the number under the cursor as binary, useful for bitwise operations
+function! s:echoBinary()
+  echo printf("%08b", expand('<cword>'))
+endfunction
+nnoremap <silent> gb :<C-u>call <SID>echoBinary()<CR>
+
 " Source the current Vim file
 nnoremap <leader>pr :Runtime<CR>
 
@@ -388,23 +394,17 @@ nnoremap <leader>gb :Gblame<CR>
 " ==================== vim-go ====================
 let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
-let g:go_fmt_options = {
-  \ 'goimports': '-local do/',
-  \ }
-
 let g:go_debug_windows = {
       \ 'vars':  'leftabove 35vnew',
       \ 'stack': 'botright 10new',
 \ }
-
 
 let g:go_test_prepend_name = 1
 let g:go_list_type = "quickfix"
 let g:go_auto_type_info = 0
 let g:go_auto_sameids = 0
 let g:go_info_mode = "gocode"
-
-let g:go_def_mode = "godef"
+let g:go_def_mode = "gopls"
 let g:go_echo_command_info = 1
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
