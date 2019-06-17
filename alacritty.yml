@@ -99,8 +99,9 @@ font:
   # false.
   use_thin_strokes: true
 
-# Should display the render timer
-render_timer: false
+debug:
+  # Should display the render timer
+  render_timer: false
 
 # Colors (Tomorrow Night Bright)
 colors:
@@ -238,6 +239,7 @@ cursor:
   #   - _ Underline
   #   - | Beam
   style: Block
+  unfocused_hollow: false
 
 # Live config reload (changes require restart)
 live_config_reload: true
