@@ -403,9 +403,10 @@ let g:go_test_prepend_name = 1
 let g:go_list_type = "quickfix"
 let g:go_auto_type_info = 0
 let g:go_auto_sameids = 0
-let g:go_info_mode = "gocode"
-let g:go_def_mode = "gopls"
+
+let g:go_null_module_warning = 0
 let g:go_echo_command_info = 1
+
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_enabled = ['vet', 'golint']
