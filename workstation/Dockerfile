@@ -38,10 +38,9 @@ RUN mkdir -p /root/.vim/plugged && cd /root/.vim/plugged && \
 	git clone 'https://github.com/corylanou/vim-present' && \
 	git clone 'https://github.com/ekalinin/Dockerfile.vim' && \
 	git clone 'https://github.com/elzr/vim-json' && \
-	git clone 'https://github.com/fatih/vim-go' && \
 	git clone 'https://github.com/fatih/vim-hclfmt' && \
 	git clone 'https://github.com/fatih/vim-nginx' && \
-	git clone 'https://github.com/godlygeek/tabular' && \
+	git clone 'https://github.com/fatih/vim-go' && \
 	git clone 'https://github.com/hashivim/vim-hashicorp-tools' && \
 	git clone 'https://github.com/junegunn/fzf.vim' && \
 	git clone 'https://github.com/mileszs/ack.vim' && \

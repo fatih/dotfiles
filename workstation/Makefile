@@ -17,7 +17,7 @@ push:
 
 
 run: kill
-	docker run -d -h dev --net=host --rm -e TZ=Europe/Istanbul -v /var/run/docker.sock:/var/run/docker.sock  -v /mnt/code:/root/code -v /mnt/secrets:/root/secrets --privileged --name dev fatih/dev:8c0f74d
+	docker run -d -h dev --net=host --rm -e TZ=Europe/Istanbul -v /var/run/docker.sock:/var/run/docker.sock  -v /mnt/code:/root/code -v /mnt/secrets:/root/secrets --privileged --name dev fatih/dev:50a9c22
 
 ssh:
 	mosh --no-init --ssh="ssh -o StrictHostKeyChecking=no -i /root/.ssh/github_rsa -p 3222" root@localhost -- tmux new-session -AD -s main
