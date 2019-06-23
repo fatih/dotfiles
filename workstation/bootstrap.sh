@@ -4,9 +4,6 @@ set -eu
 
 UPGRADE_PACKAGES=${1:-none}
 
-echo "==> Creating dev directories"
-mkdir -p /mnt/dev/code /mnt/dev/secrets
-
 export DEBIAN_FRONTEND=noninteractive
 
 if [ "${UPGRADE_PACKAGES:-none}" != "none" ]; then
@@ -271,7 +268,35 @@ fi
 echo "==> Setting shell to zsh..."
 chsh -s /usr/bin/zsh
 
+echo "==> Setting up mount"
+VOLUME_NAME=$(find /dev/disk/by-id/ -path "*/scsi-0DO_Volume_dev*" -fstype devtmpfs)
+if [ -z "${VOLUME_NAME}" ]; then
+  echo "==> Missing dev disk. Disks present:"
+  ls -l /dev/disk/by-id/
+  exit 1
+fi
+
+blkid "$VOLUME_NAME" || mkfs.ext4 "$VOLUME_NAME"
+
+DEV_DATA_DIR="/mnt/dev"
+if ! mountpoint -q "$DEV_DATA_DIR"; then
+  echo "==> Mounting volume $VOLUME_NAME to dev data dir $DEV_DATA_DIR"
+  # mount dev data
+  mkdir -p "$DEV_DATA_DIR"
+  mount -o discard,defaults,noatime "$VOLUME_NAME" "$DEV_DATA_DIR"
+fi
+
+# make it mountable in case the droplet is rebooted
+if ! grep -qF "$DEV_DATA_DIR" /etc/fstab; then
+  echo "$VOLUME_NAME $DEV_DATA_DIR ext4 defaults,nofail,noatime,discard 0 0" | sudo tee -a /etc/fstab
+fi
+
+echo "==> Creating dev directories"
+mkdir -p /mnt/dev/code
+
 if [ ! -d /mnt/dev/code/dotfiles ]; then
+
+
   echo "==> Setting up dotfiles"
   # the reason we dont't copy the files individually is, to easily push changes
   # if needed
@@ -315,6 +340,7 @@ echo "Done!"
 EOF
 
   mkdir -p /mnt/dev/secrets
+  chmod +x pull-secrets.sh
   mv pull-secrets.sh /mnt/dev/secrets
 fi
 
