@@ -18,7 +18,7 @@ resource "digitalocean_volume" "dev" {
 
 resource "digitalocean_droplet" "dev" {
   name               = "dev"
-  image              = "ubuntu-18-10-x64"
+  image              = "ubuntu-19-04-x64"
   size               = "s-4vcpu-8gb"
   region             = "${var.region}"
   private_networking = true
