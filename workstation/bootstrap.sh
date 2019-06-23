@@ -295,8 +295,6 @@ echo "==> Creating dev directories"
 mkdir -p /mnt/dev/code
 
 if [ ! -d /mnt/dev/code/dotfiles ]; then
-
-
   echo "==> Setting up dotfiles"
   # the reason we dont't copy the files individually is, to easily push changes
   # if needed
