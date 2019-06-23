@@ -104,14 +104,6 @@ sudo apt-get install -q -y \
 
 rm -rf /var/lib/apt/lists/*
 
-# TODO(arslan): check if we need them
-# export LANG="en_US.UTF-8"
-# export LC_ALL="en_US.UTF-8"
-# export LANGUAGE="en_US.UTF-8"
-# locale-gen --purge ${LANG}
-# dpkg-reconfigure --frontend=noninteractive locales 
-# update-locale LANG=${LANG} LC_ALL=${LC_ALL} LANGUAGE=${LANGUAGE}
-
 # install Go
 if ! [ -x "$(command -v go)" ]; then
   export GO_VERSION="1.12.6"
