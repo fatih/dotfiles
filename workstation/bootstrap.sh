@@ -5,11 +5,11 @@ set -eu
 UPGRADE_PACKAGES=${1:-none}
 
 echo "==> Creating dev directories"
-mkdir -p /mnt/dev/code /mnt/dev/secrets
+mkdir -p /mnt/dev/code
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [ "${UPGRADE_PACKAGES:-none}" != "none" ]; then
+if [ "${UPGRADE_PACKAGES}" != "none" ]; then
   echo "==> Updating and upgrading packages ..."
 
   # Add third party repositories
