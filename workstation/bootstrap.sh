@@ -6,7 +6,7 @@ UPGRADE_PACKAGES=${1:-none}
 
 export DEBIAN_FRONTEND=noninteractive
 
-if [ "${UPGRADE_PACKAGES:-none}" != "none" ]; then
+if [ "${UPGRADE_PACKAGES}" != "none" ]; then
   echo "==> Updating and upgrading packages ..."
 
   # Add third party repositories
