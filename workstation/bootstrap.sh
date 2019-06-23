@@ -2,14 +2,16 @@
 
 set -eu
 
-UPGRADE_PACKAGES=$1
+UPGRADE_PACKAGES=${1:-none}
 
-echo "Creating dev directories"
+echo "==> Creating dev directories"
 mkdir -p /mnt/dev/code /mnt/dev/secrets
 
 export DEBIAN_FRONTEND=noninteractive
 
 if [ "${UPGRADE_PACKAGES:-none}" != "none" ]; then
+  echo "==> Updating and upgrading packages ..."
+
   # Add third party repositories
   sudo add-apt-repository ppa:keithw/mosh-dev -y
   sudo add-apt-repository ppa:jonathonf/vim -y
@@ -25,7 +27,7 @@ if [ "${UPGRADE_PACKAGES:-none}" != "none" ]; then
   sudo apt-get upgrade -y
 fi
 
-sudo apt-get install -q -y \
+sudo apt-get install -qq \
   apache2-utils \
   apt-transport-https \
   build-essential \
@@ -291,4 +293,4 @@ fi
 
 
 echo ""
-echo "=> Done!"
+echo "==> Done!"

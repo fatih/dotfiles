@@ -6,7 +6,6 @@ unbind C-b
 set -g prefix C-f
 bind C-f send-prefix
 
-
 set-option -g default-shell /bin/zsh
 
 # toogle last window by hitting again C-f
@@ -23,7 +22,6 @@ setw -g pane-base-index 1
 # re-number windows when one is closed
 set -g renumber-windows on
 
- 
 # word separators for automatic word selection
 setw -g word-separators ' @"=()[]_-:,.'
 setw -ag word-separators "'"
