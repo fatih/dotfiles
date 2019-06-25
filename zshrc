@@ -30,7 +30,7 @@ esac
 
 alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
 alias co='git checkout master'
-alias po='git pull origin master'
+alias po='git pull origin $(git rev-parse --abbrev-ref HEAD)'
 alias b='git branch'
 alias hc='hub compare'
 alias hb='hub browse'
