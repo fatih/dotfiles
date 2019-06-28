@@ -2,9 +2,9 @@
 
 set -eu
 
-UPGRADE_PACKAGES=${1:-none}
-
 export DEBIAN_FRONTEND=noninteractive
+
+UPGRADE_PACKAGES=${1:-none}
 
 if [ "${UPGRADE_PACKAGES}" != "none" ]; then
   echo "==> Updating and upgrading packages ..."
@@ -173,6 +173,17 @@ if ! [ -x "$(command -v jump)" ]; then
   wget https://github.com/gsamokovarov/jump/releases/download/v${JUMP_VERSION}/jump_${JUMP_VERSION}_amd64.deb
   sudo dpkg -i jump_${JUMP_VERSION}_amd64.deb
   rm -f jump_${JUMP_VERSION}_amd64.deb
+fi
+
+if ! [ -x "$(command -v hub)" ]; then
+  echo " ==> Installing hub .."
+  export HUB_VERSION="2.12.0"
+  wget https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz
+  tar xf hub-linux-amd64-${HUB_VERSION}.tgz
+  chmod +x hub-linux-amd64-${HUB_VERSION}/bin/hub
+  cp hub-linux-amd64-${HUB_VERSION}/bin/hub /usr/local/bin
+  rm -rf hub-linux-amd64-${HUB_VERSION}
+  rm -f hub-linux-amd64-${HUB_VERSION}.tgz*
 fi
 
 VIM_PLUG_FILE="${HOME}/.vim/autoload/plug.vim"
