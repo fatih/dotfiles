@@ -67,7 +67,6 @@ sudo apt-get install -qq \
   netcat-openbsd \
   openssh-server \
   pkg-config \
-  postgresql-contrib \
   protobuf-compiler \
   pwgen \
   python \
