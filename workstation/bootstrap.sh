@@ -353,6 +353,8 @@ EOF
 fi
 
 
+# Set correct timezone
+timedatectl set-timezone Europe/Istanbul
 
 echo ""
 echo "==> Done!"
