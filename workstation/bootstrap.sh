@@ -233,6 +233,7 @@ if [ ! -d "$(go env GOPATH)" ]; then
   go get -u -v golang.org/x/tools/cmd/gorename
   go get -u -v golang.org/x/tools/cmd/guru
   go get -u -v golang.org/x/tools/cmd/gopls
+  go get -u -v github.com/bhcleek/lsp-position/cmd/lsp-position
   go get -u -v golang.org/x/lint/golint
   go get -u -v github.com/josharian/impl
   go get -u -v honnef.co/go/tools/cmd/keyify
