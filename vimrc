@@ -240,7 +240,7 @@ augroup END
 autocmd BufEnter * silent! lcd %:p:h
 
 " Automatically resize screens to be equally the same
-" autocmd VimResized * wincmd =
+autocmd VimResized * wincmd =
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -588,6 +588,7 @@ let g:vim_json_syntax_conceal = 0
 " Ultisnips has native support for SuperTab. SuperTab does omnicompletion by
 " pressing tab. I like this better than autocompletion, but it's still fast.
 let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"  
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>" 

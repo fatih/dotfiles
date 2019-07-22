@@ -34,6 +34,7 @@ alias po='git pull origin $(git rev-parse --abbrev-ref HEAD)'
 alias b='git branch'
 alias hc='hub compare'
 alias hb='hub browse'
+alias hp='hub pull-request'
 
 alias -s go='go run'
 alias hs='hugo server'
