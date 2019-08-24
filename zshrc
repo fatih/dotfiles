@@ -252,3 +252,9 @@ eval "$(jump shell)"
 # brew install direnv
 # https://github.com/direnv/direnv
 eval "$(direnv hook zsh)"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc'; fi
