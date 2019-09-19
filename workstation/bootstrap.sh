@@ -104,7 +104,7 @@ rm -rf /var/lib/apt/lists/*
 
 # install Go
 if ! [ -x "$(command -v go)" ]; then
-  export GO_VERSION="1.12.6"
+  export GO_VERSION="1.13"
   wget "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz" 
   tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz" 
   rm -f "go${GO_VERSION}.linux-amd64.tar.gz"
@@ -137,7 +137,7 @@ fi
 
 # install terraform
 if ! [ -x "$(command -v terraform)" ]; then
-  export TERRAFORM_VERSION="0.12.2"
+  export TERRAFORM_VERSION="0.12.9"
   wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
   unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
   chmod +x terraform
@@ -176,7 +176,7 @@ fi
 
 if ! [ -x "$(command -v hub)" ]; then
   echo " ==> Installing hub .."
-  export HUB_VERSION="2.12.0"
+  export HUB_VERSION="2.12.3"
   wget https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz
   tar xf hub-linux-amd64-${HUB_VERSION}.tgz
   chmod +x hub-linux-amd64-${HUB_VERSION}/bin/hub
@@ -278,40 +278,17 @@ fi
 echo "==> Setting shell to zsh..."
 chsh -s /usr/bin/zsh
 
-echo "==> Setting up mount"
-VOLUME_NAME=$(find /dev/disk/by-id/ -path "*/scsi-0DO_Volume_dev*" -fstype devtmpfs)
-if [ -z "${VOLUME_NAME}" ]; then
-  echo "==> Missing dev disk. Disks present:"
-  ls -l /dev/disk/by-id/
-  exit 1
-fi
-
-blkid "$VOLUME_NAME" || mkfs.ext4 "$VOLUME_NAME"
-
-DEV_DATA_DIR="/mnt/dev"
-if ! mountpoint -q "$DEV_DATA_DIR"; then
-  echo "==> Mounting volume $VOLUME_NAME to dev data dir $DEV_DATA_DIR"
-  # mount dev data
-  mkdir -p "$DEV_DATA_DIR"
-  mount -o discard,defaults,noatime "$VOLUME_NAME" "$DEV_DATA_DIR"
-fi
-
-# make it mountable in case the droplet is rebooted
-if ! grep -qF "$DEV_DATA_DIR" /etc/fstab; then
-  echo "$VOLUME_NAME $DEV_DATA_DIR ext4 defaults,nofail,noatime,discard 0 0" | sudo tee -a /etc/fstab
-fi
-
 echo "==> Creating dev directories"
-mkdir -p /mnt/dev/code
+mkdir -p /root/code
 
-if [ ! -d /mnt/dev/code/dotfiles ]; then
+if [ ! -d /root/code/dotfiles ]; then
   echo "==> Setting up dotfiles"
   # the reason we dont't copy the files individually is, to easily push changes
   # if needed
-  cd "/mnt/dev/code"
+  cd "/root/code"
   git clone --recursive https://github.com/fatih/dotfiles.git
 
-  cd "/mnt/dev/code/dotfiles"
+  cd "/root/code/dotfiles"
   git remote set-url origin git@github.com:fatih/dotfiles.git
 
   ln -sfn $(pwd)/vimrc "${HOME}/.vimrc"
@@ -325,7 +302,7 @@ if [ ! -d /mnt/dev/code/dotfiles ]; then
 fi
 
 
-if [ ! -f "/mnt/dev/secrets/pull-secrets.sh" ]; then
+if [ ! -f "/root/secrets/pull-secrets.sh" ]; then
   echo "==> Creating pull-secret.sh script"
 
 cat > pull-secrets.sh <<'EOF'
@@ -352,9 +329,9 @@ ln -sfn $(pwd)/zsh_history ~/.zsh_history
 echo "Done!"
 EOF
 
-  mkdir -p /mnt/dev/secrets
+  mkdir -p /root/secrets
   chmod +x pull-secrets.sh
-  mv pull-secrets.sh /mnt/dev/secrets
+  mv pull-secrets.sh ~/secrets
 fi
 
 
