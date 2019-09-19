@@ -27,6 +27,5 @@ clean:
 	rm -f ~/.git-prompt.sh
 	rm -f ~/.gitconfig
 	rm -f ~/.agignore
-	rm -f ~/.ssh/config
 
 .PHONY: all clean sync build run kill
