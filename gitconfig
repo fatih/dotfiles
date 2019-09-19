@@ -47,3 +47,5 @@
 	smudge = git-media-smudge %f
 [push]
 	default = current
+[url "git@github.com:"]
+	insteadOf = https://github.com/
