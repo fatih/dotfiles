@@ -39,6 +39,9 @@ alias hp='hub pull-request'
 alias -s go='go run'
 alias hs='hugo server'
 
+alias icloud='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/'
+
+
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
@@ -235,6 +238,25 @@ exit() {
   fi
 }
 
+function switchgo() {
+  version=$1
+  if [ -z $version ]; then
+    echo "Usage: switchgo [version]"
+    return
+  fi
+
+  if ! command -v "go$version" > /dev/null 2>&1; then
+    echo "version does not exist, download with: "
+    echo "  go get golang.org/dl/go${version}"
+    echo "  go${version} download"
+    return
+  fi
+
+  go_bin_path=$(command -v "go$version")
+  ln -sf "$go_bin_path" "$GOBIN/go"
+  echo "Switched to ${go_bin_path}"
+}
+
 # ===================
 #    PLUGINS
 # ===================
@@ -249,9 +271,8 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 # https://github.com/gsamokovarov/jump
 eval "$(jump shell)"
 
-# brew install direnv
-# https://github.com/direnv/direnv
-eval "$(direnv hook zsh)"
+# brew install rbenv
+eval "$(rbenv init -)"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc'; fi
