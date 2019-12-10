@@ -33,8 +33,15 @@ alias co='git checkout master'
 alias po='git pull origin $(git rev-parse --abbrev-ref HEAD)'
 alias b='git branch'
 alias hc='hub compare'
-alias hb='hub browse'
 alias hp='hub pull-request'
+
+
+# open github repo from git repo
+function hb() {
+  # from https://jasonmccreary.me/articles/open-github-command-line/
+  github_url=`git remote -v | awk '/fetch/{print $2}' | sed -Ee 's#(git@|git://)#https://#' -e 's@com:@com/@' -e 's%\.git$%%' | awk '/github/'`;
+  open $github_url
+}
 
 alias -s go='go run'
 alias hs='hugo server'
