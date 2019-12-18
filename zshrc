@@ -254,10 +254,13 @@ function switchgo() {
   fi
 
   if ! command -v "go$version" > /dev/null 2>&1; then
-    echo "version does not exist, download with: "
+    echo "version does not exist, downloading with commands: "
     echo "  go get golang.org/dl/go${version}"
     echo "  go${version} download"
-    return
+    echo ""
+
+    go get "golang.org/dl/go${version}"
+    go${version} download
   fi
 
   go_bin_path=$(command -v "go$version")
