@@ -6,7 +6,7 @@ variable "region" {
 
 resource "digitalocean_droplet" "dev" {
   name               = "dev"
-  image              = "ubuntu-19-04-x64"
+  image              = "ubuntu-19-10-x64"
   size               = "s-2vcpu-4gb"
   region             = "${var.region}"
   backups            = true

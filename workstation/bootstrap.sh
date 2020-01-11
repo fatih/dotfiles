@@ -104,7 +104,7 @@ rm -rf /var/lib/apt/lists/*
 
 # install Go
 if ! [ -x "$(command -v go)" ]; then
-  export GO_VERSION="1.13"
+  export GO_VERSION="1.13.6"
   wget "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz" 
   tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz" 
   rm -f "go${GO_VERSION}.linux-amd64.tar.gz"
@@ -113,7 +113,7 @@ fi
 
 # install 1password
 if ! [ -x "$(command -v op)" ]; then
-  export OP_VERSION="v0.5.6-003"
+  export OP_VERSION="v0.8.0"
   curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/${OP_VERSION}/op_linux_amd64_${OP_VERSION}.zip
   unzip 1password.zip op -d /usr/local/bin
   rm -f 1password.zip
@@ -127,7 +127,7 @@ fi
 
 # install doctl
 if ! [ -x "$(command -v doctl)" ]; then
-  export DOCTL_VERSION="1.20.1"
+  export DOCTL_VERSION="1.36.0"
   wget https://github.com/digitalocean/doctl/releases/download/v${DOCTL_VERSION}/doctl-${DOCTL_VERSION}-linux-amd64.tar.gz
   tar xf doctl-${DOCTL_VERSION}-linux-amd64.tar.gz 
   chmod +x doctl 
@@ -137,7 +137,7 @@ fi
 
 # install terraform
 if ! [ -x "$(command -v terraform)" ]; then
-  export TERRAFORM_VERSION="0.12.9"
+  export TERRAFORM_VERSION="0.12.19"
   wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
   unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
   chmod +x terraform
@@ -147,7 +147,7 @@ fi
 
 # install protobuf
 if ! [ -x "$(command -v protoc)" ]; then
-  export PROTOBUF_VERSION="3.8.0"
+  export PROTOBUF_VERSION="3.11.2"
   mkdir -p protobuf_install 
   pushd protobuf_install
   wget https://github.com/protocolbuffers/protobuf/releases/download/v${PROTOBUF_VERSION}/protoc-${PROTOBUF_VERSION}-linux-x86_64.zip
@@ -176,7 +176,7 @@ fi
 
 if ! [ -x "$(command -v hub)" ]; then
   echo " ==> Installing hub .."
-  export HUB_VERSION="2.12.3"
+  export HUB_VERSION="2.13.0"
   wget https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz
   tar xf hub-linux-amd64-${HUB_VERSION}.tgz
   chmod +x hub-linux-amd64-${HUB_VERSION}/bin/hub
@@ -244,7 +244,7 @@ if [ ! -d "$(go env GOPATH)" ]; then
   go get -u -v github.com/aybabtme/humanlog/cmd/...
   go get -u -v github.com/fatih/hclfmt
 
-  export GIT_TAG="v1.2.0" 
+  export GIT_TAG="v1.3.2" 
   go get -d -u github.com/golang/protobuf/protoc-gen-go 
   git -C "$(go env GOPATH)"/src/github.com/golang/protobuf checkout $GIT_TAG 
   go install github.com/golang/protobuf/protoc-gen-go
