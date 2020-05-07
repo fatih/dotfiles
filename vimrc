@@ -422,6 +422,13 @@ let g:go_autodetect_gopath = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_enabled = ['vet', 'golint']
 
+let g:go_info_mode = 'gopls'
+let g:go_rename_command='gopls'
+let g:go_gopls_complete_unimported = 1
+let g:go_implements_mode='gopls'
+let g:go_diagnostics_enabled = 1
+let g:go_doc_popup_window = 1
+
 let g:go_highlight_space_tab_error = 0
 let g:go_highlight_array_whitespace_error = 0
 let g:go_highlight_trailing_whitespace_error = 0
