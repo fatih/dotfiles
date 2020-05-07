@@ -104,7 +104,7 @@ rm -rf /var/lib/apt/lists/*
 
 # install Go
 if ! [ -x "$(command -v go)" ]; then
-  export GO_VERSION="1.13"
+  export GO_VERSION="1.14.2"
   wget "https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz" 
   tar -C /usr/local -xzf "go${GO_VERSION}.linux-amd64.tar.gz" 
   rm -f "go${GO_VERSION}.linux-amd64.tar.gz"
@@ -117,32 +117,6 @@ if ! [ -x "$(command -v op)" ]; then
   curl -sS -o 1password.zip https://cache.agilebits.com/dist/1P/op/pkg/${OP_VERSION}/op_linux_amd64_${OP_VERSION}.zip
   unzip 1password.zip op -d /usr/local/bin
   rm -f 1password.zip
-fi
-
-# install kubectl
-if ! [ -x "$(command -v kubectl)" ]; then
-  curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-  chmod 755 /usr/local/bin/kubectl
-fi
-
-# install doctl
-if ! [ -x "$(command -v doctl)" ]; then
-  export DOCTL_VERSION="1.20.1"
-  wget https://github.com/digitalocean/doctl/releases/download/v${DOCTL_VERSION}/doctl-${DOCTL_VERSION}-linux-amd64.tar.gz
-  tar xf doctl-${DOCTL_VERSION}-linux-amd64.tar.gz 
-  chmod +x doctl 
-  mv doctl /usr/local/bin 
-  rm -f doctl-${DOCTL_VERSION}-linux-amd64.tar.gz
-fi
-
-# install terraform
-if ! [ -x "$(command -v terraform)" ]; then
-  export TERRAFORM_VERSION="0.12.9"
-  wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
-  unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip 
-  chmod +x terraform
-  mv terraform /usr/local/bin
-  rm -f terraform_${TERRAFORM_VERSION}_linux_amd64.zip
 fi
 
 # install protobuf
@@ -158,13 +132,6 @@ if ! [ -x "$(command -v protoc)" ]; then
   rm -rf protobuf_install
 fi
 
-# install cloud_sql_proxy
-if ! [ -x "$(command -v cloud_sql_proxy)" ]; then
-  wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-  chmod +x cloud_sql_proxy 
-  mv cloud_sql_proxy /usr/local/bin
-fi
-
 # install tools
 if ! [ -x "$(command -v jump)" ]; then
   echo " ==> Installing jump .."
@@ -172,17 +139,6 @@ if ! [ -x "$(command -v jump)" ]; then
   wget https://github.com/gsamokovarov/jump/releases/download/v${JUMP_VERSION}/jump_${JUMP_VERSION}_amd64.deb
   sudo dpkg -i jump_${JUMP_VERSION}_amd64.deb
   rm -f jump_${JUMP_VERSION}_amd64.deb
-fi
-
-if ! [ -x "$(command -v hub)" ]; then
-  echo " ==> Installing hub .."
-  export HUB_VERSION="2.12.3"
-  wget https://github.com/github/hub/releases/download/v${HUB_VERSION}/hub-linux-amd64-${HUB_VERSION}.tgz
-  tar xf hub-linux-amd64-${HUB_VERSION}.tgz
-  chmod +x hub-linux-amd64-${HUB_VERSION}/bin/hub
-  cp hub-linux-amd64-${HUB_VERSION}/bin/hub /usr/local/bin
-  rm -rf hub-linux-amd64-${HUB_VERSION}
-  rm -f hub-linux-amd64-${HUB_VERSION}.tgz*
 fi
 
 VIM_PLUG_FILE="${HOME}/.vim/autoload/plug.vim"
@@ -244,11 +200,6 @@ if [ ! -d "$(go env GOPATH)" ]; then
   go get -u -v github.com/aybabtme/humanlog/cmd/...
   go get -u -v github.com/fatih/hclfmt
 
-  export GIT_TAG="v1.2.0" 
-  go get -d -u github.com/golang/protobuf/protoc-gen-go 
-  git -C "$(go env GOPATH)"/src/github.com/golang/protobuf checkout $GIT_TAG 
-  go install github.com/golang/protobuf/protoc-gen-go
-
   cp -r $(go env GOPATH)/bin/* /usr/local/bin/
 fi
 
@@ -302,41 +253,6 @@ if [ ! -d /root/code/dotfiles ]; then
 fi
 
 
-if [ ! -f "/root/secrets/pull-secrets.sh" ]; then
-  echo "==> Creating pull-secret.sh script"
-
-cat > pull-secrets.sh <<'EOF'
-#!/bin/bash
-
-set -eu
-
-echo "Authenticating with 1Password"
-export OP_SESSION_my=$(op signin https://my.1password.com ftharsln@gmail.com --output=raw)
-
-echo "Pulling secrets"
-
-op get document 'github_rsa' > github_rsa
-op get document 'zsh_private' > zsh_private
-op get document 'zsh_history' > zsh_history
-
-rm -f ~/.ssh/github_rsa
-ln -sfn $(pwd)/github_rsa ~/.ssh/github_rsa
-chmod 0600 ~/.ssh/github_rsa
-
-ln -sfn $(pwd)/zsh_private ~/.zsh_private
-ln -sfn $(pwd)/zsh_history ~/.zsh_history
-
-echo "Done!"
-EOF
-
-  mkdir -p /root/secrets
-  chmod +x pull-secrets.sh
-  mv pull-secrets.sh ~/secrets
-fi
-
-
-# Set correct timezone
-timedatectl set-timezone Europe/Istanbul
 
 echo ""
 echo "==> Done!"
