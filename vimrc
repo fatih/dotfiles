@@ -556,7 +556,7 @@ let g:vim_markdown_no_extensions_in_markdown = 1
 "
 function! s:create_front_matter()
   let fm = ["+++"]
-  call add(fm, 'author = "Fatih Arslan"')
+  call add(fm, 'author = "Michael Ngo"')
   call add(fm, printf("date = \"%s\"", strftime("%Y-%m-%d %X")))
 
   let filename = expand("%:r")

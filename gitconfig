@@ -1,6 +1,6 @@
 [user]
-	name = Fatih Arslan
-	email = ftharsln@gmail.com
+	name = Michael Ngo
+	email = michaeln56@gmail.com
 [alias]
 	st = status -sb
 	ci = commit
@@ -35,11 +35,10 @@
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	editor = vim
 	quotepath = false
-	excludesfile = /Users/fatih/.gitignore_global
 [credential]
 	helper = osxkeychain
 [github]
-	user = fatih
+	user = DrNgo
 [mergetool]
 	keepBackup = true
 [filter "media"]
