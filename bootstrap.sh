@@ -10,17 +10,13 @@ if [ "${UPGRADE_PACKAGES}" != "none" ]; then
   echo "==> Updating and upgrading packages ..."
 
   # Add third party repositories
-  sudo add-apt-repository ppa:keithw/mosh-dev -y
-  sudo add-apt-repository ppa:jonathonf/vim -y
+#  sudo add-apt-repository ppa:keithw/mosh-dev -y
+#  sudo add-apt-repository ppa:jonathonf/vim -y
 
-  CLOUD_SDK_SOURCE="/etc/apt/sources.list.d/google-cloud-sdk.list"
-  CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-  if [ ! -f "${CLOUD_SDK_SOURCE}" ]; then
-    echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a ${CLOUD_SDK_SOURCE}
-    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  fi
+  echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
-  sudo apt-get update
+  sudo apt-get update --allow-insecure-repositories --allow-unauthenticated
   sudo apt-get upgrade -y
 fi
 
@@ -178,30 +174,30 @@ if [ ! -f "${VIM_PLUG_FILE}" ]; then
   popd
 fi
 
-if [ ! -d "$(go env GOPATH)" ]; then
-  echo " ==> Installing Go tools"
-  # vim-go tooling
-  go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
-  go get -u -v github.com/mdempsky/gocode
-  go get -u -v github.com/rogpeppe/godef
-  go get -u -v github.com/zmb3/gogetdoc
-  go get -u -v golang.org/x/tools/cmd/goimports
-  go get -u -v golang.org/x/tools/cmd/gorename
-  go get -u -v golang.org/x/tools/cmd/guru
-  go get -u -v golang.org/x/tools/cmd/gopls
-  go get -u -v golang.org/x/lint/golint
-  go get -u -v github.com/josharian/impl
-  go get -u -v honnef.co/go/tools/cmd/keyify
-  go get -u -v github.com/fatih/gomodifytags
-  go get -u -v github.com/fatih/motion
-  go get -u -v github.com/koron/iferr
-
-  # generic
-  go get -u -v github.com/aybabtme/humanlog/cmd/...
-  go get -u -v github.com/fatih/hclfmt
-
-  cp -r $(go env GOPATH)/bin/* /usr/local/bin/
-fi
+#if [ ! -d "$(go env GOPATH)" ]; then
+#  echo " ==> Installing Go tools"
+#  # vim-go tooling
+#  go get -u -v github.com/davidrjenni/reftools/cmd/fillstruct
+#  go get -u -v github.com/mdempsky/gocode
+#  go get -u -v github.com/rogpeppe/godef
+#  go get -u -v github.com/zmb3/gogetdoc
+#  go get -u -v golang.org/x/tools/cmd/goimports
+#  go get -u -v golang.org/x/tools/cmd/gorename
+#  go get -u -v golang.org/x/tools/cmd/guru
+#  GO111MODULE=on go get -u -v golang.org/x/tools/cmd/gopls
+#  go get -u -v golang.org/x/lint/golint
+#  go get -u -v github.com/josharian/impl
+#  go get -u -v honnef.co/go/tools/cmd/keyify
+#  go get -u -v github.com/fatih/gomodifytags
+#  go get -u -v github.com/fatih/motion
+#  go get -u -v github.com/koron/iferr
+#
+#  # generic
+#  go get -u -v github.com/aybabtme/humanlog/cmd/...
+#  go get -u -v github.com/fatih/hclfmt
+#
+#  cp -r $(go env GOPATH)/bin/* /usr/local/bin/
+#fi
 
 if [ ! -d "${HOME}/.fzf" ]; then
   echo " ==> Installing fzf"
@@ -237,10 +233,10 @@ if [ ! -d /root/code/dotfiles ]; then
   # the reason we dont't copy the files individually is, to easily push changes
   # if needed
   cd "/root/code"
-  git clone --recursive https://github.com/fatih/dotfiles.git
+  git clone --recursive https://github.com/DrNgo/dotfiles.git
 
   cd "/root/code/dotfiles"
-  git remote set-url origin git@github.com:fatih/dotfiles.git
+  git remote set-url origin git@github.com:DrNgo/dotfiles.git
 
   ln -sfn $(pwd)/vimrc "${HOME}/.vimrc"
   ln -sfn $(pwd)/zshrc "${HOME}/.zshrc"

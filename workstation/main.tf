@@ -1,17 +1,20 @@
+terraform {
+  required_version = ">= 0.12.0"
+}
 provider "digitalocean" {}
 
 variable "region" {
-  default = "sfo2"
+  default = "nyc1"
 }
 
 resource "digitalocean_droplet" "dev" {
   name               = "dev"
-  image              = "ubuntu-19-04-x64"
+  image              = "ubuntu-20-04-x64"
   size               = "s-2vcpu-4gb"
-  region             = "${var.region}"
+  region             = var.region
   backups            = true
   ipv6               = true
-  ssh_keys           = [25378407]                        # doctl compute ssh-key list
+  ssh_keys           = ["93:3d:80:9e:52:6b:88:46:e2:2a:27:e7:c2:c6:df:b4"]                        # doctl compute ssh-key list
 
   provisioner "file" {
     source      = "../bootstrap.sh"
@@ -20,9 +23,9 @@ resource "digitalocean_droplet" "dev" {
     connection {
       type        = "ssh"
       user        = "root"
-      private_key = "${file("~/.ssh/ipad_rsa")}"
+      private_key = file("~/.ssh/id_ed25519")
       timeout     = "2m"
-      host = "${digitalocean_droplet.dev.ipv4_address}"
+      host = digitalocean_droplet.dev.ipv4_address
     }
   }
 
@@ -35,9 +38,9 @@ resource "digitalocean_droplet" "dev" {
     connection {
       type        = "ssh"
       user        = "root"
-      private_key = "${file("~/.ssh/ipad_rsa")}"
+      private_key = file("~/.ssh/id_ed25519")
       timeout     = "2m"
-      host = "${digitalocean_droplet.dev.ipv4_address}"
+      host = digitalocean_droplet.dev.ipv4_address
     }
   }
 }
@@ -45,7 +48,7 @@ resource "digitalocean_droplet" "dev" {
 resource "digitalocean_firewall" "dev" {
   name = "dev"
 
-  droplet_ids = ["${digitalocean_droplet.dev.id}"]
+  droplet_ids = [digitalocean_droplet.dev.id]
 
   inbound_rule {
       protocol         = "tcp"
@@ -78,5 +81,5 @@ resource "digitalocean_firewall" "dev" {
 }
 
 output "public_ip" {
-  value = "${digitalocean_droplet.dev.ipv4_address}"
+  value = digitalocean_droplet.dev.ipv4_address
 }
