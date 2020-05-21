@@ -14,7 +14,7 @@ resource "digitalocean_droplet" "dev" {
   ssh_keys           = [25378407]                        # doctl compute ssh-key list
 
   provisioner "file" {
-    source      = "bootstrap.sh"
+    source      = "../bootstrap.sh"
     destination = "/tmp/bootstrap.sh"
 
     connection {
