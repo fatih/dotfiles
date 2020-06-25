@@ -38,9 +38,17 @@ alias cdr='cd $(git rev-parse --show-toplevel)'
 # show 
 alias duh='du -sh -h * .[^.]* 2> /dev/null | sort -h'
 
-alias b='git branch'
+# build and test
+alias bt='go build ./... && go test ./...'
 alias hc='hub compare'
 alias hp='hub pull-request'
+alias b='git branch'
+
+# open seperate tmux buffer and search for a file, open with vim
+function fe() (
+  IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
+  [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
+)
 
 
 # open github repo from git repo
@@ -292,9 +300,5 @@ eval "$(jump shell)"
 # brew install rbenv
 eval "$(rbenv init -)"
 
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/fatih/Code/google-cloud-sdk/completion.zsh.inc'; fi
 export PATH="/usr/local/opt/mysql-client/bin:$PATH"
+export PATH="/usr/local/opt/mysql-client@5.7/bin:$PATH"
