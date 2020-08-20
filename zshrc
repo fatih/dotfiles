@@ -28,8 +28,10 @@ case `uname` in
   ;;
 esac
 
-alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
-alias co='git checkout master'
+alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) $(basename $(git symbolic-ref refs/remotes/origin/HEAD)))'
+
+# if it fails to resolve, set the HEAD with: git remote set-head origin --auto
+alias co='git checkout $(basename $(git symbolic-ref refs/remotes/origin/HEAD))'
 alias po='git pull origin $(git rev-parse --abbrev-ref HEAD)'
 
 # cd into git root dir
