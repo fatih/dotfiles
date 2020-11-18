@@ -74,7 +74,8 @@ export LANG="en_US.UTF-8"
 # =============
 #
 
-export PATH="/usr/local/go/bin:$GOBIN:$HOME/.cargo/bin:$PATH"
+export GOBIN="$HOME/go/bin"
+export PATH="$GOBIN:$HOME/.cargo/bin:$PATH"
 
 export EDITOR="vim"
 export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
@@ -289,8 +290,9 @@ function switchgo() {
 #    PLUGINS
 # ===================
 
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+# These are installed via github.com/fatih/dotfiles/Brewfile
+source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # ===================
 #    THIRD PARTY
@@ -298,9 +300,3 @@ source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
 # brew install jump
 # https://github.com/gsamokovarov/jump
 eval "$(jump shell)"
-
-# brew install rbenv
-eval "$(rbenv init -)"
-
-export PATH="/usr/local/opt/mysql-client/bin:$PATH"
-export PATH="/usr/local/opt/mysql-client@5.7/bin:$PATH"
