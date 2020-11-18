@@ -407,43 +407,30 @@ nnoremap <leader>gb :Gblame<CR>
 
 " ==================== vim-go ====================
 let g:go_fmt_fail_silently = 1
-let g:go_fmt_command = "goimports"
 let g:go_debug_windows = {
       \ 'vars':  'leftabove 35vnew',
       \ 'stack': 'botright 10new',
 \ }
 
-let g:go_test_prepend_name = 1
+let g:go_test_show_name = 1
 let g:go_list_type = "quickfix"
-let g:go_auto_type_info = 0
-let g:go_auto_sameids = 0
-
-let g:go_null_module_warning = 0
-let g:go_echo_command_info = 1
 
 let g:go_autodetect_gopath = 1
 let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_enabled = ['vet', 'golint']
 
-let g:go_info_mode = 'gopls'
-let g:go_rename_command='gopls'
 let g:go_gopls_complete_unimported = 1
-let g:go_implements_mode='gopls'
-let g:go_diagnostics_enabled = 1
+
+" 2 is for errors and warnings
+let g:go_diagnostics_level = 2 
 let g:go_doc_popup_window = 1
 
-let g:go_highlight_space_tab_error = 0
-let g:go_highlight_array_whitespace_error = 0
-let g:go_highlight_trailing_whitespace_error = 0
-let g:go_highlight_extra_types = 0
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_types = 0
-let g:go_highlight_operators = 1
-let g:go_highlight_format_strings = 0
-let g:go_highlight_function_calls = 0
-let g:go_gocode_propose_source = 1
+let g:go_imports_mode="gopls"
+let g:go_imports_autosave=1
 
-let g:go_modifytags_transform = 'camelcase'
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_operators = 1
+
 let g:go_fold_enable = []
 
 nmap <C-g> :GoDecls<cr>
