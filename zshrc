@@ -42,8 +42,9 @@ alias duh='du -sh -h * .[^.]* 2> /dev/null | sort -h'
 
 # build and test
 alias bt='go build ./... && go test ./...'
-alias hc='hub compare'
-alias hp='hub pull-request'
+alias hc='gh pr view --web'
+# open github repo from git repo
+alias hb='gh repo view --web'
 alias b='git branch'
 
 # open seperate tmux buffer and search for a file, open with vim
@@ -51,14 +52,6 @@ function fe() (
   IFS=$'\n' files=($(fzf-tmux --query="$1" --multi --select-1 --exit-0))
   [[ -n "$files" ]] && ${EDITOR:-vim} "${files[@]}"
 )
-
-
-# open github repo from git repo
-function hb() {
-  # from https://jasonmccreary.me/articles/open-github-command-line/
-  github_url=`git remote -v | awk '/fetch/{print $2}' | sed -Ee 's#(git@|git://)#https://#' -e 's@com:@com/@' -e 's%\.git$%%' | awk '/github/'`;
-  open $github_url
-}
 
 alias -s go='go run'
 alias hs='hugo server'
