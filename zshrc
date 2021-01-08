@@ -58,17 +58,21 @@ alias hs='hugo server'
 
 alias icloud='cd ~/Library/Mobile\ Documents/com~apple~CloudDocs/'
 
-
 export LC_ALL="en_US.UTF-8"
 export LANG="en_US.UTF-8"
 
 # =============
 #    EXPORT
 # =============
-#
 
 export GOBIN="$HOME/go/bin"
 export PATH="$GOBIN:$HOME/.cargo/bin:$PATH"
+
+# brew install mysql@5.7
+export PATH="/usr/local/opt/mysql@5.7/bin:$PATH"
+
+# brew install openssl
+export PATH="/usr/local/opt/openssl@1.1/bin:$PATH"
 
 export EDITOR="vim"
 export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
