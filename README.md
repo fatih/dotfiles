@@ -19,8 +19,8 @@ brew bundle
 # copy dotfiles to the appropriate places
 make
 
-# make zsh the new default
-chsh -s /bin/zsh
+# make fish the new default
+chsh -s /usr/local/bin/fish
 
 # setup vim-plug
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \

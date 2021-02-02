@@ -35,6 +35,7 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rhubarb'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tyru/open-browser.vim'
+Plug 'dag/vim-fish'
 
 call plug#end()
 

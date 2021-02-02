@@ -235,10 +235,19 @@ live_config_reload: true
 # You can set shell.program to the path of your favorite shell, e.g. /bin/zsh.
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
+# shell:
+#   program: /usr/local/bin/fish
+#   args:
+#     - --login
+#
 shell:
-  program: /usr/local/bin/zsh
+  program: /usr/local/bin/tmux
   args:
-    - --login
+    - new-session
+    - -A
+    - -D
+    - -s
+    - main
 
 
 # Key bindings
