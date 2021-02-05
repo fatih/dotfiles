@@ -6,12 +6,12 @@ function usego --argument ver
 
   set go_bin_path (command -v "go$ver")
   if test -z $go_bin_path
-    echo "version does not exist, downloading with commands: "
+    echo "go $ver does not exist, downloading with commands: "
     echo "  go get golang.org/dl/go$ver"
     echo "  go$ver download"
     echo ""
 
-    go get -v "golang.org/dl/go$ver"
+    go get "golang.org/dl/go$ver"
     go$ver download
     set go_bin_path (command -v "go$ver")
   end
