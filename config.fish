@@ -5,6 +5,9 @@ set -gx EDITOR vim
 set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
 set -gxp PATH /usr/local/opt/python@3.9/libexec/bin
 
+# brew install openssl
+set -gxp PATH /usr/local/opt/openssl@1.1/bin
+
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
 set -g __fish_git_prompt_showdirtystate 'yes'
