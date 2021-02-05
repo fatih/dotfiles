@@ -1,12 +1,6 @@
-set -gxp PATH $HOME/go/bin
+set -gxp PATH /usr/local/opt/openssl@1.1/bin /usr/local/opt/python@3.9/libexec/bin /usr/local/sbin $HOME/go/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR vim
-
-set -g fish_user_paths "/usr/local/sbin" $fish_user_paths
-set -gxp PATH /usr/local/opt/python@3.9/libexec/bin
-
-# brew install openssl
-set -gxp PATH /usr/local/opt/openssl@1.1/bin
 
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
@@ -35,4 +29,3 @@ status --is-interactive; and source (jump shell fish | psub)
 # Senstive functions which are not pushed to Github
 # It contains work related stuff, some functions, aliases etc...
 source ~/.config/fish/private.fish
-
