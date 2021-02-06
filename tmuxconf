@@ -6,6 +6,8 @@ unbind C-b
 set -g prefix C-f
 bind C-f send-prefix
 
+set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
+
 set-option -g default-shell /usr/local/bin/fish
 
 # toogle last window by hitting again C-f
@@ -145,7 +147,7 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run -b '~/.tmux/plugins/tpm/tpm'
+run '~/.tmux/plugins/tpm/tpm'
 
 
 # The followings are not any kind of setting for Tmux, but crucial to my

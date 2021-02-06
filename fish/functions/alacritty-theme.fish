@@ -1,4 +1,4 @@
-function alacritty-theme-switch  --argument theme
+function alacritty-theme --argument theme
   if ! test -f ~/.config/alacritty/color.yml
     echo "file ~/.config/alacritty/color.yml doesn't exist"
     return

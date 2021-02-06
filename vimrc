@@ -115,16 +115,26 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 
+function! s:change_background()
+  if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
+    set background=dark   " for dark version of theme
+    let g:gruvbox_contrast_dark = "hard"
+  else
+    set background=light  " for light version of theme
+    let g:gruvbox_contrast_light = "hard"
+  endif
+  colorscheme gruvbox
+endfunction
 
-if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
-  set background=dark   " for dark version of theme
-  let g:gruvbox_contrast_dark="hard"
-else
-  set background=light  " for light version of theme
-  let g:gruvbox_contrast_light="hard"
-endif
-colorscheme gruvbox
+call <sid>change_background()
 
+" Change colorscheme if we receive a SigUSR1
+autocmd SigUSR1 * call <sid>change_background()
+
+" augroup sigusr1
+"   autocmd!
+"   autocmd SigUSR1 * source $MYVIMRC
+" augroup END
 
 augroup filetypedetect
   command! -nargs=* -complete=help Help vertical belowright help <args>
@@ -263,6 +273,7 @@ autocmd BufEnter * silent! lcd %:p:h
 " Automatically resize screens to be equally the same
 autocmd VimResized * wincmd =
 
+
 " Fast saving
 nnoremap <leader>w :w!<cr>
 nnoremap <silent> <leader>q :q!<CR>
@@ -335,9 +346,6 @@ noremap k gk
 
 " Exit on j
 imap jj <Esc>
-
-" Source (reload configuration)
-nnoremap <silent> <F5> :source $MNVIMRC<CR>
 
 nnoremap <F6> :setlocal spell! spell?<CR>
 
@@ -624,9 +632,5 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-nmap <Leader>gi <Plug>(grammarous-open-info-window)
-nmap <Leader>gc <Plug>(grammarous-close-info-window)
-nmap <Leader>gf <Plug>(grammarous-fixit)
 
 " vim: sw=2 sw=2 et
