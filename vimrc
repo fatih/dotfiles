@@ -130,6 +130,7 @@ augroup filetypedetect
   autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.fish setlocal expandtab shiftwidth=2 tabstop=2
   
   autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
   autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=2
