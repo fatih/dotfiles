@@ -1,4 +1,8 @@
 " I use the same vimrc for both nvim and vim
+if &shell =~# 'fish$'
+    set shell=sh
+endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
@@ -11,7 +15,7 @@ Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ervandew/supertab'
-Plug 'fatih/molokai'
+Plug 'lifepillar/vim-solarized8'
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
@@ -104,13 +108,20 @@ if has('persistent_undo')
   set undodir=~/.cache/vim
 endif
 
+
 " color
 syntax enable
-set t_Co=256
-set background=dark
-let g:molokai_original = 1
-let g:rehash256 = 1
-colorscheme molokai
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+
+colorscheme solarized8_high
+if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
+  set background=dark
+else
+  set background=light
+endif
+
 
 augroup filetypedetect
   command! -nargs=* -complete=help Help vertical belowright help <args>
