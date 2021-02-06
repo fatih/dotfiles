@@ -15,7 +15,7 @@ Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ervandew/supertab'
-Plug 'lifepillar/vim-solarized8'
+Plug 'gruvbox-community/gruvbox'
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
@@ -115,12 +115,15 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 set termguicolors
 
-colorscheme solarized8_high
+
 if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
-  set background=dark
+  set background=dark   " for dark version of theme
+  let g:gruvbox_contrast_dark="hard"
 else
-  set background=light
+  set background=light  " for light version of theme
+  let g:gruvbox_contrast_light="hard"
 endif
+colorscheme gruvbox
 
 
 augroup filetypedetect

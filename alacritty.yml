@@ -1,4 +1,6 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator
+import:
+  - "/Users/fatih/.config/alacritty/color.yml"
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -91,74 +93,66 @@ debug:
   # Should display the render timer
   render_timer: false
 
-schemes:
-  solarized_light: &light
-    # Default colors
-    primary:
-      background: '#fdf6e3' # base3
-      foreground: '#657b83' # base00
+# schemes:
+#   gruvbox_light: &light
+#     # Default colors
+#     primary:
+#       background: '0xf9f5d7' # hard contrast
+#       # background: '0xfbf1c7' # normal
+#       # soft contrast: background = '0xf2e5bc'
+#       foreground: '0x3c3836'
+  
+#     # Normal colors
+#     normal:
+#       black:   '0xfbf1c7'
+#       red:     '0xcc241d'
+#       green:   '0x98971a'
+#       yellow:  '0xd79921'
+#       blue:    '0x458588'
+#       magenta: '0xb16286'
+#       cyan:    '0x689d6a'
+#       white:   '0x7c6f64'
+  
+#     # Bright colors
+#     bright:
+#       black:   '0x928374'
+#       red:     '0x9d0006'
+#       green:   '0x79740e'
+#       yellow:  '0xb57614'
+#       blue:    '0x076678'
+#       magenta: '0x8f3f71'
+#       cyan:    '0x427b58'
+#       white:   '0x3c3836'
+#   gruvbox_dark: &dark
+#     # Default colors
+#     primary:
+#       background: '0x1d2021' # hard contrast
+#       # background: '0x282828' # normal contrast
+#       foreground: '0xebdbb2'
 
+#     # Normal colors
+#     normal:
+#       black:   '0x282828'
+#       red:     '0xcc241d'
+#       green:   '0x98971a'
+#       yellow:  '0xd79921'
+#       blue:    '0x458588'
+#       magenta: '0xb16286'
+#       cyan:    '0x689d6a'
+#       white:   '0xa89984'
 
-    # Cursor colors
-    cursor:
-      text:   '#fdf6e3' # base3
-      cursor: '#657b83' # base00
+#     # Bright colors
+#     bright:
+#       black:   '0x928374'
+#       red:     '0xfb4934'
+#       green:   '0xb8bb26'
+#       yellow:  '0xfabd2f'
+#       blue:    '0x83a598'
+#       magenta: '0xd3869b'
+#       cyan:    '0x8ec07c'
+#       white:   '0xebdbb2'
 
-    # Normal colors
-    normal:
-      black:   '#073642' # base02
-      red:     '#dc322f' # red
-      green:   '#859900' # green
-      yellow:  '#b58900' # yellow
-      blue:    '#268bd2' # blue
-      magenta: '#d33682' # magenta
-      cyan:    '#2aa198' # cyan
-      white:   '#eee8d5' # base2
-
-    # Bright colors
-    bright:
-      black:   '#002b36' # base03
-      red:     '#cb4b16' # orange
-      green:   '#586e75' # base01
-      yellow:  '#657b83' # base00
-      blue:    '#839496' # base0
-      magenta: '#6c71c4' # violet
-      cyan:    '#93a1a1' # base1
-      white:   '#fdf6e3' # base3
-  solarized_dark: &dark
-    # Default colors
-    primary:
-      background: '#002b36' # base03
-      foreground: '#93a1a1' # base0
-
-    # Cursor colors
-    cursor:
-      text:   '#002b36' # base03
-      cursor: '#93a1a1' # base0
-
-    # Normal colors
-    normal:
-      black:   '#073642' # base02
-      red:     '#dc322f' # red
-      green:   '#859900' # green
-      yellow:  '#b58900' # yellow
-      blue:    '#268bd2' # blue
-      magenta: '#d33682' # magenta
-      cyan:    '#2aa198' # cyan
-      white:   '#fdf6e3' # base2
-
-    # Bright colors
-    bright:
-      black:   '#002b36' # base03
-      red:     '#cb4b16' # orange
-      green:   '#657b83' # base01
-      yellow:  '#839496' # base00
-      blue:    '#93a1a1' # base0
-      magenta: '#6c71c4' # violet
-      cyan:    '#eee8d5' # base1
-      white:   '#fdf6e3' # base3
-
-colors: *dark
+# colors: *dark
 
 
 # Visual Bell
