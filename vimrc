@@ -16,6 +16,7 @@ Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ervandew/supertab'
 Plug 'gruvbox-community/gruvbox'
+Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
@@ -125,6 +126,7 @@ function! s:change_background()
     let g:gruvbox_contrast_light = "hard"
   endif
   colorscheme gruvbox
+
   try
     execute "AirlineRefresh"
   catch
@@ -169,6 +171,17 @@ augroup END
 
 "=====================================================
 "===================== STATUSLINE ====================
+
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'x'    : '%a',
+      \'y'    : '%Y-%m-%d %H:%M',
+      \'z'    : ' #h',
+      \'options' : {'status-justify' : 'left', 'status-position' : 'top'}}
+
+let g:tmuxline_powerline_separators = 0
 
 "=====================================================
 "===================== MAPPINGS ======================

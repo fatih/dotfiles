@@ -21,6 +21,8 @@ function change_background --argument mode_setting
   end
 
   # vim automatically reloads changes the background once it receives a SIGUSR1
+  # our tmux theme is also changed automatically because we're using the 
+  # edkolev/tmuxline.vim vim plugin
   for pid in (pgrep vim)
     kill -SIGUSR1 $pid
   end
@@ -32,6 +34,4 @@ function change_background --argument mode_setting
     case light
       alacritty-theme gruvbox_light
   end
-
-  # todo: TMUX colors
 end
