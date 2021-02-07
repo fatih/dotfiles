@@ -20,11 +20,12 @@ function change_background --argument mode_setting
     end
   end
 
+  # vim automatically reloads changes the background once it receives a SIGUSR1
   for pid in (pgrep vim)
-    # vim automatically reloads changes the background once it receives a SIGUSR1
     kill -SIGUSR1 $pid
   end
 
+  # change alacritty
   switch $mode
     case dark
       alacritty-theme gruvbox_dark
@@ -33,5 +34,4 @@ function change_background --argument mode_setting
   end
 
   # todo: TMUX colors
-  # todo: Airline/statusline colors
 end
