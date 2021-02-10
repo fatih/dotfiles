@@ -1,4 +1,8 @@
 " I use the same vimrc for both nvim and vim
+if &shell =~# 'fish$'
+    set shell=sh
+endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
@@ -11,7 +15,9 @@ Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ervandew/supertab'
-Plug 'fatih/molokai'
+Plug 'gruvbox-community/gruvbox'
+Plug 'edkolev/tmuxline.vim'
+Plug 'vim-airline/vim-airline'
 Plug 'fatih/vim-go'
 Plug 'fatih/vim-hclfmt'
 Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
@@ -35,6 +41,7 @@ Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rhubarb'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tyru/open-browser.vim'
+Plug 'dag/vim-fish'
 
 call plug#end()
 
@@ -103,13 +110,33 @@ if has('persistent_undo')
   set undodir=~/.cache/vim
 endif
 
+
 " color
 syntax enable
-set t_Co=256
-set background=dark
-let g:molokai_original = 1
-let g:rehash256 = 1
-colorscheme molokai
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+set termguicolors
+let g:gruvbox_contrast_dark = "hard"
+let g:gruvbox_contrast_light = "hard"
+
+" ChangeBackground changes the background mode based on macOS's `Appearance`
+" setting. We also refresh the statusline colors to reflect the new mode.
+function! ChangeBackground()
+  if system("defaults read -g AppleInterfaceStyle") =~ '^Dark'
+    set background=dark   " for dark version of theme
+  else
+    set background=light  " for light version of theme
+  endif
+  colorscheme gruvbox
+
+  try
+    execute "AirlineRefresh"
+  catch
+  endtry
+endfunction
+
+" initialize the colorscheme for the first run
+call ChangeBackground()
 
 augroup filetypedetect
   command! -nargs=* -complete=help Help vertical belowright help <args>
@@ -129,6 +156,7 @@ augroup filetypedetect
   autocmd BufNewFile,BufRead *.hcl setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.sh setlocal expandtab shiftwidth=2 tabstop=2
   autocmd BufNewFile,BufRead *.proto setlocal expandtab shiftwidth=2 tabstop=2
+  autocmd BufNewFile,BufRead *.fish setlocal expandtab shiftwidth=2 tabstop=2
   
   autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4
   autocmd FileType yaml setlocal expandtab shiftwidth=2 tabstop=2
@@ -139,87 +167,16 @@ augroup END
 "=====================================================
 "===================== STATUSLINE ====================
 
-let s:modes = {
-      \ 'n': 'NORMAL', 
-      \ 'i': 'INSERT', 
-      \ 'R': 'REPLACE', 
-      \ 'v': 'VISUAL', 
-      \ 'V': 'V-LINE', 
-      \ "\<C-v>": 'V-BLOCK',
-      \ 'c': 'COMMAND',
-      \ 's': 'SELECT', 
-      \ 'S': 'S-LINE', 
-      \ "\<C-s>": 'S-BLOCK', 
-      \ 't': 'TERMINAL'
-      \}
+let g:tmuxline_preset = {
+      \'a'    : '#S',
+      \'win'  : '#I #W',
+      \'cwin' : '#I #W',
+      \'x'    : '%a',
+      \'y'    : '%Y-%m-%d %H:%M',
+      \'z'    : ' #h',
+      \'options' : {'status-justify' : 'left', 'status-position' : 'top'}}
 
-let s:prev_mode = ""
-function! StatusLineMode()
-  let cur_mode = get(s:modes, mode(), '')
-
-  " do not update higlight if the mode is the same
-  if cur_mode == s:prev_mode
-    return cur_mode
-  endif
-
-  if cur_mode == "NORMAL"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=148 ctermfg=22'
-  elseif cur_mode == "INSERT"
-    exe 'hi! myModeColor cterm=bold ctermbg=23 ctermfg=231'
-  elseif cur_mode == "VISUAL" || cur_mode == "V-LINE" || cur_mode == "V_BLOCK"
-    exe 'hi! StatusLine ctermfg=236'
-    exe 'hi! myModeColor cterm=bold ctermbg=208 ctermfg=88'
-  endif
-
-  let s:prev_mode = cur_mode
-  return cur_mode
-endfunction
-
-function! StatusLineFiletype()
-  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype : 'no ft') : ''
-endfunction
-
-function! StatusLinePercent()
-  return (100 * line('.') / line('$')) . '%'
-endfunction
-
-function! StatusLineLeftInfo()
- let branch = fugitive#head()
- let filename = '' != expand('%:t') ? expand('%:t') : '[No Name]'
- if branch !=# ''
-   return printf("%s | %s", branch, filename)
- endif
- return filename
-endfunction
-
-exe 'hi! myInfoColor ctermbg=240 ctermfg=252'
-
-" start building our statusline
-set statusline=
-
-" mode with custom colors
-set statusline+=%#myModeColor#
-set statusline+=%{StatusLineMode()}               
-set statusline+=%*
-
-" left information bar (after mode)
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineLeftInfo()}
-set statusline+=\ %*
-
-" go command status (requires vim-go)
-set statusline+=%#goStatuslineColor#
-set statusline+=%{go#statusline#Show()}
-set statusline+=%*
-
-" right section seperator
-set statusline+=%=
-
-" filetype, percentage, line number and column number
-set statusline+=%#myInfoColor#
-set statusline+=\ %{StatusLineFiletype()}\ %{StatusLinePercent()}\ %l:%v
-set statusline+=\ %*
+let g:tmuxline_powerline_separators = 0
 
 "=====================================================
 "===================== MAPPINGS ======================
@@ -246,6 +203,7 @@ autocmd BufEnter * silent! lcd %:p:h
 
 " Automatically resize screens to be equally the same
 autocmd VimResized * wincmd =
+
 
 " Fast saving
 nnoremap <leader>w :w!<cr>
@@ -319,9 +277,6 @@ noremap k gk
 
 " Exit on j
 imap jj <Esc>
-
-" Source (reload configuration)
-nnoremap <silent> <F5> :source $MNVIMRC<CR>
 
 nnoremap <F6> :setlocal spell! spell?<CR>
 
@@ -608,9 +563,5 @@ nmap  -  <Plug>(choosewin)
 
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-
-nmap <Leader>gi <Plug>(grammarous-open-info-window)
-nmap <Leader>gc <Plug>(grammarous-close-info-window)
-nmap <Leader>gf <Plug>(grammarous-fixit)
 
 " vim: sw=2 sw=2 et

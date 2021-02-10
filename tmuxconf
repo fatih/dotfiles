@@ -6,7 +6,9 @@ unbind C-b
 set -g prefix C-f
 bind C-f send-prefix
 
-set-option -g default-shell /bin/zsh
+set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
+
+set-option -g default-shell /usr/local/bin/fish
 
 # toogle last window by hitting again C-f
 bind-key C-f last-window
@@ -33,14 +35,14 @@ set -g display-panes-time 2000
 set -g display-time 4000
 
 # {n}vim compability
+set-option -ga terminal-overrides ",xterm-256color:Tc"
 set -g default-terminal "screen-256color"
 
 # Split horiziontal and vertical splits, instead of % and ". We also open them
-# in the same directory. 
-# Because we use widescreens nowadays, opening a vertical split that takes half
-# of the screen is not worth. For vertical we only open 80 lines width, for
-# horizontal it's 20 columns.
-bind-key v split-window -h -l 80 -c '#{pane_current_path}'
+# in the same directory.  Because we use widescreens nowadays, opening a
+# vertical split that takes half of the screen is not worth. For vertical we
+# only open 90 lines width, for horizontal it's 20 columns.
+bind-key v split-window -h -l 90 -c '#{pane_current_path}'
 bind-key s split-window -v -l 20 -c '#{pane_current_path}'
 
 # Pressing Ctrl+Shift+Left (will move the current window to the left. Similarly
@@ -66,12 +68,10 @@ bind-key -T edit-mode-vi Down send-keys -X history-down
 bind-key -T copy-mode-vi 'v' send-keys -X begin-selection
 
 # copy text with `y` in copy mode
-# bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel\; run "tmux save -|pbcopy >/dev/null 2>&1"
 bind-key -T copy-mode-vi 'y' send -X copy-selection-and-cancel
 
 # copy text with mouse selection without pressing any key
-bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel\; run "tmux save -|pbcopy >/dev/null 2>&1"
-# bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection-and-cancel
 
 # emacs key bindings in tmux command prompt (prefix + :) are better than
 # vi keys, even for vim users
@@ -97,7 +97,7 @@ set -s escape-time 0
 set -g history-limit 1000000
 
 # Mouse mode on
-set -g terminal-overrides 'xterm*:smcup@:rmcup@'
+# set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 set -g mouse on
 
 # Set title
@@ -124,21 +124,6 @@ bind-key l select-pane -R
 # Disable confirm before killing
 bind-key x kill-pane
 
-# This tmux statusbar config was created by tmuxline.vim
-# on Wed, 25 Nov 2015
-set -g status "on"
-set -g status-bg "colour236" 
-set -g status-justify "left"
-set -g status-position "top"
-set -g status-left-length "100"
-set -g status-right-length "100"
-set -g status-left "#{prefix_highlight}#[fg=colour22,bg=colour148,bold] #S #[fg=colour148,bg=colour236,nobold,nounderscore,noitalics]"
-set -g status-right "#[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]#[fg=colour250,bg=colour240] %Y-%m-%d %H:%M #[fg=colour252,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour241,bg=colour252] #h "
-
-setw -g window-status-separator ""
-setw -g window-status-format "#[fg=colour245,bg=colour236] #I #[fg=colour245,bg=colour236]#W "
-setw -g window-status-current-format "#[fg=colour236,bg=colour240,nobold,nounderscore,noitalics]#[fg=colour231,bg=colour240] #I #[fg=colour231,bg=colour240]#{?window_zoomed_flag,#[fg=green][],}#W #[fg=colour240,bg=colour236,nobold,nounderscore,noitalics]"
-
 # List of plugins
 # see this https://github.com/tmux-plugins/tpm to installation
 set -g @plugin 'tmux-plugins/tpm'
@@ -147,7 +132,7 @@ set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
-run -b '~/.tmux/plugins/tpm/tpm'
+run '~/.tmux/plugins/tpm/tpm'
 
 
 # The followings are not any kind of setting for Tmux, but crucial to my
