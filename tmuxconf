@@ -41,9 +41,9 @@ set -g default-terminal "screen-256color"
 # Split horiziontal and vertical splits, instead of % and ". We also open them
 # in the same directory.  Because we use widescreens nowadays, opening a
 # vertical split that takes half of the screen is not worth. For vertical we
-# only open 90 lines width, for horizontal it's 20 columns.
-bind-key v split-window -h -l 90 -c '#{pane_current_path}'
-bind-key s split-window -v -l 20 -c '#{pane_current_path}'
+# only open 100 lines width, for horizontal it's 20 columns.
+bind-key v split-window -h -l 100 -c '#{pane_current_path}'
+bind-key s split-window -v -l 30 -c '#{pane_current_path}'
 
 # Pressing Ctrl+Shift+Left (will move the current window to the left. Similarly
 # right. No need to use the modifier (C-b).

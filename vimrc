@@ -110,7 +110,6 @@ if has('persistent_undo')
   set undodir=~/.cache/vim
 endif
 
-
 " color
 syntax enable
 let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"

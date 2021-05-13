@@ -26,6 +26,11 @@ function __fish_describe_command; end
 # brew install jump, https://github.com/gsamokovarov/jump
 status --is-interactive; and source (jump shell fish | psub)
 
+# rbenv
+status --is-interactive; and source (rbenv init -|psub)
+
 # Senstive functions which are not pushed to Github
 # It contains work related stuff, some functions, aliases etc...
-source ~/.config/fish/private.fish
+source ~/.private.fish
+
+set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
