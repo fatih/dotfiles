@@ -4,22 +4,24 @@
 [lctrl]>[lwin]
 [kp-lctrl]>[lwin]
 
-[rwin]>[rctrl]
-[kp-rwin]>[rctrl]
+[rwin]>[hyper]
+[kp-rwin]>[hyper]
 
 * [kp-rctrl]>[rwin]
 * [rctrl]>[rwin]
 
-[rctrl]>[kpshift]
-[kp-rctrl]>[kpshift]
-
+***************
 ** tap and hold
-
-[delete]>[tab]
 
 [']>['][t&h150][rctrl]
 
+[rctrl]>[escape][t&h150][rwin]
+[kp-rctrl]>[escape][t&h150][rwin]
+
 ** second (embedded) layer
+
+[delete]>[kpshift]
+[kp-delete]>[kpshift]
 
 ***************
 ** left side **
