@@ -1,31 +1,30 @@
 [scroll]>[shutdn]
 [caps]>[lctrl]
 
-[lctrl]>[lwin]
-[kp-lctrl]>[lwin]
-
 [rwin]>[hyper]
 [kp-rwin]>[hyper]
 
-* [kp-rctrl]>[rwin]
-* [rctrl]>[rwin]
-
-***************
-** tap and hold
+******************
+** tap and hold **
+******************
 
 [']>['][t&h150][rctrl]
 
 [rctrl]>[escape][t&h150][rwin]
 [kp-rctrl]>[escape][t&h150][rwin]
 
-** second (embedded) layer
+[lctrl]>[tab][t&h100][lwin]
+[kp-lctrl]>[tab][t&h100][lwin]
+
+*******************
+** embedded layer *
+*******************
 
 [delete]>[kpshift]
 [kp-delete]>[kpshift]
 
-***************
 ** left side **
-***************
+****************
 
 {kp-Q}>{speed9}{-lshift}{1}{+lshift}
 {kp-W}>{speed9}{-lshift}{2}{+lshift}
@@ -43,7 +42,6 @@
 [kp-V]>[cbrack]
 {kp-B}>{speed9}{-lshift}{`}{+lshift}
 
-****************
 ** right side **
 ****************
 
