@@ -1,0 +1,60 @@
+[scroll]>[shutdn]
+[caps]>[lctrl]
+
+[lctrl]>[lwin]
+[kp-lctrl]>[lwin]
+
+[rwin]>[rctrl]
+[kp-rwin]>[rctrl]
+
+* [kp-rctrl]>[rwin]
+* [rctrl]>[rwin]
+
+[rctrl]>[kpshift]
+[kp-rctrl]>[kpshift]
+
+** tap and hold
+
+[delete]>[tab]
+
+[']>['][t&h150][rctrl]
+
+** second (embedded) layer
+
+***************
+** left side **
+***************
+
+{kp-Q}>{speed9}{-lshift}{1}{+lshift}
+{kp-W}>{speed9}{-lshift}{2}{+lshift}
+{kp-E}>{speed9}{-lshift}{obrack}{+lshift}
+{kp-R}>{speed9}{-lshift}{cbrack}{+lshift}
+{kp-T}>{speed9}{-lshift}{\}{+lshift}
+
+{kp-S}>{speed9}{-lshift}{4}{+lshift}
+{kp-D}>{speed9}{-lshift}{9}{+lshift}
+{kp-F}>{speed9}{-lshift}{0}{+lshift}
+[kp-G]>[`]
+
+{kp-X}>{speed9}{-lshift}{6}{+lshift}
+[kp-C]>[obrack]
+[kp-V]>[cbrack]
+{kp-B}>{speed9}{-lshift}{`}{+lshift}
+
+****************
+** right side **
+****************
+
+{kp-Y}>{speed9}{-lshift}{3}{+lshift}
+{kpmin}>{speed9}{-lshift}{8}{+lshift}
+
+[kp-H]>[left]
+[kp4]>[down]
+[kp5]>[up]
+[kp6]>[right]
+
+{kp-N}>{speed9}{-lshift}{7}{+lshift}
+[kp1]>[hyphen]
+[kp2]>[=]
+{kp3}>{speed9}{-lshift}{5}{+lshift}
+
