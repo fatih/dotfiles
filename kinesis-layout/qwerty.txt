@@ -1,6 +1,15 @@
 [scroll]>[shutdn]
 [caps]>[lctrl]
 
+[lctrl]>[lwin]
+[kp-lctrl]>[lwin]
+
+[lalt]>[hyper]
+[kp-alt]>[hyper]
+
+[rwin]>[lalt]
+[kp-rwin]>[lalt]
+
 [rwin]>[hyper]
 [kp-rwin]>[hyper]
 
@@ -8,13 +17,10 @@
 ** tap and hold **
 ******************
 
-[']>['][t&h150][rctrl]
+[']>['][t&h220][rctrl]
 
 [rctrl]>[escape][t&h150][rwin]
 [kp-rctrl]>[escape][t&h150][rwin]
-
-[lctrl]>[tab][t&h100][lwin]
-[kp-lctrl]>[tab][t&h100][lwin]
 
 *******************
 ** embedded layer *
@@ -32,6 +38,7 @@
 {kp-R}>{speed9}{-lshift}{cbrack}{+lshift}
 {kp-T}>{speed9}{-lshift}{\}{+lshift}
 
+{kp-A}>{speed9}{-lshift}{7}{+lshift}
 {kp-S}>{speed9}{-lshift}{4}{+lshift}
 {kp-D}>{speed9}{-lshift}{9}{+lshift}
 {kp-F}>{speed9}{-lshift}{0}{+lshift}
@@ -53,8 +60,34 @@
 [kp5]>[up]
 [kp6]>[right]
 
-{kp-N}>{speed9}{-lshift}{7}{+lshift}
+{kp-N}>{speed9}{-lshift}{hyphen}{+lshift}
 [kp1]>[hyphen]
 [kp2]>[=]
 {kp3}>{speed9}{-lshift}{5}{+lshift}
+
+*****************
+** misc & apps **
+*****************
+** somehow the hyper token doesn't work, so we have to manually type the hyper combination
+
+** terminal
+{kp7}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{1}{+lwin}{+lctrl}{+lalt}{+lshift}
+
+** browser
+{kp8}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{2}{+lwin}{+lctrl}{+lalt}{+lshift}
+
+** slack
+{kp9}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{3}{+lwin}{+lctrl}{+lalt}{+lshift}
+
+** lock
+{pdown}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{4}{+lwin}{+lctrl}{+lalt}{+lshift}
+
+** screenshot
+{pup}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{5}{+lwin}{+lctrl}{+lalt}{+lshift}
+
+** alfred
+{home}>{speed9}{-rwin}{-space}{+rwin}{+space}
+
+** dash
+{end}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{6}{+lwin}{+lctrl}{+lalt}{+lshift}
 
