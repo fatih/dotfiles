@@ -39,6 +39,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-scriptease'
 Plug 'tpope/vim-rails'
 Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tyru/open-browser.vim'
 Plug 'dag/vim-fish'
@@ -274,7 +275,8 @@ noremap <Down> gj
 noremap j gj
 noremap k gk
 
-" Exit on j
+" Exit on jj and jk
+imap jk <Esc>
 imap jj <Esc>
 
 nnoremap <F6> :setlocal spell! spell?<CR>
