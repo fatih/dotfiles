@@ -1,5 +1,5 @@
-[scroll]>[shutdn]
 [caps]>[lctrl]
+[delete]>[bspace]
 
 [lctrl]>[lwin]
 [kp-lctrl]>[lwin]
@@ -17,8 +17,6 @@
 ** tap and hold **
 ******************
 
-[']>['][t&h220][rctrl]
-
 [rctrl]>[escape][t&h150][rwin]
 [kp-rctrl]>[escape][t&h150][rwin]
 
@@ -26,8 +24,8 @@
 ** embedded layer *
 *******************
 
-[delete]>[kpshift]
-[kp-delete]>[kpshift]
+[bspace]>[kpshift]
+[kp-bspace]>[kpshift]
 
 ** left side **
 ****************
@@ -80,16 +78,16 @@
 {kp9}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{3}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** lock
-{pdown}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{4}{+lwin}{+lctrl}{+lalt}{+lshift}
+{scroll}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{4}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** screenshot
-{pup}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{5}{+lwin}{+lctrl}{+lalt}{+lshift}
+{home}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{5}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** alfred
-{home}>{speed9}{-rwin}{-space}{+rwin}{+space}
+{end}>{speed9}{-rwin}{-space}{+rwin}{+space}
 
 ** dash
-{end}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{6}{+lwin}{+lctrl}{+lalt}{+lshift}
+{pdown}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{6}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** copy url
 {f9}>{speed9}{-lwin}{l}{+lwin}{-lwin}{c}{+lwin}{escape}
