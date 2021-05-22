@@ -10,9 +10,6 @@
 [rwin]>[lalt]
 [kp-rwin]>[lalt]
 
-[rwin]>[hyper]
-[kp-rwin]>[hyper]
-
 ******************
 ** tap and hold **
 ******************
@@ -42,15 +39,16 @@
 {kp-F}>{speed9}{-lshift}{0}{+lshift}
 [kp-G]>[`]
 
+{kp-Z}>{speed9}{-lshift}{3}{+lshift}
 {kp-X}>{speed9}{-lshift}{6}{+lshift}
 [kp-C]>[obrack]
 [kp-V]>[cbrack]
 {kp-B}>{speed9}{-lshift}{`}{+lshift}
+ 
 
 ** right side **
 ****************
 
-{kp-Y}>{speed9}{-lshift}{3}{+lshift}
 {kpmin}>{speed9}{-lshift}{8}{+lshift}
 
 [kp-H]>[left]
@@ -77,14 +75,20 @@
 ** slack
 {kp9}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{3}{+lwin}{+lctrl}{+lalt}{+lshift}
 
+** previous tab
+{kp-left}>{speed9}{-lwin}{-lalt}{left}{+lwin}{+lalt}
+
+** next tab
+{kp-right}>{speed9}{-lwin}{-lalt}{right}{+lwin}{+lalt}
+
 ** lock
 {scroll}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{4}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** screenshot
-{home}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{5}{+lwin}{+lctrl}{+lalt}{+lshift}
+{end}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{5}{+lwin}{+lctrl}{+lalt}{+lshift}
 
 ** alfred
-{end}>{speed9}{-rwin}{-space}{+rwin}{+space}
+{home}>{speed9}{-rwin}{-space}{+rwin}{+space}
 
 ** dash
 {pdown}>{speed9}{-lwin}{-lctrl}{-lalt}{-lshift}{6}{+lwin}{+lctrl}{+lalt}{+lshift}
