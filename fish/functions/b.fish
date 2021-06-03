@@ -1,4 +1,3 @@
-# Defined in - @ line 1
-function b --wraps='git branch' --description 'alias b=git branch'
-  git branch $argv;
+function b -d "Fuzzy-find and checkout a branch"
+  git branch | grep -v HEAD | string trim | fzf | read -l result; and git checkout "$result"
 end
