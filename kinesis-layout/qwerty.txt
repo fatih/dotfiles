@@ -10,12 +10,9 @@
 [rwin]>[lalt]
 [kp-rwin]>[lalt]
 
-******************
-** tap and hold **
-******************
+[rctrl]>[rwin]
+[kp-rctrl]>[rwin]
 
-[rctrl]>[escape][t&h150][rwin]
-[kp-rctrl]>[escape][t&h150][rwin]
 
 *******************
 ** embedded layer *
