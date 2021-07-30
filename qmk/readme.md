@@ -9,7 +9,7 @@ qmk setup -b develop
 
 # copy the custom keymaps into the keymaps folder
 cd ~/qmk_firmware/
-cp -r ~/Code/dotfiles/qmk/ keyboards/kinesis/keymaps/
+cp -r ~/Code/dotfiles/qmk/ keyboards/kinesis/keymaps/fatih
 
 # compile the firmware
 qmk compile -kb kinesis/kint41 -km fatih
@@ -32,7 +32,7 @@ brew install --HEAD teensy_loader_cli
 Verify that `4.1` is supported with: 
 
 ```
- teensy_loader_cli --list-mcus
+$ teensy_loader_cli --list-mcus
 Supported MCUs are:
  - at90usb162
  - atmega32u4
