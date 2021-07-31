@@ -68,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
            KC_RALT,RGUI_T(KC_ESC),
            KC_PGUP,
-           KC_HYPR, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
+           KC_HYPR, RALT_T(KC_ENTER) , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
