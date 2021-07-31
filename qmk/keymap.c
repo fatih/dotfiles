@@ -56,9 +56,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            KC_LCTL,KC_A   ,KC_S   ,KC_D   ,KC_F   ,KC_G   ,
            KC_LSFT,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   ,
                    KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,
-			   KC_LGUI,KC_LALT,
+			   HYPR(KC_7),KC_LALT,
                                     KC_HOME,
-             LT(_NUMPAD, KC_BSPC), LT(_SYMBOLS, KC_F10), HYPR(KC_5),
+                   KC_LGUI, LT(_NUMPAD, KC_BSPC), HYPR(KC_5),
 
     KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, KC_FN0, RESET,
 	KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,
@@ -68,21 +68,21 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
            KC_RALT,RGUI_T(KC_ESC),
            KC_PGUP,
-           KC_HYPR,KC_ENTER ,KC_SPC
+           KC_HYPR, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
          _______,  _______,  _______,  _______,  _______,  _______, _______, _______, _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
+         _______,  _______,  HYPR(KC_1),  HYPR(KC_2),  HYPR(KC_3),  _______,
          _______,  KC_EXCLAIM,  KC_AT,  KC_LEFT_CURLY_BRACE,  KC_RIGHT_CURLY_BRACE,  KC_PIPE,
          _______,  KC_AMPERSAND,  KC_DOLLAR,  KC_LEFT_PAREN,  KC_RIGHT_PAREN,  KC_GRAVE,
          _______,  KC_HASH,  KC_CIRCUMFLEX,  KC_LBRACKET,  KC_RBRACKET,  KC_TILDE,
                    _______,  _______,  _______,  _______,
                              _______,  _______,
                                        _______,
-                    _______, _______,  _______,
+                   _______, _______,  _______,
          _______,  _______, _______,  _______,  _______,  _______, _______, _______, _______,
-         _______,  HYPR(KC_1),  HYPR(KC_2),  HYPR(KC_3),  _______,  _______,
+         _______,  _______, _______,  _______,  _______,  _______,
          BROWSER_PREVTAB,  BROWSER_CLOSETTAB, BROWSER_NEWTAB, BROWSER_NEXTTAB,  KC_ASTERISK,  BROWSER_SEARCH,
          KC_LEFT,  KC_DOWN, KC_UP,  KC_RIGHT,  _______,  _______,
          KC_UNDERSCORE,  KC_MINUS,  KC_EQUAL,  KC_PERCENT,  _______,  _______,
