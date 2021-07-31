@@ -52,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                    KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,
 			   KC_LGUI,KC_LALT,
                                     KC_HOME,
-                           KC_BSPC, MO(_SYMBOLS),KC_END ,
+             LT(_NUMPAD, KC_BSPC), LT(_SYMBOLS, KC_F10), HYPR(KC_5),
 
     KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, KC_FN0, RESET,
 	KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,
@@ -62,7 +62,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
            KC_RALT,RGUI_T(KC_ESC),
            KC_PGUP,
-           MO(_NUMPAD),KC_ENTER ,KC_SPC
+           KC_PGDOWN,KC_ENTER ,KC_SPC
     ),
 
 [_SYMBOLS] = LAYOUT(
@@ -97,14 +97,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                        _______,
                     _______, _______,  _______,
          _______,  _______,  _______,  _______,  _______,  _______, _______, _______, _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-                   _______,  _______,  _______,  _______,
+         _______,  _______,  KC_KP_EQUAL,  KC_KP_SLASH,  KC_KP_ASTERISK,  _______,
+         _______,  KC_KP_7,  KC_KP_8,  KC_KP_9,  KC_KP_MINUS,  _______,
+         _______,  KC_KP_4,  KC_KP_5,  KC_KP_6,  KC_KP_PLUS,  _______,
+         _______,  KC_KP_1,  KC_KP_2,  KC_KP_3,  KC_KP_ENTER,  _______,
+                   _______,  _______,  KC_KP_DOT,  KC_KP_ENTER,
          _______,  _______,
          _______,
-         _______,  _______,  _______
+         _______,  _______,  KC_KP_0
     ),
 };
 
@@ -128,9 +128,15 @@ layer_state_t layer_state_set_user(layer_state_t state) {
     switch (get_highest_layer(state)) {
     case _SYMBOLS:
         writePinLow(LED_NUM_LOCK_PIN);
+        writePinHigh(LED_CAPS_LOCK_PIN);
+        writePinHigh(LED_SCROLL_LOCK_PIN);
+        writePinHigh(LED_COMPOSE_PIN);
         break;
     case _NUMPAD:
         writePinLow(LED_SCROLL_LOCK_PIN);
+        writePinHigh(LED_NUM_LOCK_PIN);
+        writePinHigh(LED_CAPS_LOCK_PIN);
+        writePinHigh(LED_COMPOSE_PIN);
         break;
     default: //  for any other layers, or the default layer
         writePinLow(LED_CAPS_LOCK_PIN);
