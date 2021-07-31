@@ -13,6 +13,12 @@ enum layer_names {
 #define MACREDO LGUI(KC_Y)
 #define MACLOCK LGUI(LCTL(KC_Q))
 
+#define BROWSER_SEARCH LGUI(KC_F) 
+#define BROWSER_NEWTAB LGUI(KC_T) 
+#define BROWSER_CLOSETTAB LGUI(KC_W) 
+#define BROWSER_NEXTTAB LAG(KC_RIGHT) 
+#define BROWSER_PREVTAB LAG(KC_LEFT) 
+
 
 /****************************************************************************************************
 *
@@ -62,24 +68,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
            KC_RALT,RGUI_T(KC_ESC),
            KC_PGUP,
-           KC_PGDOWN,KC_ENTER ,KC_SPC
+           KC_HYPR,KC_ENTER ,KC_SPC
     ),
 
 [_SYMBOLS] = LAYOUT(
          _______,  _______,  _______,  _______,  _______,  _______, _______, _______, _______,
          _______,  _______,  _______,  _______,  _______,  _______,
-          _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,
+         _______,  KC_EXCLAIM,  KC_AT,  KC_LEFT_CURLY_BRACE,  KC_RIGHT_CURLY_BRACE,  KC_PIPE,
+         _______,  KC_AMPERSAND,  KC_DOLLAR,  KC_LEFT_PAREN,  KC_RIGHT_PAREN,  KC_GRAVE,
+         _______,  KC_HASH,  KC_CIRCUMFLEX,  KC_LBRACKET,  KC_RBRACKET,  KC_TILDE,
                    _______,  _______,  _______,  _______,
                              _______,  _______,
                                        _______,
                     _______, _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______, _______, _______, _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  KC_ASTERISK,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
-         _______,  _______,  _______,  _______,  _______,  _______,
+         _______,  _______, _______,  _______,  _______,  _______, _______, _______, _______,
+         _______,  HYPR(KC_1),  HYPR(KC_2),  HYPR(KC_3),  _______,  _______,
+         BROWSER_PREVTAB,  BROWSER_CLOSETTAB, BROWSER_NEWTAB, BROWSER_NEXTTAB,  KC_ASTERISK,  BROWSER_SEARCH,
+         KC_LEFT,  KC_DOWN, KC_UP,  KC_RIGHT,  _______,  _______,
+         KC_UNDERSCORE,  KC_MINUS,  KC_EQUAL,  KC_PERCENT,  _______,  _______,
                    _______,  _______,  _______,  _______,
          _______,  _______,
          _______,
@@ -89,9 +95,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_NUMPAD] = LAYOUT(
          _______,  _______,  _______,  _______,  _______,  _______, _______, _______, _______,
          _______,  _______,  _______,  _______,  _______,  _______,
-          _______,  _______,  _______,  _______,  _______,  _______,
          _______,  _______,  _______,  _______,  _______,  _______,
-        _______,  _______,  _______,  _______,  _______,  _______,
+         _______,  _______,  _______,  _______,  _______,  _______,
+         _______,  _______,  _______,  _______,  _______,  _______,
                    _______,  _______,  _______,  _______,
                              _______,  _______,
                                        _______,
