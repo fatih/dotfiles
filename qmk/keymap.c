@@ -60,15 +60,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                     KC_HOME,
                    KC_LGUI, KC_BSPC, HYPR(KC_5),
 
-    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, KC_FN0, RESET,
+    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, TG(_NUMPAD), RESET,
 	KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,
 	KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_BSLS,
 	KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,RCTL_T(KC_QUOT),
 	KC_N   ,KC_M   ,KC_COMM,KC_DOT ,KC_SLSH,KC_RSFT,
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
-           KC_RALT,RGUI_T(KC_ESC),
+           KC_RALT, KC_ESC,
            KC_PGUP,
-           KC_HYPR, RALT_T(KC_ENTER) , LT(_SYMBOLS, KC_SPACE)
+           KC_HYPR, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
