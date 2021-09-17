@@ -97,7 +97,6 @@ set -s escape-time 0
 set -g history-limit 1000000
 
 # Mouse mode on
-# set -g terminal-overrides 'xterm*:smcup@:rmcup@'
 set -g mouse on
 
 # Set title
