@@ -204,7 +204,6 @@ autocmd BufEnter * silent! lcd %:p:h
 " Automatically resize screens to be equally the same
 autocmd VimResized * wincmd =
 
-
 " Fast saving
 nnoremap <leader>w :w!<cr>
 nnoremap <silent> <leader>q :q!<CR>
@@ -358,8 +357,8 @@ nmap gx <Plug>(openbrowser-smart-search)
 vmap gx <Plug>(openbrowser-smart-search)
 
 " ==================== Fugitive ====================
-vnoremap <leader>gb :Gblame<CR>
-nnoremap <leader>gb :Gblame<CR>
+vnoremap <leader>gb :Git blame<CR>
+nnoremap <leader>gb :Git blame<CR>
 
 " ==================== vim-go ====================
 let g:go_fmt_fail_silently = 1
@@ -376,6 +375,7 @@ let g:go_metalinter_autosave_enabled = ['vet', 'golint']
 let g:go_metalinter_enabled = ['vet', 'golint']
 
 let g:go_gopls_complete_unimported = 1
+let g:go_gopls_gofumpt = 1
 
 " 2 is for errors and warnings
 let g:go_diagnostics_level = 2 
