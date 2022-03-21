@@ -14,6 +14,11 @@ set main-view-commit-title-graph = v1
 bind generic r refresh
 bind status d !@?rm -rf %(file) # delete untracked files
 
+bind generic y @sh -c "printf '%(file)' | pbcopy"
+bind generic v @tmux split-window -h "vim %(file)"
+bind generic s @tmux split-window -v "vim %(file)"
+
+
 # Allow moving in the main menu while displaying a diff in the bottom of the
 # screen.
 bind generic J next
