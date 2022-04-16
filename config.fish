@@ -1,6 +1,7 @@
 set -gxp PATH /usr/local/opt/python@3.9/libexec/bin /usr/local/sbin $HOME/go/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR vim
+set -gx FZF_CTRL_T_COMMAND vim
 
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
