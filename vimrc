@@ -7,7 +7,6 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
-Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
 Plug 'arthurxavierx/vim-caser'
 Plug 'cespare/vim-toml'
@@ -380,6 +379,7 @@ let g:go_gopls_gofumpt = 1
 " 2 is for errors and warnings
 let g:go_diagnostics_level = 2 
 let g:go_doc_popup_window = 1
+let g:go_doc_balloon = 1
 
 let g:go_imports_mode="gopls"
 let g:go_imports_autosave=1
@@ -457,16 +457,6 @@ command! -bang -nargs=* Rg
   \   <bang>0)
 
 command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>), 1, <bang>0)
-
-" ==================== delimitMate ====================
-let g:delimitMate_expand_cr = 1   
-let g:delimitMate_expand_space = 1    
-let g:delimitMate_smart_quotes = 1    
-let g:delimitMate_expand_inside_quotes = 0    
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'   
-let g:delimitMate_quotes = "\" '"
-
-imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 
 " ==================== NerdTree ====================
 " For toggling
