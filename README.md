@@ -41,9 +41,4 @@ launchctl load -w ~/Library/LaunchAgents/io.arslan.dark-mode-notify.plist
 
 # Configuring Kinesis Advantage2 Keyboard
 
-1. Mount the `v-drive` with `progm + F1`
-2. Make changes to the `qwerty.txt` file (don't forget to save it)
-3. Reload file with `progm + F3`, check if everything works fine
-4. Unmount file with `diskutil unmount /Volumes/ADVANTAGE2/`
-5. Disconnect from v-drive by pressing `progm + 1` again.
-
+See `qmk/readme.md`

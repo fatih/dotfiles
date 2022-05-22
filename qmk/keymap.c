@@ -56,8 +56,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            KC_LCTL,KC_A   ,KC_S   ,KC_D   ,LT(_NUMPAD, KC_F), KC_G   ,
            KC_LSFT,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B   ,
                    KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,
-			   HYPR(KC_7),KC_LALT,
-                                    KC_HOME,
+			   HYPR(KC_7),HYPR(KC_8),
+				    HYPR(KC_9),
                    KC_LGUI, KC_BSPC, HYPR(KC_5),
 
     KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, TG(_NUMPAD), RESET,
@@ -68,7 +68,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
            KC_RALT, KC_ESC,
            KC_PGUP,
-           KC_HYPR, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
+           HYPR(KC_6), KC_ENTER , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
