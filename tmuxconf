@@ -50,12 +50,16 @@ bind-key s split-window -v -l 30 -c '#{pane_current_path}'
 bind-key -n C-S-Left swap-window -t -1
 bind-key -n C-S-Right swap-window -t +1
 
+
 # Source file
 unbind r
 bind r source-file ~/.tmux.conf \; display "Reloaded!"
 
 # Use vim keybindings in copy mode
 setw -g mode-keys vi
+
+# Enter copy mode with /
+bind-key / copy-mode \; send-key ?
 
 # Update default binding of `Enter` and `Space to also use copy-pipe
 unbind -T copy-mode-vi Enter
