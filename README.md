@@ -26,6 +26,10 @@ chsh -s /usr/local/bin/fish
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+# generate and add new SSH key:
+
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
 # open vim and install all plugins
 :PlugInstall
 
