@@ -1,6 +1,6 @@
 [user]
-	name = Fatih Arslan
-	email = ftharsln@gmail.com
+	name = rubinette
+	email = rubinette@hey.com
 [alias]
 	st = status -sb
 	ci = commit
@@ -35,13 +35,14 @@
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 	editor = vim
 	quotepath = false
-	excludesfile = /Users/fatih/.gitignore
+	excludesfile = /Users/rubinette/.gitignore
 [credential]
 	helper = osxkeychain
 [github]
-	user = fatih
+	user = rubinette
 [mergetool]
 	keepBackup = true
+	prompt = false
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
@@ -53,3 +54,14 @@
 	rebase = false
 [init]
 	defaultBranch = main
+[diff]
+	tool = Kaleidoscope
+[difftool "Kaleidoscope"]
+	cmd = ksdiff --partial-changeset --relative-path \"$MERGED\" -- \"$LOCAL\" \"$REMOTE\"
+[difftool]
+	prompt = false
+[merge]
+	tool = Kaleidoscope
+[mergetool "Kaleidoscope"]
+	cmd = ksdiff --merge --output \"$MERGED\" --base \"$BASE\" -- \"$LOCAL\" --snapshot \"$REMOTE\" --snapshot
+	trustExitCode = true

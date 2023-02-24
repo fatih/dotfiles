@@ -1,6 +1,6 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator
 import:
-  - "/Users/fatih/.config/alacritty/color.yml"
+  - "/Users/rubinette/.config/alacritty/color.yml"
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -58,18 +58,21 @@ scrolling:
 font:
   # The normal (roman) font face to use.
   normal:
+    # family: PragmataPro Mono Liga
     family: Berkeley Mono
     style: Regular
 
   # The bold font face
   bold:
+    # family: PragmataPro Mono
     family: Berkeley Mono
     style: Bold
 
   # The italic font face
   italic:
+    #family: PragmataPro Mono
     family: Berkeley Mono
-    style: Italic
+    style: Regular Italic
 
   # Point size of the font
   size: 14.0
@@ -250,19 +253,18 @@ live_config_reload: true
 # Entries in shell.args are passed unmodified as arguments to the shell.
 #
 # shell:
-#   program: /usr/local/bin/fish
+#   program:  /opt/homebrew/bin/fish
 #   args:
 #     - --login
 #
 shell:
-  program: /usr/local/bin/tmux
+  program: /opt/homebrew/bin/tmux
   args:
     - new-session
     - -A
     - -D
     - -s
     - main
-
 
 # Key bindings
 #

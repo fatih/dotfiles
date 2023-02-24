@@ -1,4 +1,4 @@
-set -gxp PATH /usr/local/opt/python@3.9/libexec/bin /usr/local/sbin $HOME/go/bin
+set -gxp PATH  /opt/homebrew/opt/python@3.10/libexec/bin /opt/homebrew/sbin /opt/homebrew/bin /opt/flutter/bin $HOME/go/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR vim
 set -gx FZF_CTRL_T_COMMAND vim
@@ -34,6 +34,7 @@ status --is-interactive; and source (rbenv init -|psub)
 # It contains work related stuff, some functions, aliases etc...
 source ~/.private.fish
 
-set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
-set -g fish_user_paths "/usr/local/opt/mysql-client/bin" $fish_user_paths
+set -g fish_user_paths "/usr/homebrew/opt/openssl@1.1/bin" $fish_user_paths
+set -g fish_user_paths "/usr/homebrew/opt/mysql-client/bin" $fish_user_paths
 
+# starship init fish | source

@@ -8,13 +8,13 @@
     <key>KeepAlive</key>
     <true/>
     <key>StandardErrorPath</key>
-    <string>/Users/fatih/.dark-mode-notify-stderr.log</string>
+    <string>/Users/rubinette/.dark-mode-notify-stderr.log</string>
     <key>StandardOutPath</key>
-    <string>/Users/fatih/.dark-mode-notify-stdout.log</string>
+    <string>/Users/rubinette/.dark-mode-notify-stdout.log</string>
     <key>ProgramArguments</key>
     <array>
-       <string>/usr/local/bin/dark-mode-notify</string>
-       <string>/usr/local/bin/fish</string>
+       <string>/opt/homebrew/bin/dark-mode-notify</string>
+       <string>/opt/homebrew/bin/fish</string>
        <string>-c</string>
        <string>change_background</string>
     </array>
