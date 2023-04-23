@@ -1,6 +1,44 @@
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
+
+require("lazy").setup({
+  { "ellisonleao/gruvbox.nvim", priority = 1000, config = function ()
+    require("gruvbox").setup({
+      contrast = "hard"
+    })
+    vim.cmd([[colorscheme gruvbox]])
+    end,
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    version = "*",
+    config = function()
+      require("nvim-tree").setup {}
+    end,
+  },
+})
+
 ----------------
 --- SETTINGS ---
 ----------------
+vim.o.background = "dark" -- or "light" for light mode
+
+-- disable netrw at the very start of our init.lua, because we use nvim-tree
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- set termguicolors to enable highlight groups
+vim.opt.termguicolors = true
 
 -- Show line numbers
 vim.wo.number = true
@@ -43,4 +81,7 @@ vim.keymap.set('n', '<Down>', 'gj')
 
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
+
+
+vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 
