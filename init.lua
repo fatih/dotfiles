@@ -11,3 +11,17 @@ vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', 'jk', '<ESC>')
 
+-- Remove search highlight
+vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
+
+-- Center the screen
+vim.keymap.set('n', '<space>', 'zz')
+
+-- Source the current Vim file
+vim.keymap.set('n', '<Leader>pr', ':luafile %<CR>')
+
+-- Better split switching
+vim.keymap.set('', '<C-j>', '<C-W>j')
+vim.keymap.set('', '<C-k>', '<C-W>k')
+vim.keymap.set('', '<C-h>', '<C-W>h')
+vim.keymap.set('', '<C-l>', '<C-W>l')
