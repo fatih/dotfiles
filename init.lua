@@ -11,7 +11,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+----------------
+--- plugins ---
+----------------
+
 require("lazy").setup({
+
   { "ellisonleao/gruvbox.nvim", priority = 1000, config = function ()
     require("gruvbox").setup({
       contrast = "hard"
@@ -19,11 +24,21 @@ require("lazy").setup({
     vim.cmd([[colorscheme gruvbox]])
     end,
   },
+
+
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
     config = function()
-      require("nvim-tree").setup {}
+      require("nvim-tree").setup({
+        sort_by = "case_sensitive",
+        renderer = {
+          group_empty = true,
+        },
+        filters = {
+          dotfiles = true,
+        },
+      })
     end,
   },
 })
@@ -37,14 +52,20 @@ vim.o.background = "dark" -- or "light" for light mode
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
--- set termguicolors to enable highlight groups
-vim.opt.termguicolors = true
+vim.opt.termguicolors = true -- Enable 24-bit RGB colors
+vim.opt.number = true        -- Show line numbers
+vim.opt.showmatch = true     -- Highlight matching parenthesis
+vim.opt.splitright = true    -- Split windows right to the current windows
+vim.opt.splitbelow = true    -- Split windows below to the current windows
+vim.opt.autoread = true      -- Auto read changed files without prompt
+vim.opt.autowrite = true     -- Automatically save before :next, :make etc.
 
--- Show line numbers
-vim.wo.number = true
-
-vim.opt.splitright = true -- Split windows right to the current windows
-vim.opt.splitbelow = true -- Split windows below to the current windows
+vim.opt.mouse = 'a'                -- Enable mouse support
+vim.opt.clipboard = 'unnamedplus'  -- Copy/paste to system clipboard
+vim.opt.swapfile = false           -- Don't use swapfile
+vim.opt.ignorecase = true          -- Search case insensitive...
+vim.opt.smartcase = true           -- ... but not it begins with upper case 
+vim.opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
 
 
 -- This comes first, because we have mappings that depend on leader
