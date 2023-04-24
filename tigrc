@@ -24,4 +24,5 @@ bind generic s @tmux split-window -v "vim %(file)"
 bind generic J next
 bind generic K previous
 bind generic G move-last-line
-bind status A !?git commit --amend
+bind status A !?git commit -S --amend
+bind status C !git commit --signoff

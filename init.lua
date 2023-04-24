@@ -17,6 +17,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
 
+  -- colorscheme
   { "ellisonleao/gruvbox.nvim", priority = 1000, config = function ()
     require("gruvbox").setup({
       contrast = "hard"
@@ -26,6 +27,7 @@ require("lazy").setup({
   },
 
 
+  -- file explorer
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -41,6 +43,19 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- save my last cursor position
+  {
+    "ethanholz/nvim-lastplace",
+    config = function()
+      require("nvim-lastplace").setup({
+        lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
+        lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
+        lastplace_open_folds = true
+      })
+    end,
+  }
+
 })
 
 ----------------
@@ -103,6 +118,6 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
-
-vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 
