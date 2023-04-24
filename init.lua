@@ -16,7 +16,7 @@ vim.opt.rtp:prepend(lazypath)
 ----------------
 
 require("lazy").setup({
-
+  -- colorscheme
   { "ellisonleao/gruvbox.nvim", priority = 1000, config = function ()
     require("gruvbox").setup({
       contrast = "hard"
@@ -26,6 +26,7 @@ require("lazy").setup({
   },
 
 
+  -- file explorer
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
@@ -41,6 +42,16 @@ require("lazy").setup({
       })
     end,
   },
+
+  {
+    "rmagatti/auto-session",
+    config = function()
+      require("auto-session").setup({
+        log_level = "error",
+      })
+    end,
+  },
+
 })
 
 ----------------
@@ -104,5 +115,6 @@ vim.keymap.set('n', '<Down>', 'gj')
 vim.keymap.set('n', 'Y', 'y$')
 
 
-vim.keymap.set('n', '<leader>n', ':NvimTreeFindFileToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 
