@@ -104,7 +104,6 @@ vim.opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "undo"
 
-
 -- This comes first, because we have mappings that depend on leader
 -- With a map leader it's possible to do extra key combinations
 -- i.e: <leader>w saves the current filek
@@ -143,3 +142,11 @@ vim.keymap.set('n', 'Y', 'y$')
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 
+-- Open help window in a vertical split to the right.
+vim.api.nvim_create_autocmd("BufWinEnter", {
+    group = vim.api.nvim_create_augroup("help_window_right", {}),
+    pattern = { "*.txt" },
+    callback = function()
+        if vim.o.filetype == 'help' then vim.cmd.wincmd("L") end
+    end
+})
