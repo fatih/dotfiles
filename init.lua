@@ -18,11 +18,14 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 
   -- colorscheme
-  { "ellisonleao/gruvbox.nvim", priority = 1000, config = function ()
-    require("gruvbox").setup({
-      contrast = "hard"
-    })
-    vim.cmd([[colorscheme gruvbox]])
+  { 
+    "ellisonleao/gruvbox.nvim", 
+    priority = 1000, -- make sure to load this before all the other start plugins
+    config = function ()
+      require("gruvbox").setup({
+        contrast = "hard"
+      })
+      vim.cmd([[colorscheme gruvbox]])
     end,
   },
 
@@ -54,6 +57,14 @@ require("lazy").setup({
         lastplace_open_folds = true
       })
     end,
+  },
+
+  -- commenting out lines
+  {
+    "numToStr/Comment.nvim",
+    config = function()
+        require('Comment').setup()
+    end
   }
 
 })
@@ -61,7 +72,7 @@ require("lazy").setup({
 ----------------
 --- SETTINGS ---
 ----------------
-vim.o.background = "dark" -- or "light" for light mode
+vim.o.background = "light" -- or "light" for light mode
 
 -- disable netrw at the very start of our init.lua, because we use nvim-tree
 vim.g.loaded_netrw = 1
