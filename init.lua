@@ -79,11 +79,11 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
 vim.opt.termguicolors = true -- Enable 24-bit RGB colors
+
 vim.opt.number = true        -- Show line numbers
 vim.opt.showmatch = true     -- Highlight matching parenthesis
 vim.opt.splitright = true    -- Split windows right to the current windows
 vim.opt.splitbelow = true    -- Split windows below to the current windows
-vim.opt.autoread = true      -- Auto read changed files without prompt
 vim.opt.autowrite = true     -- Automatically save before :next, :make etc.
 
 vim.opt.mouse = 'a'                -- Enable mouse support
@@ -92,6 +92,9 @@ vim.opt.swapfile = false           -- Don't use swapfile
 vim.opt.ignorecase = true          -- Search case insensitive...
 vim.opt.smartcase = true           -- ... but not it begins with upper case 
 vim.opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
+
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("data") .. "undo"
 
 
 -- This comes first, because we have mappings that depend on leader
