@@ -219,9 +219,8 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
-vim.api.nvim_create_augroup('setIndent', { clear = true })
 vim.api.nvim_create_autocmd('Filetype', {
-  group = 'setIndent',
+  group = vim.api.nvim_create_augroup('setIndent', { clear = true }),
   pattern = { 'go' },
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
 })
