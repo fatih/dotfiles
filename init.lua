@@ -136,7 +136,7 @@ require("lazy").setup({
 ----------------
 --- SETTINGS ---
 ----------------
-vim.o.background = "dark" -- or "light" for light mode
+vim.o.background = "light" -- or "light" for light mode
 
 -- disable netrw at the very start of our init.lua, because we use nvim-tree
 vim.g.loaded_netrw = 1
@@ -159,6 +159,15 @@ vim.opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
 
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "undo"
+
+-- Indent Settings
+-- I'm in the Spaces camp (sorry Tabs folks), so I'm using a combination of
+-- settings to insert spaces all the time. 
+vim.opt.expandtab = true  -- expand tabs into spaces
+vim.opt.shiftwidth = 4    -- number of spaces to use for each step of indent.
+vim.opt.tabstop = 4       -- number of spaces a TAB counts for
+vim.opt.autoindent = true -- copy indent from current line when starting a new line
+vim.opt.wrap = true
 
 -- This comes first, because we have mappings that depend on leader
 -- With a map leader it's possible to do extra key combinations
@@ -195,6 +204,7 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
+-- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
 
@@ -205,4 +215,13 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     callback = function()
         if vim.o.filetype == 'help' then vim.cmd.wincmd("L") end
     end
+})
+
+-- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
+-- Hence override our indentation rules.
+local ftgroup = vim.api.nvim_create_augroup('filetypedetect', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  group = ftgroup,
+  pattern = 'go',
+  command = 'setlocal noexpandtab tabstop=4 shiftwidth=4',
 })
