@@ -87,7 +87,7 @@ require("lazy").setup({
               git = {
                 unstaged = "✗",
                 staged = "✓",
-                unmerged = " ",
+                unmerged = "~",
                 renamed = "➜",
                 untracked = "★",
                 deleted = "x",
