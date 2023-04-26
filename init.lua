@@ -56,6 +56,8 @@ require("lazy").setup({
               none = "-",
             },
           },
+          -- Disable icons, I don't want to patch
+          -- my font with Nerd Fonts (at least for now)
           icons = {
             webdev_colors = true,
             git_placement = "before",
@@ -129,14 +131,42 @@ require("lazy").setup({
       { 'gJ', function() require'splitjoin'.join() end, desc = 'Join the object under cursor' },
       { 'gS', function() require'splitjoin'.split() end, desc = 'Split the object under cursor' },
     },
+  },
+
+  -- fzf extension for telescope
+  {
+    "nvim-telescope/telescope-fzf-native.nvim", run = 'make' 
+  },
+
+  {
+    "nvim-telescope/telescope.nvim", 
+    tag = '0.1.1',
+    dependencies = { 
+        "nvim-lua/plenary.nvim" ,
+        "nvim-treesitter/nvim-treesitter",
+    },
+    config = function ()
+      require("telescope").setup({
+        extensions = {
+          fzf = {
+            fuzzy = true,                    -- false will only do exact matching
+            override_generic_sorter = true,  -- override the generic sorter
+            override_file_sorter = true,     -- override the file sorter
+            case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                             -- the default case_mode is "smart_case"
+          }
+        }
+      })
+    end,
   }
+
 
 })
 
 ----------------
 --- SETTINGS ---
 ----------------
-vim.o.background = "light" -- or "light" for light mode
+vim.o.background = "dark" -- or "light" for light mode
 
 -- disable netrw at the very start of our init.lua, because we use nvim-tree
 vim.g.loaded_netrw = 1
@@ -164,8 +194,8 @@ vim.opt.undodir = vim.fn.stdpath("data") .. "undo"
 -- I'm in the Spaces camp (sorry Tabs folks), so I'm using a combination of
 -- settings to insert spaces all the time. 
 vim.opt.expandtab = true  -- expand tabs into spaces
-vim.opt.shiftwidth = 4    -- number of spaces to use for each step of indent.
-vim.opt.tabstop = 4       -- number of spaces a TAB counts for
+vim.opt.shiftwidth = 2    -- number of spaces to use for each step of indent.
+vim.opt.tabstop = 2       -- number of spaces a TAB counts for
 vim.opt.autoindent = true -- copy indent from current line when starting a new line
 vim.opt.wrap = true
 
@@ -224,3 +254,13 @@ vim.api.nvim_create_autocmd('Filetype', {
   pattern = { 'go' },
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
 })
+
+-- To get fzf loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
+require('telescope').load_extension('fzf')
+
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
