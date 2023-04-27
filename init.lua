@@ -236,6 +236,11 @@ vim.g.mapleader = ','
 vim.keymap.set('n', '<Leader>w', ':write!<CR>')
 vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
 
+-- Some useful quickfix shortcuts for quickfix
+vim.keymap.set('', '<C-n>', ':cn<CR>')
+vim.keymap.set('', '<C-m>', ':cp<CR>')
+vim.keymap.set('n', '<Leader>a', ':cclose<CR>')
+
 -- Exit on jj and jk
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', 'jk', '<ESC>')
