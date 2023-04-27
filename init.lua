@@ -196,7 +196,32 @@ require("lazy").setup({
         },
       })
     end,
-  }
+  },
+
+  {
+    "rgroli/other.nvim",
+    keys = {
+      { ":A", "<cmd>Other<cr>"},
+      { ":AV", "<cmd>OtherVSplit<cr>"},
+      { ":AS", "<cmd>OtherSplit<cr>"},
+    },
+    config = function ()
+      require("other-nvim").setup({
+        mappings = {
+	        {
+	        	pattern = "(.*).go$",
+	        	target = "%1_test.go",
+            context = "test",
+	        },
+	        {
+	        	pattern = "(.*)_test.go$",
+	        	target = "%1.go",
+            context = "file",
+	        },
+	      },
+      })
+    end,
+  },
 
 
 })
@@ -290,14 +315,7 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
 })
 
--- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
--- Hence override our indentation rules.
-vim.api.nvim_create_autocmd('Filetype', {
-  group = vim.api.nvim_create_augroup('setIndent', { clear = true }),
-  pattern = { 'go' },
-  command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
-})
-
+-- telescope
 local builtin = require('telescope.builtin')
 vim.keymap.set('n', '<leader>ff', builtin.git_files, {})
 vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
@@ -305,6 +323,21 @@ vim.keymap.set('n', '<leader>fs', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 
+
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
+-- Hence override our indentation rules.
+vim.api.nvim_create_autocmd('Filetype', {
+  group = vim.api.nvim_create_augroup('setIndent', { clear = true }),
+  pattern = { 'go' },
+  command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
+})
 
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
@@ -314,13 +347,6 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     vim.lsp.buf.format({ async = true })
   end
 })
-
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
