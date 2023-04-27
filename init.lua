@@ -138,6 +138,8 @@ require("lazy").setup({
     "nvim-telescope/telescope-fzf-native.nvim", run = 'make' 
   },
 
+  {'nvim-telescope/telescope-ui-select.nvim' },
+
   -- fuzzy finder framework
   {
     "nvim-telescope/telescope.nvim", 
@@ -162,6 +164,10 @@ require("lazy").setup({
       -- To get fzf loaded and working with telescope, you need to call
       -- load_extension, somewhere after setup function:
       require('telescope').load_extension('fzf')
+
+      -- To get ui-select loaded and working with telescope, you need to call
+      -- load_extension, somewhere after setup function:
+      require("telescope").load_extension("ui-select")
     end,
   },
 
@@ -179,18 +185,34 @@ require("lazy").setup({
             usePlaceholders = true,
             gofumpt = true,
             analyses = {
+              nilness = true,
               unusedparams = true,
+              unusedwrite = true,
+              useany = true,
             },
-            staticcheck = true,
+            codelenses = {
+              gc_details = false,
+              generate = true,
+              regenerate_cgo = true,
+              run_govulncheck = true,
+              test = true,
+              tidy = true,
+              upgrade_dependency = true,
+              vendor = true,
+            },
             experimentalPostfixCompletions = true,
+            completeUnimported = true,
+            staticcheck = true,
+            directoryFilters = { "-.git", "-node_modules" },
+            semanticTokens = true,
             hints = {
-              parameterNames = true,
               assignVariableTypes = true,
-              constantValues = true,
-              rangeVariableTypes = true,
-              compositeLiteralTypes = true,
               compositeLiteralFields = true,
+              compositeLiteralTypes = true,
+              constantValues = true,
               functionTypeParameters = true,
+              parameterNames = true,
+              rangeVariableTypes = true,
             },
           },
         },
@@ -202,9 +224,9 @@ require("lazy").setup({
   {
     "rgroli/other.nvim",
     keys = {
-      { ":A", "<cmd>Other<cr>"},
-      { ":AV", "<cmd>OtherVSplit<cr>"},
-      { ":AS", "<cmd>OtherSplit<cr>"},
+      { ":A", "<cmd>Other<cr>", {noremap = true, silent = true}},
+      { ":AV", "<cmd>OtherVSplit<cr>", {noremap = true, silent = true}},
+      { ":AS", "<cmd>OtherSplit<cr>", {noremap = true, silent = true}},
     },
     config = function ()
       require("other-nvim").setup({
@@ -224,8 +246,6 @@ require("lazy").setup({
       })
     end,
   },
-
-
 })
 
 ----------------
@@ -244,6 +264,7 @@ vim.opt.showmatch = true     -- Highlight matching parenthesis
 vim.opt.splitright = true    -- Split windows right to the current windows
 vim.opt.splitbelow = true    -- Split windows below to the current windows
 vim.opt.autowrite = true     -- Automatically save before :next, :make etc.
+vim.opt.autochdir = true     -- Change CWD when I open a file
 
 vim.opt.mouse = 'a'                -- Enable mouse support
 vim.opt.clipboard = 'unnamedplus'  -- Copy/paste to system clipboard
@@ -319,19 +340,18 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 
 -- telescope
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.git_files, {})
-vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
+vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+vim.keymap.set('n', '<C-b>', builtin.find_files, {})
+vim.keymap.set('n', '<C-g>', builtin.lsp_document_symbols, {})
+vim.keymap.set('n', '<leader>fd', builtin.diagnostics, {})
 vim.keymap.set('n', '<leader>fs', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
 
-
--- Global mappings.
--- See `:help vim.diagnostic.*` for documentation on any of the below functions
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+-- diagnostics
+vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float)
+vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
+vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<leader>ds', vim.diagnostic.setqflist)
 
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
@@ -341,6 +361,7 @@ vim.api.nvim_create_autocmd('Filetype', {
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
 })
 
+-- Run gofmt/gofmpt, import packages automatically on save
 vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
   pattern = '*.go',
@@ -363,13 +384,14 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
     vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
 
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
-    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
-    vim.keymap.set('v', '<space>ca', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, opts)
   end,
 })
 
