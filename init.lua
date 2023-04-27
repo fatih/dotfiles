@@ -163,6 +163,29 @@ require("lazy").setup({
       -- load_extension, somewhere after setup function:
       require('telescope').load_extension('fzf')
     end,
+  },
+
+  -- lsp-config
+  {
+    "neovim/nvim-lspconfig", 
+    config = function ()
+      util = require "lspconfig/util"
+      require("lspconfig").gopls.setup({
+        cmd = {"gopls", "serve"},
+        filetypes = {"go", "gomod", "gowork", "gotmpl"},
+        root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+        settings = {
+          gopls = {
+            usePlaceholders = true,
+            gofumpt = true,
+            analyses = {
+              unusedparams = true,
+            },
+            staticcheck = true,
+          },
+        },
+      })
+    end,
   }
 
 
@@ -171,7 +194,7 @@ require("lazy").setup({
 ----------------
 --- SETTINGS ---
 ----------------
-vim.o.background = "dark" -- or "light" for light mode
+vim.o.background = "light" -- or "light" for light mode
 
 -- disable netrw at the very start of our init.lua, because we use nvim-tree
 vim.g.loaded_netrw = 1
@@ -266,3 +289,14 @@ vim.keymap.set('n', '<leader>fo', builtin.oldfiles, {})
 vim.keymap.set('n', '<leader>fs', builtin.grep_string, {})
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
 vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+
+
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
+  pattern = '*.go',
+  callback = function()
+    vim.lsp.buf.format({ async = false })
+    vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+  end
+})
+
