@@ -198,6 +198,7 @@ require("lazy").setup({
     end,
   },
 
+  -- Alternate between files, such as foo.go and foo_test.go
   {
     "rgroli/other.nvim",
     keys = {
@@ -208,6 +209,7 @@ require("lazy").setup({
     config = function ()
       require("other-nvim").setup({
         mappings = {
+          "rails", --builtin mapping
 	        {
 	        	pattern = "(.*).go$",
 	        	target = "%1_test.go",
