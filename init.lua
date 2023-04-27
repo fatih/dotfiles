@@ -182,6 +182,16 @@ require("lazy").setup({
               unusedparams = true,
             },
             staticcheck = true,
+            experimentalPostfixCompletions = true,
+            hints = {
+              parameterNames = true,
+              assignVariableTypes = true,
+              constantValues = true,
+              rangeVariableTypes = true,
+              compositeLiteralTypes = true,
+              compositeLiteralFields = true,
+              functionTypeParameters = true,
+            },
           },
         },
       })
