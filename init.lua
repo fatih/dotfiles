@@ -264,6 +264,9 @@ require("lazy").setup({
             scope_incremental = "<tab>", -- increment to the upper scope (as defined in locals.scm)
           },
         },
+        autopairs = {
+          enable = true,
+        },
         textobjects = {
           select = {
             enable = true,
@@ -310,6 +313,13 @@ require("lazy").setup({
     end,
   },
 
+  {
+    "windwp/nvim-autopairs",
+    config = function() 
+      require("nvim-autopairs").setup {}
+    end
+  },
+
   -- autocompletion
   {
     "hrsh7th/nvim-cmp",
@@ -324,6 +334,9 @@ require("lazy").setup({
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local lspkind = require('lspkind')
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
       luasnip.config.setup {}
 
