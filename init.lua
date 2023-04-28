@@ -412,10 +412,22 @@ require("lazy").setup({
   },
 })
 
+-- ChangeBackground changes the background mode based on macOS's `Appearance
+-- setting. 
+local function change_background()
+  local m = vim.fn.system("defaults read -g AppleInterfaceStyle")
+  m = m:gsub("%s+", "") -- trim whitespace
+  if m == "Dark" then
+    vim.o.background = "dark" 
+  else
+    vim.o.background = "light" 
+  end
+end
+change_background()
+
 ----------------
 --- SETTINGS ---
 ----------------
-vim.o.background = "dark" -- or "light" for light mode
 
 -- disable netrw at the very start of our init.lua, because we use nvim-tree
 vim.g.loaded_netrw = 1
