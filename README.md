@@ -37,6 +37,7 @@ defaults -currentHost write -g AppleFontSmoothing -int 0
 
 # enable dark mode notify service
 # install binary from: https://github.com/bouk/dark-mode-notify
+# install neovim-remote
 launchctl load -w ~/Library/LaunchAgents/io.arslan.dark-mode-notify.plist
 ```
 
