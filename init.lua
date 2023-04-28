@@ -383,7 +383,7 @@ require("lazy").setup({
           },
         },
         confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Select,
+          behavior = cmp.ConfirmBehavior.Insert,
         },
         sources = {
           { name = 'nvim_lsp' },
