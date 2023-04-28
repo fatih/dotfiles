@@ -316,7 +316,9 @@ require("lazy").setup({
   {
     "windwp/nvim-autopairs",
     config = function() 
-      require("nvim-autopairs").setup {}
+      require("nvim-autopairs").setup {
+        check_ts = true,
+      }
     end
   },
 
