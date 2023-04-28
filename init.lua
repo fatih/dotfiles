@@ -255,6 +255,15 @@ require("lazy").setup({
       require('nvim-treesitter.configs').setup({
         ensure_installed = { 'go', 'lua', 'ruby', 'vimdoc', 'vim' },
         indent = { enable = true },
+        incremental_selection = {
+          enable = true,
+          keymaps = {
+            init_selection = "<CR>", -- maps in normal mode to init the node/scope selection with enter
+            node_incremental = "<CR>", -- increment to the upper named parent
+            node_decremental = "<bs>", -- decrement to the previous node
+            scope_incremental = "<tab>", -- increment to the upper scope (as defined in locals.scm)
+          },
+        },
         textobjects = {
           select = {
             enable = true,
@@ -267,6 +276,8 @@ require("lazy").setup({
               ['if'] = '@function.inner',
               ['ac'] = '@class.outer',
               ['ic'] = '@class.inner',
+              ["iB"] = "@block.inner",
+              ["aB"] = "@block.outer",
             },
           },
           move = {
