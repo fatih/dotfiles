@@ -366,7 +366,7 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
   pattern = '*.go',
   callback = function()
-    vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true })
+    vim.lsp.buf.code_action({ context = { only = { 'source.organizeImports' } }, apply = true, async = false })
     vim.lsp.buf.format({ async = true })
   end
 })
