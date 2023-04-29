@@ -11,6 +11,50 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+
+-- ChangeBackground changes the background mode based on macOS's `Appearance
+-- setting. 
+local function change_background()
+  local m = vim.fn.system("defaults read -g AppleInterfaceStyle")
+  m = m:gsub("%s+", "") -- trim whitespace
+  if m == "Dark" then
+    vim.o.background = "dark" 
+  else
+    vim.o.background = "light" 
+  end
+
+ -- Async version of changing the background. Keeping it for now for future
+ -- refernce, might delete it in the future.
+ --  local lines = {""}
+ --  cmd = "defaults read -g AppleInterfaceStyle"
+ --  local function on_event(job_id, data, event)
+ --    if event == "stdout" or event == "stderr" then
+ --      if data then
+ --        vim.list_extend(lines, data)
+ --      end
+ --    end
+ -- 
+ --    if event == "exit" then
+ --      for _, i in ipairs(lines) do
+ --        if string.find(i, "Dark") then
+ --          vim.o.background = "dark" 
+ --        else
+ --          vim.o.background = "light" 
+ --        end
+ --      end
+ --    end
+ --  end
+ --
+ --  local job_id = vim.fn.jobstart(
+ --    cmd,
+ --    {
+ --      on_stderr = on_event,
+ --      on_stdout = on_event,
+ --      on_exit = on_event,
+ --    }
+ --  )
+end
+
 ----------------
 --- plugins ---
 ----------------
@@ -21,6 +65,7 @@ require("lazy").setup({
     "ellisonleao/gruvbox.nvim", 
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function ()
+      change_background()
       require("gruvbox").setup({
         contrast = "hard"
       })
@@ -365,19 +410,6 @@ require("lazy").setup({
     end,
   },
 })
-
--- ChangeBackground changes the background mode based on macOS's `Appearance
--- setting. 
-local function change_background()
-  local m = vim.fn.system("defaults read -g AppleInterfaceStyle")
-  m = m:gsub("%s+", "") -- trim whitespace
-  if m == "Dark" then
-    vim.o.background = "dark" 
-  else
-    vim.o.background = "light" 
-  end
-end
-change_background()
 
 ----------------
 --- SETTINGS ---
