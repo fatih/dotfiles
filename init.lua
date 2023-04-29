@@ -11,7 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-
 -- ChangeBackground changes the background mode based on macOS's `Appearance
 -- setting. 
 local function change_background()
@@ -22,37 +21,6 @@ local function change_background()
   else
     vim.o.background = "light" 
   end
-
- -- Async version of changing the background. Keeping it for now for future
- -- refernce, might delete it in the future.
- --  local lines = {""}
- --  cmd = "defaults read -g AppleInterfaceStyle"
- --  local function on_event(job_id, data, event)
- --    if event == "stdout" or event == "stderr" then
- --      if data then
- --        vim.list_extend(lines, data)
- --      end
- --    end
- -- 
- --    if event == "exit" then
- --      for _, i in ipairs(lines) do
- --        if string.find(i, "Dark") then
- --          vim.o.background = "dark" 
- --        else
- --          vim.o.background = "light" 
- --        end
- --      end
- --    end
- --  end
- --
- --  local job_id = vim.fn.jobstart(
- --    cmd,
- --    {
- --      on_stderr = on_event,
- --      on_stdout = on_event,
- --      on_exit = on_event,
- --    }
- --  )
 end
 
 ----------------
@@ -73,6 +41,7 @@ require("lazy").setup({
     end,
   },
 
+  -- statusline
   { 
     "nvim-lualine/lualine.nvim",
     dependencies = { 'nvim-tree/nvim-web-devicons' },
@@ -80,6 +49,16 @@ require("lazy").setup({
       require("lualine").setup({
         options = { theme = 'gruvbox' }
       })
+    end,
+  },
+
+  -- testing framework
+  { 
+    "vim-test/vim-test",
+    config = function ()
+      vim.g['test#strategy'] = 'neovim'
+      vim.g['test#neovim#start_normal'] = '1'
+      vim.g['test#neovim#term_position'] = 'vert'
     end,
   },
 
@@ -488,21 +467,19 @@ vim.keymap.set('n', '<Down>', 'gj')
 vim.keymap.set('n', 'Y', 'y$')
 
 -- Terminal
--- Kill job and close terminal window
-vim.keymap.set('t', '<leader>q', '<C-w><C-C><C-w>c<cr>')
+-- Clost terminal window, even if we are in insert mode
+vim.keymap.set('t', '<leader>q', '<C-\\><C-n>:q<cr>')
 
 -- switch to normal mode with esc
 vim.keymap.set('t', '<ESC>', '<C-\\><C-n>')
 
--- Open terminal in vertical, horizontal and new tab
+-- Open terminal in vertical and horizontal split
 vim.keymap.set('n', '<leader>tv', '<cmd>vnew term://fish<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>ts', '<cmd>split term://fish<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>tt', '<cmd>tabnew term://fish<CR>', { noremap = true })
 
--- Open terminal in vertical, horizontal and new tab, inside the terminal
+-- Open terminal in vertical and horizontal split, inside the terminal
 vim.keymap.set('t', '<leader>tv', '<c-w><cmd>vnew term://fish<CR>', { noremap = true })
 vim.keymap.set('t', '<leader>ts', '<c-w><cmd>split term://fish<CR>', { noremap = true })
-vim.keymap.set('t', '<leader>tt', '<c-w><cmd>tabnew term://fish<CR>', { noremap = true })
 
 -- mappings to move out from terminal to other views
 vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
@@ -514,7 +491,9 @@ vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
     group = vim.api.nvim_create_augroup("openTermInsert", {}),
     callback = function(args)
-        if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+        -- we don't use vim.startswith() and look for test:// because of vim-test
+        -- vim-test starts tests in a terminal, which we want to keep in normal mode
+        if vim.endswith(vim.api.nvim_buf_get_name(args.buf), "fish") then
             vim.cmd("startinsert")
         end
     end,
@@ -528,6 +507,12 @@ vim.api.nvim_create_autocmd("TermOpen", {
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
+
+-- Test
+--
+-- File-tree mappings
+vim.keymap.set('n', '<leader>tt', ':TestNearest -v<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tf', ':TestFile -v<CR>', { noremap = true, silent = true })
 
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
