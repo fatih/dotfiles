@@ -8,7 +8,7 @@ bind C-f send-prefix
 
 set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
 
-set-option -g default-shell /usr/local/bin/fish
+set-option -g default-shell /opt/homebrew/bin/fish
 
 # toogle last window by hitting again C-f
 bind-key C-f last-window
