@@ -209,13 +209,13 @@ require("lazy").setup({
     build = ":TSUpdate",
     config = function()
       require('nvim-treesitter.configs').setup({
-        ensure_installed = { 'go', 'lua', 'ruby', 'vimdoc', 'vim' },
+        ensure_installed = { 'go', 'gomod', 'lua', 'ruby', 'vimdoc', 'vim', 'bash', 'fish' },
         indent = { enable = true },
         incremental_selection = {
           enable = true,
           keymaps = {
-            init_selection = "<CR>", -- maps in normal mode to init the node/scope selection with enter
-            node_incremental = "<CR>", -- increment to the upper named parent
+            init_selection = "<space>", -- maps in normal mode to init the node/scope selection with enter
+            node_incremental = "<space>", -- increment to the upper named parent
             node_decremental = "<bs>", -- decrement to the previous node
             scope_incremental = "<tab>", -- increment to the upper scope (as defined in locals.scm)
           },
@@ -437,7 +437,7 @@ vim.keymap.set('i', 'jk', '<ESC>')
 vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
 
 -- Center the screen
-vim.keymap.set('n', '<space>', 'zz')
+vim.keymap.set('n', '<CR>', 'zz')
 
 -- Source the current Vim file
 vim.keymap.set('n', '<Leader>pr', ':luafile %<CR>')
