@@ -28,70 +28,25 @@ require("lazy").setup({
     end,
   },
 
+  { 
+    "nvim-lualine/lualine.nvim",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function ()
+      require("lualine").setup({
+        options = { theme = 'gruvbox' }
+      })
+    end,
+  },
+
 
   -- file explorer
   {
     "nvim-tree/nvim-tree.lua",
     version = "*",
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require("nvim-tree").setup({
         sort_by = "case_sensitive",
-        renderer = {
-          group_empty = true,
-          indent_width = 2,
-          indent_markers = {
-            enable = true,
-            inline_arrows = true,
-            icons = {
-              corner = "└",
-              edge = "│",
-              item = "│",
-              bottom = "─",
-              none = "-",
-            },
-          },
-          -- Disable icons, I don't want to patch
-          -- my font with Nerd Fonts (at least for now)
-          icons = {
-            webdev_colors = true,
-            git_placement = "before",
-            modified_placement = "after",
-            padding = " ",
-            symlink_arrow = " ➛ ",
-            show = {
-              file = true,
-              folder = false,
-              folder_arrow = true,
-              git = true,
-              modified = true,
-            },
-            glyphs = {
-              default = "",
-              symlink = "",
-              bookmark = "",
-              modified = "●",
-              folder = {
-                arrow_closed = "▶",
-                arrow_open = "▼",
-                default = "",
-                open = "",
-                empty = "",
-                empty_open = "",
-                symlink = "",
-                symlink_open = "",
-              },
-              git = {
-                unstaged = "✗",
-                staged = "✓",
-                unmerged = "~",
-                renamed = "➜",
-                untracked = "★",
-                deleted = "x",
-                ignored = "◌",
-              },
-            },
-          },
-        },
         filters = {
           dotfiles = true,
         },
@@ -141,6 +96,7 @@ require("lazy").setup({
     dependencies = { 
       "nvim-lua/plenary.nvim" ,
       "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
     },
     config = function ()
       require("telescope").setup({
@@ -330,12 +286,10 @@ require("lazy").setup({
       "hrsh7th/cmp-buffer",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
-      "onsails/lspkind.nvim",
     },
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-      local lspkind = require('lspkind')
       local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
       cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
