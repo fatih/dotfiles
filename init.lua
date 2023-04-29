@@ -487,6 +487,44 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
+-- Terminal
+-- Kill job and close terminal window
+vim.keymap.set('t', '<leader>q', '<C-w><C-C><C-w>c<cr>')
+
+-- switch to normal mode with esc
+vim.keymap.set('t', '<ESC>', '<C-\\><C-n>')
+
+-- Open terminal in vertical, horizontal and new tab
+vim.keymap.set('n', '<leader>tv', '<cmd>vnew term://fish<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>ts', '<cmd>split term://fish<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>tt', '<cmd>tabnew term://fish<CR>', { noremap = true })
+
+-- Open terminal in vertical, horizontal and new tab, inside the terminal
+vim.keymap.set('t', '<leader>tv', '<c-w><cmd>vnew term://fish<CR>', { noremap = true })
+vim.keymap.set('t', '<leader>ts', '<c-w><cmd>split term://fish<CR>', { noremap = true })
+vim.keymap.set('t', '<leader>tt', '<c-w><cmd>tabnew term://fish<CR>', { noremap = true })
+
+-- mappings to move out from terminal to other views
+vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
+vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j')
+vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k')
+vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
+
+-- automatically switch to insert mode when entering a Term buffer
+vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
+    group = vim.api.nvim_create_augroup("openTermInsert", {}),
+    callback = function(args)
+        if vim.startswith(vim.api.nvim_buf_get_name(args.buf), "term://") then
+            vim.cmd("startinsert")
+        end
+    end,
+})
+
+-- don't show number
+vim.api.nvim_create_autocmd("TermOpen", {
+    command = [[setlocal nonumber norelativenumber]]
+})
+
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
@@ -506,8 +544,8 @@ vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 vim.keymap.set('n', '<C-b>', builtin.find_files, {})
 vim.keymap.set('n', '<C-g>', builtin.lsp_document_symbols, {})
 vim.keymap.set('n', '<leader>td', builtin.diagnostics, {})
-vim.keymap.set('n', '<leader>ts', builtin.grep_string, {})
-vim.keymap.set('n', '<leader>tg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>gs', builtin.grep_string, {})
+vim.keymap.set('n', '<leader>gg', builtin.live_grep, {})
 
 -- diagnostics
 vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float)
