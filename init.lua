@@ -450,6 +450,14 @@ vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
 -- Center the screen
 vim.keymap.set('n', '<CR>', 'zz')
 
+-- Search mappings: These will make it so that going to the next one in a
+-- search will center on the line it's found in.
+vim.keymap.set('n', 'n', 'nzzzv')
+vim.keymap.set('n', 'N', 'Nzzzv')
+
+-- Don't jump forward if I higlight and search for a word
+vim.keymap.set('n', '*', '*N')
+
 -- Source the current Vim file
 vim.keymap.set('n', '<Leader>pr', ':luafile %<CR>')
 
