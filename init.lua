@@ -318,6 +318,14 @@ require("lazy").setup({
     end
   },
 
+  {
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    config = function() 
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end
+  },
+
   -- autocompletion
   {
     "hrsh7th/nvim-cmp",
@@ -381,26 +389,34 @@ require("lazy").setup({
         },
         sources = {
           { name = 'nvim_lsp' },
-          { name = "luasnip" },
-          { name = "buffer", keyword_length = 5 },
-          { name = "path" },
+          { name = "luasnip", keyword_length = 2},
+          { name = "buffer", keyword_length = 3},
         },
       })
 
       require('cmp').setup.cmdline("/", {
-	      sources = cmp.config.sources({
-	      	{ name = "nvim_lsp_document_symbol" },
-	      }, {
-	      	{ name = "buffer" },
-	      }),
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = "nvim_lsp_document_symbol" },
+          { name = 'buffer' }
+        }
       })
 
       require('cmp').setup.cmdline(":", {
-	      sources = cmp.config.sources({
-	      	{ name = "path" },
-	      }, {
-	      	{ name = "cmdline" },
-	      }),
+        -- mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources(
+          {
+            { name = 'path' }
+          }, 
+          {
+            {
+              name = 'cmdline',
+              option = {
+                ignore_cmds = { 'Man', '!' }
+              }
+            }
+          }
+        )
       })
     end,
   },
@@ -474,8 +490,18 @@ vim.keymap.set('n', 'N', 'Nzzzv')
 -- Don't jump forward if I higlight and search for a word
 vim.keymap.set('n', '*', '*N')
 
--- Source the current Vim file
-vim.keymap.set('n', '<Leader>pr', ':luafile %<CR>')
+-- We don't need this keymap, but here we are. If I do a ctrl-v and select
+-- lines vertically, insert stuff, they get lost for all lines if we use
+-- ctrl-c, but not if we use ESC. So just let's assume Ctrl-c is ESC.
+vim.keymap.set('i', '<C-c>', '<ESC>')
+
+-- If I visually select words and paste from clipboard, don't replace my
+-- clipboard with the selected word, instead keep my old word in the
+-- clipboard
+vim.keymap.set("x", "p", "\"_dP")
+
+-- rename the word under the cursor 
+vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Better split switching
 vim.keymap.set('', '<C-j>', '<C-W>j')
@@ -527,21 +553,6 @@ vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
     end,
 })
 
--- don't show number
-vim.api.nvim_create_autocmd("TermOpen", {
-    command = [[setlocal nonumber norelativenumber]]
-})
-
--- File-tree mappings
-vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle<CR>', { noremap = true })
-
--- Test
---
--- File-tree mappings
-vim.keymap.set('n', '<leader>tt', ':TestNearest -v<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>tf', ':TestFile -v<CR>', { noremap = true, silent = true })
-
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
     group = vim.api.nvim_create_augroup("help_window_right", {}),
@@ -550,6 +561,20 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
         if vim.o.filetype == 'help' then vim.cmd.wincmd("L") end
     end
 })
+
+-- don't show number
+vim.api.nvim_create_autocmd("TermOpen", {
+    command = [[setlocal nonumber norelativenumber]]
+})
+
+-- File-tree mappings
+vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>f', ':NvimTreeFindFile!<CR>', { noremap = true })
+
+-- vim-test
+vim.keymap.set('n', '<leader>tt', ':TestNearest -v<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>tf', ':TestFile -v<CR>', { noremap = true, silent = true })
+
 
 -- telescope
 local builtin = require('telescope.builtin')
