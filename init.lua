@@ -483,6 +483,10 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
+-- Visually select lines, and move them up/down
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
+
 -- Terminal
 -- Clost terminal window, even if we are in insert mode
 vim.keymap.set('t', '<leader>q', '<C-\\><C-n>:q<cr>')
