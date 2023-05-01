@@ -209,11 +209,6 @@ require("lazy").setup({
   -- Alternate between files, such as foo.go and foo_test.go
   {
     "rgroli/other.nvim",
-    keys = {
-      { ":A", "<cmd>Other<cr>", {noremap = true, silent = true}},
-      { ":AV", "<cmd>OtherVSplit<cr>", {noremap = true, silent = true}},
-      { ":AS", "<cmd>OtherSplit<cr>", {noremap = true, silent = true}},
-    },
     config = function ()
       require("other-nvim").setup({
         mappings = {
@@ -230,6 +225,18 @@ require("lazy").setup({
 	        },
 	      },
       })
+
+      vim.api.nvim_create_user_command('A',   function(opts)
+        require('other-nvim').open(opts.fargs[1])
+      end, {nargs = '*'})
+
+      vim.api.nvim_create_user_command('AV',   function(opts)
+        require('other-nvim').openVSplit(opts.fargs[1])
+      end, {nargs = '*'})
+
+      vim.api.nvim_create_user_command('AS',   function(opts)
+        require('other-nvim').openSplit(opts.fargs[1])
+      end, {nargs = '*'})
     end,
   },
 
