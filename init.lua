@@ -528,11 +528,11 @@ vim.keymap.set('n', '<CR>', 'zz')
 
 -- Search mappings: These will make it so that going to the next one in a
 -- search will center on the line it's found in.
-vim.keymap.set('n', 'n', 'nzzzv')
-vim.keymap.set('n', 'N', 'Nzzzv')
+vim.keymap.set('n', 'n', 'nzzzv', {noremap = true})
+vim.keymap.set('n', 'N', 'Nzzzv', {noremap = true})
 
 -- Don't jump forward if I higlight and search for a word
-vim.keymap.set('n', '*', '*N')
+vim.keymap.set('n', '*', '*N', {noremap = true})
 
 -- We don't need this keymap, but here we are. If I do a ctrl-v and select
 -- lines vertically, insert stuff, they get lost for all lines if we use
