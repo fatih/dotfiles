@@ -1,7 +1,8 @@
-set -gxp PATH  /opt/homebrew/opt/python@3.10/libexec/bin /opt/homebrew/sbin /opt/homebrew/bin /opt/flutter/bin $HOME/go/bin
+# set -gxp PATH  /opt/homebrew/opt/python@3.10/libexec/bin /opt/homebrew/sbin /opt/homebrew/bin /opt/flutter/bin $HOME/go/bin
+set -gxp PATH /opt/homebrew/bin/ /usr/local/opt/python@3.10/libexec/bin /usr/local/sbin $HOME/go/bin
 set -gx GOBIN $HOME/go/bin
-set -gx EDITOR vim
-set -gx FZF_CTRL_T_COMMAND vim
+set -gx EDITOR nvim
+set -gx FZF_CTRL_T_COMMAND nvim
 
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
@@ -26,9 +27,6 @@ function __fish_describe_command; end
 
 # brew install jump, https://github.com/gsamokovarov/jump
 status --is-interactive; and source (jump shell fish | psub)
-
-# rbenv
-status --is-interactive; and source (rbenv init -|psub)
 
 # Senstive functions which are not pushed to Github
 # It contains work related stuff, some functions, aliases etc...

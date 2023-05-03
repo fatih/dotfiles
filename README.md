@@ -22,12 +22,12 @@ make
 # make fish the new default
 chsh -s /usr/local/bin/fish
 
-# setup vim-plug
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# generate and add new SSH key:
 
-# open vim and install all plugins
-:PlugInstall
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# open Nvim. Lazy.nvim will automatically install all plugins
+:Nvim
 
 # install tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -36,6 +36,8 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 defaults -currentHost write -g AppleFontSmoothing -int 0
 
 # enable dark mode notify service
+# install binary from: https://github.com/bouk/dark-mode-notify
+# install neovim-remote
 launchctl load -w ~/Library/LaunchAgents/io.arslan.dark-mode-notify.plist
 ```
 
