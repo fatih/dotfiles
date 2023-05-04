@@ -83,6 +83,25 @@ require("lazy").setup({
         filters = {
           dotfiles = true,
         },
+        on_attach = function(bufnr)
+          local api = require('nvim-tree.api')
+
+          local function opts(desc)
+            return {
+              desc = 'nvim-tree: ' .. desc,
+              buffer = bufnr,
+              noremap = true,
+              silent = true,
+              nowait = true,
+            }
+          end
+
+          api.config.mappings.default_on_attach(bufnr)
+
+          vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
+          vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
+          vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
+        end
       })
     end,
   },
@@ -673,7 +692,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, opts)
