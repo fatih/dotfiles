@@ -71,6 +71,13 @@ require("lazy").setup({
     end,
   },
 
+  {
+    'dinhhuy258/git.nvim',
+    config = function ()
+      require("git").setup()
+    end,
+  },
+
 
   -- file explorer
   {
@@ -136,7 +143,14 @@ require("lazy").setup({
   {
     "numToStr/Comment.nvim",
     config = function()
-        require('Comment').setup()
+      require('Comment').setup({
+        opleader = {
+          ---Line-comment keymap
+          line = '<Nop>',
+          ---Block-comment keymap
+          block = '<Nop>',
+        },
+      }) 
     end
   },
 
@@ -628,6 +642,18 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 -- don't show number
 vim.api.nvim_create_autocmd("TermOpen", {
     command = [[setlocal nonumber norelativenumber]]
+})
+
+-- git.nvim
+vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
+vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
+vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
+
+-- old habits 
+vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
+  range = true,
+  bang = true,
+  nargs = "*",
 })
 
 -- File-tree mappings
