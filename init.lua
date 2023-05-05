@@ -23,6 +23,15 @@ local function change_background()
   end
 end
 
+-- run :GoBuild or :GoTestCompile based on the go file
+local function build_go_files()
+  if vim.endswith(vim.api.nvim_buf_get_name(0), "_test.go") then
+    vim.cmd("GoTestCompile")
+  else
+    vim.cmd("GoBuild")
+  end
+end
+
 ----------------
 --- plugins ---
 ----------------
@@ -60,6 +69,25 @@ require("lazy").setup({
       })
     end,
   },
+
+  -- you know the drill
+  {
+    "fatih/vim-go",
+    config = function ()
+      -- we disable most of these features because treesitter and nvim-lsp
+      -- take care of it
+      vim.g['go_gopls_enabled'] = 0
+      vim.g['go_code_completion_enabled'] = 0
+      vim.g['go_fmt_autosave'] = 0
+      vim.g['go_imports_autosave'] = 0
+      vim.g['go_mod_fmt_autosave'] = 0
+      vim.g['go_doc_keywordprg_enabled'] = 0
+      vim.g['go_def_mapping_enabled'] = 0
+      vim.g['go_textobj_enabled'] = 0
+      vim.g['go_list_type'] = 'quickfix'
+    end,
+  },
+
 
   -- testing framework
   { 
@@ -145,8 +173,6 @@ require("lazy").setup({
     config = function()
       require('Comment').setup({
         opleader = {
-          ---Line-comment keymap
-          line = '<Nop>',
           ---Block-comment keymap
           block = '<Nop>',
         },
@@ -375,10 +401,10 @@ require("lazy").setup({
           swap = {
             enable = true,
             swap_next = {
-              ['<leader>a'] = '@parameter.inner',
+              ['<leader>sn'] = '@parameter.inner',
             },
             swap_previous = {
-              ['<leader>A'] = '@parameter.inner',
+              ['<leader>sp'] = '@parameter.inner',
             },
           },
         },
@@ -470,31 +496,6 @@ require("lazy").setup({
           { name = "buffer", keyword_length = 3},
         },
       })
-
-      require('cmp').setup.cmdline("/", {
-        mapping = cmp.mapping.preset.cmdline(),
-        sources = {
-          { name = "nvim_lsp_document_symbol" },
-          { name = 'buffer' }
-        }
-      })
-
-      require('cmp').setup.cmdline(":", {
-        -- mapping = cmp.mapping.preset.cmdline(),
-        sources = cmp.config.sources(
-          {
-            { name = 'path' }
-          }, 
-          {
-            {
-              name = 'cmdline',
-              option = {
-                ignore_cmds = { 'Man', '!' }
-              }
-            }
-          }
-        )
-      })
     end,
   },
 })
@@ -545,9 +546,9 @@ vim.keymap.set('n', '<Leader>w', ':write!<CR>')
 vim.keymap.set('n', '<Leader>q', ':q!<CR>', { silent = true })
 
 -- Some useful quickfix shortcuts for quickfix
-vim.keymap.set('', '<C-n>', ':cn<CR>')
-vim.keymap.set('', '<C-m>', ':cp<CR>')
-vim.keymap.set('n', '<Leader>a', ':cclose<CR>')
+vim.keymap.set('n', '<C-n>', '<cmd>cnext<CR>zz')
+vim.keymap.set('n', '<C-m>', '<cmd>cprev<CR>zz')
+vim.keymap.set('n', '<leader>a', '<cmd>cclose<CR>')
 
 -- Exit on jj and jk
 vim.keymap.set('i', 'jj', '<ESC>')
@@ -555,9 +556,6 @@ vim.keymap.set('i', 'jk', '<ESC>')
 
 -- Remove search highlight
 vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
-
--- Center the screen
-vim.keymap.set('n', '<CR>', 'zz')
 
 -- Search mappings: These will make it so that going to the next one in a
 -- search will center on the line it's found in.
@@ -679,6 +677,9 @@ vim.keymap.set('n', '<leader>do', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>dp', vim.diagnostic.goto_prev)
 vim.keymap.set('n', '<leader>dn', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<leader>ds', vim.diagnostic.setqflist)
+
+-- vim-go
+vim.keymap.set('n', '<leader>b', build_go_files)
 
 -- disable diagnostics, I didn't like them
 vim.lsp.handlers["textDocument/publishDiagnostics"] = function() end
