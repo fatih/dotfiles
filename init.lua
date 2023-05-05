@@ -71,6 +71,13 @@ require("lazy").setup({
     end,
   },
 
+  {
+    'dinhhuy258/git.nvim',
+    config = function ()
+      require("git").setup()
+    end,
+  },
+
 
   -- file explorer
   {
@@ -83,6 +90,25 @@ require("lazy").setup({
         filters = {
           dotfiles = true,
         },
+        on_attach = function(bufnr)
+          local api = require('nvim-tree.api')
+
+          local function opts(desc)
+            return {
+              desc = 'nvim-tree: ' .. desc,
+              buffer = bufnr,
+              noremap = true,
+              silent = true,
+              nowait = true,
+            }
+          end
+
+          api.config.mappings.default_on_attach(bufnr)
+
+          vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
+          vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
+          vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
+        end
       })
     end,
   },
@@ -117,7 +143,14 @@ require("lazy").setup({
   {
     "numToStr/Comment.nvim",
     config = function()
-        require('Comment').setup()
+      require('Comment').setup({
+        opleader = {
+          ---Line-comment keymap
+          line = '<Nop>',
+          ---Block-comment keymap
+          block = '<Nop>',
+        },
+      }) 
     end
   },
 
@@ -611,6 +644,18 @@ vim.api.nvim_create_autocmd("TermOpen", {
     command = [[setlocal nonumber norelativenumber]]
 })
 
+-- git.nvim
+vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
+vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
+vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
+
+-- old habits 
+vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
+  range = true,
+  bang = true,
+  nargs = "*",
+})
+
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFile!<CR>', { noremap = true })
@@ -673,7 +718,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
     vim.keymap.set({'n', 'v'}, '<leader>ca', vim.lsp.buf.code_action, opts)
