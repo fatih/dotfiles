@@ -563,7 +563,13 @@ vim.keymap.set('n', 'n', 'nzzzv', {noremap = true})
 vim.keymap.set('n', 'N', 'Nzzzv', {noremap = true})
 
 -- Don't jump forward if I higlight and search for a word
-vim.keymap.set('n', '*', '*N', {noremap = true})
+local function stay_star()
+  local sview = vim.fn.winsaveview()
+  local args = string.format("keepjumps keeppatterns execute %q", "sil normal! *")
+  vim.api.nvim_command(args)
+  vim.fn.winrestview(sview)
+end
+vim.keymap.set('n', '*', stay_star, {noremap = true, silent = true})
 
 -- We don't need this keymap, but here we are. If I do a ctrl-v and select
 -- lines vertically, insert stuff, they get lost for all lines if we use
