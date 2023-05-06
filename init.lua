@@ -88,6 +88,8 @@ require("lazy").setup({
     end,
   },
 
+  -- search selection via *
+  { 'bronson/vim-visual-star-search' },
 
   -- testing framework
   { 
