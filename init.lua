@@ -551,6 +551,10 @@ vim.keymap.set('n', '<C-m>', '<cmd>cprev<CR>zz')
 vim.keymap.set('n', '<leader>a', '<cmd>cclose<CR>')
 
 -- Exit on jj and jk
+vim.keymap.set('n', 'j', 'gj')
+vim.keymap.set('n', 'k', 'gk')
+
+-- Exit on jj and jk
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', 'jk', '<ESC>')
 
@@ -621,6 +625,10 @@ vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
 vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j')
 vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k')
 vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
+
+-- we don't use netrw (because of nvim-tree), hence re-implement gx to open
+-- links in browser
+vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>')
 
 -- automatically switch to insert mode when entering a Term buffer
 vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
