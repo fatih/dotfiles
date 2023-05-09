@@ -105,18 +105,6 @@ require("lazy").setup({
     'dinhhuy258/git.nvim',
     config = function ()
       require("git").setup()
-
-      -- git.nvim
-      vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
-      vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
-      vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
-
-      -- old habits 
-      vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
-        range = true,
-        bang = true,
-        nargs = "*",
-      })
     end,
   },
 
@@ -507,7 +495,7 @@ require("lazy").setup({
         sources = {
           { name = 'nvim_lsp' },
           { name = "luasnip", keyword_length = 2},
-          { name = "buffer", keyword_length = 3},
+          { name = "buffer", keyword_length = 5},
         },
       })
     end,
@@ -670,7 +658,18 @@ vim.api.nvim_create_autocmd("TermOpen", {
     command = [[setlocal nonumber norelativenumber]]
 })
 
--- -- git.
+-- git.nvim
+vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
+vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
+vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
+
+-- old habits 
+vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
+  range = true,
+  bang = true,
+  nargs = "*",
+})
+
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFile!<CR>', { noremap = true })
