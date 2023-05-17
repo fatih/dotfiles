@@ -211,12 +211,7 @@ nnoremap <silent> <leader>q :q!<CR>
 nnoremap <space> zz
 
 " Remove search highlight
-" nnoremap <leader><space> :nohlsearch<CR>
-function! s:clear_highlight()
-  let @/ = ""
-  call go#guru#ClearSameIds()
-endfunction
-nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
+nnoremap <leader><space> :nohlsearch<CR>
 
 " echo the number under the cursor as binary, useful for bitwise operations
 function! s:echoBinary()
