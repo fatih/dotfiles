@@ -58,21 +58,21 @@ scrolling:
 font:
   # The normal (roman) font face to use.
   normal:
-    family: Berkeley Mono
+    family: BerkeleyMono Nerd Font Mono
     style: Regular
 
   # The bold font face
   bold:
-    family: Berkeley Mono
+    family: BerkeleyMono Nerd Font Mono
     style: Bold
 
   # The italic font face
   italic:
-    family: Berkeley Mono
+    family: BerkeleyMono Nerd Font Mono
     style: Italic
 
   # Point size of the font
-  size: 14.0
+  size: 15.0
 
   # Offset is the extra space around each character. offset.y can be thought of
   # as modifying the linespacing, and offset.x as modifying the letter spacing.
