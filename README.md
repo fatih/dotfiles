@@ -22,12 +22,12 @@ make
 # make fish the new default
 chsh -s /usr/local/bin/fish
 
-# generate and add new SSH key:
-
+# generate and add new SSH key
 https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 
 # open Nvim. Lazy.nvim will automatically install all plugins
 :Nvim
+
 
 # install tmux plugins
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
