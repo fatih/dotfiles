@@ -182,12 +182,8 @@ require("lazy").setup({
     end
   },
 
-  {
-    "bennypowers/splitjoin.nvim",
-    keys = {
-      { 'gJ', function() require'splitjoin'.join() end, desc = 'Join the object under cursor' },
-      { 'gS', function() require'splitjoin'.split() end, desc = 'Split the object under cursor' },
-    },
+  { 
+    "AndrewRadev/splitjoin.vim"
   },
 
   -- fzf extension for telescope with better speed
