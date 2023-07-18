@@ -672,6 +672,7 @@ vim.api.nvim_create_autocmd("TermOpen", {
     command = [[setlocal nonumber norelativenumber]]
 })
 
+
 -- git.nvim
 vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
 vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
@@ -769,3 +770,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
 -- automatically resize all vim buffers if I resize the terminal window
 vim.api.nvim_command('autocmd VimResized * wincmd =')
+
+-- https://github.com/neovim/neovim/issues/21771
+vim.api.nvim_create_autocmd('DirChanged', {
+  group = vim.api.nvim_create_augroup('setDir', { clear = true }),
+  pattern = { '*' },
+  command = [[call chansend(v:stderr, printf("\033]7;file://%s\033\\", v:event.cwd))]],
+})
+
