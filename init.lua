@@ -778,3 +778,17 @@ vim.api.nvim_create_autocmd('DirChanged', {
   command = [[call chansend(v:stderr, printf("\033]7;file://%s\033\\", v:event.cwd))]],
 })
 
+
+-- put quickfix window always to the bottom
+local qfgroup = vim.api.nvim_create_augroup('changeQuickfix', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  group = qfgroup,
+  command = 'wincmd J',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  group = qfgroup,
+  command = 'setlocal wrap',
+})
