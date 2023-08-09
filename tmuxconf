@@ -50,7 +50,6 @@ bind-key s split-window -v -l 30 -c "#{?pane_path,#{s@^file.//@@:pane_path},#{pa
 bind-key -n C-S-Left swap-window -t -1
 bind-key -n C-S-Right swap-window -t +1
 
-
 # Source file
 unbind r
 bind r source-file ~/.tmux.conf \; display "Reloaded!"

@@ -772,10 +772,17 @@ vim.api.nvim_create_autocmd('LspAttach', {
 vim.api.nvim_command('autocmd VimResized * wincmd =')
 
 -- https://github.com/neovim/neovim/issues/21771
+local exitgroup = vim.api.nvim_create_augroup('setDir', { clear = true })
 vim.api.nvim_create_autocmd('DirChanged', {
-  group = vim.api.nvim_create_augroup('setDir', { clear = true }),
+  group = exitgroup,
   pattern = { '*' },
   command = [[call chansend(v:stderr, printf("\033]7;file://%s\033\\", v:event.cwd))]],
+})
+
+vim.api.nvim_create_autocmd('VimLeave', {
+  group = exitgroup,
+  pattern = { '*' },
+  command = [[call chansend(v:stderr, "\033]7;\033\\")]],
 })
 
 
