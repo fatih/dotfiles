@@ -1,4 +1,4 @@
-set -gxp PATH /opt/homebrew/bin/ /usr/local/opt/python@3.9/libexec/bin /usr/local/sbin $HOME/go/bin
+set -gxp PATH $HOME/go/bin /opt/homebrew/bin /usr/local/opt/python@3.9/libexec/bin /usr/local/sbin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
