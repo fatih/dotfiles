@@ -1,0 +1,44 @@
+{
+  "features": {
+    "copilot": false
+  },
+  "cursor_blink": false,
+  "theme": "Gruvbox Dark Hard",
+  "tab_size": 2,
+  "scrollbar": {
+    "show": "never"
+  },
+  "ui_font_size": 15,
+  "ui_font_family": "BerkeleyMono Nerd Font Mono",
+  "buffer_font_size": 15,
+  "buffer_font_family": "BerkeleyMono Nerd Font Mono",
+  "buffer_line_height": {
+    "custom": 1.25
+  },
+  "vim_mode": true,
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        }
+      }
+    }
+  },
+  "terminal": {
+    "font_size": 14,
+    "font_family": "BerkeleyMono Nerd Font Mono",
+    "line_height": {
+      "custom": 1.25
+    }
+  },
+  "git": {
+    "git_gutter": "tracked_files"
+  }
+}
