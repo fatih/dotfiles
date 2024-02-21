@@ -323,6 +323,7 @@ require("lazy").setup({
         ensure_installed = {
           'go',
           'gomod',
+          'proto',
           'lua',
           'ruby',
           'vimdoc',

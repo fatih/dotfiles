@@ -38,10 +38,12 @@ function change_background --argument mode_setting
   end
 
   # change alacritty
-  switch $mode
-    case dark
-      alacritty-theme gruvbox_dark
-    case light
-      alacritty-theme gruvbox_light
-  end
+  # TODO: fix it, it doesn't work after Alacritty 0.13.1 because configuration
+  # changed from YAML to TOML
+  # switch $mode
+  #   case dark
+  #     alacritty-theme gruvbox_dark
+  #   case light
+  #     alacritty-theme gruvbox_light
+  # end
 end
