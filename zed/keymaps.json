@@ -56,6 +56,24 @@
     }
   },
   {
+    "context": "Editor && showing_completions",
+    "bindings": {
+      "enter": "editor::ConfirmCompletion",
+      "shift-tab": "editor::ContextMenuPrev",
+      "tab": "editor::ContextMenuNext",
+      "g g": "editor::ContextMenuFirst",
+      "shift-G": "editor::ContextMenuLast"
+    }
+  },
+  {
+    "context": "Editor && mode == full && inline_completion",
+    "bindings": {
+      "tab": "editor::NextInlineCompletion",
+      "shift-tab": "editor::PreviousInlineCompletion",
+      "enter": "editor::AcceptPartialInlineCompletion"
+    }
+  },
+  {
     "context": "Editor && vim_mode == insert && !menu",
     "bindings": {
       // put key-bindings here if you want them to work in insert mode
