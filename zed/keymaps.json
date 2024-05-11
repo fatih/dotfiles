@@ -2,18 +2,38 @@
   {
     "context": "Editor && VimControl && !VimWaiting && !menu",
     "bindings": {
+      // doesn't work, check why
+      // ", space": "buffer_search::Dismiss",
+
       // put key-bindings here if you want them to work in normal & visual mode
       "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
       "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
       "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
       "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "ctrl-w z": "workspace::ToggleZoom",
+      "ctrl-w t": "terminal_panel::ToggleFocus",
       "g c c": "editor::ToggleComments",
       "shift-k": "editor::Hover",
       "g shift-r": "editor::FindAllReferences",
       "g a": "editor::ToggleCodeActions",
       "ctrl-g": "outline::Toggle",
       "ctrl-shift-g": "go_to_line::Toggle",
+      ", g b": "editor::ToggleGitBlame",
       "ctrl-p": "file_finder::Toggle",
+      "j": [
+        "vim::Down",
+        {
+          "displayLines": true
+        }
+      ],
+      "k": [
+        "vim::Up",
+        {
+          "displayLines": true
+        }
+      ],
+      "space": "editor::SelectLargerSyntaxNode",
+      "backspace": "editor::SelectSmallerSyntaxNode",
       // filetree
       ", n": "workspace::ToggleLeftDock"
     }
@@ -40,7 +60,9 @@
     "bindings": {
       // put key-bindings here if you want them to work in insert mode
       "j j": "vim::NormalBefore",
-      "j k": "vim::NormalBefore"
+      "j k": "vim::NormalBefore",
+      "tab": "menu::SelectNext",
+      "shift-tab": "menu::SelectPrev"
     }
   },
   {
@@ -55,6 +77,28 @@
       "cmd-7": ["pane::ActivateItem", 6],
       "cmd-8": ["pane::ActivateItem", 7],
       "cmd-9": ["pane::ActivateItem", 8]
+    }
+  },
+  {
+    "context": "BufferSearchBar && !in_replace",
+    "bindings": {
+      ", space": "buffer_search::Dismiss"
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "ctrl-w t": "workspace::ToggleZoom",
+      "ctrl-u": "terminal::Clear"
+    }
+  },
+  {
+    "context": "Dock",
+    "bindings": {
+      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
+      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
+      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
+      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
     }
   }
 ]

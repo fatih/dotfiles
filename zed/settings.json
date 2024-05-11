@@ -15,7 +15,17 @@
   "buffer_line_height": {
     "custom": 1.25
   },
+  // allow cursor to reach edges of screen
+  "vertical_scroll_margin": 0,
   "vim_mode": true,
+  "vim": {
+    // "always": use system clipboard
+    // "never": don't use system clipboard
+    // "on_yank": use system clipboard for yank operations
+    "use_system_clipboard": "always",
+    // Lets `f` and `t` motions extend across multiple lines
+    "use_multiline_find": true
+  },
   "lsp": {
     "gopls": {
       "initialization_options": {
