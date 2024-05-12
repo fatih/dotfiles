@@ -122,7 +122,8 @@
   {
     "context": "Workspace",
     "bindings": {
-      ", b": ["task::Spawn", { "task_name": "Go Build" }]
+      ", b": ["task::Spawn", { "task_name": "Go Build" }],
+      ", a": ["task::Spawn", { "task_name": "Go Alternative" }]
     }
   }
 ]
