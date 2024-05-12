@@ -118,5 +118,11 @@
       "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
       "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
     }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      ", b": ["task::Spawn", { "task_name": "Go Build" }]
+    }
   }
 ]

@@ -1,0 +1,9 @@
+[
+  {
+    "label": "Go Build",
+    "command": "cd $(dirname $ZED_FILE) && pwd  && go build ./...",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "reveal": "never"
+  }
+]
