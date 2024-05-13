@@ -27,9 +27,17 @@
     "reveal": "always"
   },
   {
+    "label": "Go Test",
+    "command": "cd $(dirname $ZED_FILE) && pwd  && go test ./...",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "reveal": "always"
+  },
+  {
     "label": "Go Alternative",
     "command": "if [[ $ZED_FILE == *_test.go ]]; then zed \"$(dirname $ZED_FILE)/$(basename $ZED_FILE _test.go).go\"; else zed \"$(dirname $ZED_FILE)/$(basename $ZED_FILE .go)_test.go\"; fi",
     "use_new_terminal": true,
     "allow_concurrent_runs": true,
     "reveal": "always"
   }
+]
