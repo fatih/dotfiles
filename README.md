@@ -41,6 +41,10 @@ defaults -currentHost write -g AppleFontSmoothing -int 0
 launchctl load -w ~/Library/LaunchAgents/io.arslan.dark-mode-notify.plist
 ```
 
+# Configuring MoErgo Glove80 Keyboard
+
+See `zmk/readme.md`
+
 # Configuring Kinesis Advantage2 Keyboard
 
 See `qmk/readme.md`

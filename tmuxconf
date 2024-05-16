@@ -7,7 +7,6 @@ set -g prefix C-f
 bind C-f send-prefix
 
 set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
-
 set-option -g default-shell /opt/homebrew/bin/fish
 
 # toogle last window by hitting again C-f
@@ -42,14 +41,14 @@ set -g default-terminal "screen-256color"
 # in the same directory.  Because we use widescreens nowadays, opening a
 # vertical split that takes half of the screen is not worth. For vertical we
 # only open 100 lines width, for horizontal it's 20 columns.
-bind-key v split-window -h -l 100 -c '#{pane_current_path}'
-bind-key s split-window -v -l 30 -c '#{pane_current_path}'
+# https://github.com/neovim/neovim/issues/21771
+bind-key v split-window -h -l 100 -c "#{?pane_path,#{s@^file.//@@:pane_path},#{pane_current_path}}"
+bind-key s split-window -v -l 30 -c "#{?pane_path,#{s@^file.//@@:pane_path},#{pane_current_path}}"
 
 # Pressing Ctrl+Shift+Left (will move the current window to the left. Similarly
 # right. No need to use the modifier (C-b).
 bind-key -n C-S-Left swap-window -t -1
 bind-key -n C-S-Right swap-window -t +1
-
 
 # Source file
 unbind r

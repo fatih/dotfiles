@@ -37,11 +37,22 @@ function change_background --argument mode_setting
       tmux source-file ~/.tmux/tmux-light.conf
   end
 
-  # change alacritty
-  switch $mode
-    case dark
-      alacritty-theme gruvbox_dark
-    case light
-      alacritty-theme gruvbox_light
+  # # change alacritty
+  function alacritty-theme --argument mode_setting
+    # NOTE(fatih): this is all hardcoded and probably won't work in other
+    # settings. It's fine for me for now, but there might be better solutions.
+    # I have to many things in my life, so I just keep it this way.
+    pushd /Users/fatih/Code/dotfiles
+
+    cp alacritty.toml alacritty.toml.backup
+    set -l line "import = [\"/Users/fatih/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml\"]"
+    echo $line> alacritty.toml
+    
+    cat alacritty.toml.backup |tail -n+2>> alacritty.toml
+    rm alacritty.toml.backup
+
+    popd
   end
+
+  alacritty-theme $mode
 end

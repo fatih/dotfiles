@@ -4,6 +4,9 @@ Setup:
 
 
 ```
+# Install QMK if not yet installed
+brew install qmk/qmk/qmk
+
 # Clone qmk repository with 
 qmk setup -b develop
 
