@@ -1,4 +1,3 @@
-# set -gxp PATH  /opt/homebrew/opt/python@3.10/libexec/bin /opt/homebrew/sbin /opt/homebrew/bin /opt/flutter/bin $HOME/go/bin
 set -gxp PATH /opt/homebrew/bin/ /usr/local/opt/python@3.10/libexec/bin /usr/local/sbin $HOME/go/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
