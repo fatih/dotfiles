@@ -7,7 +7,6 @@ set -g prefix C-f
 bind C-f send-prefix
 
 set-environment -g PATH "/usr/local/bin:/bin:/usr/bin"
-# set-environment -g PATH "/opt/homebrew/bin:/usr/local/bin:/bin:/usr/bin"
 
 set-option -g default-shell /opt/homebrew/bin/fish
 
