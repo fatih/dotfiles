@@ -39,13 +39,13 @@ function change_background --argument mode_setting
 
   # # change alacritty
   function alacritty-theme --argument mode_setting
-    # NOTE(fatih): this is all hardcoded and probably won't work in other
+    # NOTE(rubinette): this is all hardcoded and probably won't work in other
     # settings. It's fine for me for now, but there might be better solutions.
     # I have to many things in my life, so I just keep it this way.
-    pushd /Users/fatih/Code/dotfiles
+    pushd /Users/rubinette/Code/dotfiles
 
     cp alacritty.toml alacritty.toml.backup
-    set -l line "import = [\"/Users/fatih/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml\"]"
+    set -l line "import = [\"/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml\"]"
     echo $line> alacritty.toml
     
     cat alacritty.toml.backup |tail -n+2>> alacritty.toml

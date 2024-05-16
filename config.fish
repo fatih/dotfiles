@@ -34,7 +34,7 @@ set -g fish_user_paths "/usr/homebrew/opt/openssl@1.1/bin" $fish_user_paths
 set -g fish_user_paths "/usr/homebrew/opt/mysql-client/bin" $fish_user_paths
 
 # status --is-interactive; and rbenv init - fish | source
-=======
+# =======
 
 # The next line updates PATH for the Google Cloud SDK.
 # if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end

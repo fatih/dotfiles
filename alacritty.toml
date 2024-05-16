@@ -1,4 +1,4 @@
-import = ["/Users/fatih/.config/alacritty/themes/alacritty-gruvbox-light.toml"]
+import = ["/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-light.toml"]
 live_config_reload = true
 
 [bell]
@@ -22,7 +22,7 @@ TERM = "xterm-256color"
 size = 15.0
 
 [font.bold]
-family = "BerkeleyMono Nerd Font Mono"
+family = "BerkeleyMono Nerd Font"
 style = "Bold"
 
 [font.glyph_offset]
@@ -30,11 +30,11 @@ x = 0
 y = 0
 
 [font.italic]
-family = "BerkeleyMono Nerd Font Mono"
+family = "BerkeleyMono Nerd Font"
 style = "Italic"
 
 [font.normal]
-family = "BerkeleyMono Nerd Font Mono"
+family = "BerkeleyMono Nerd Font"
 style = "Regular"
 
 [font.offset]
