@@ -282,18 +282,10 @@ require("lazy").setup({
     "rgroli/other.nvim",
     config = function ()
       require("other-nvim").setup({
+	      rememberBuffers = false,
         mappings = {
-          "rails", --builtin mapping
-	        {
-	        	pattern = "(.*).go$",
-	        	target = "%1_test.go",
-            context = "test",
-	        },
-	        {
-	        	pattern = "(.*)_test.go$",
-	        	target = "%1.go",
-            context = "file",
-	        },
+          "rails",
+          "golang",
 	      },
       })
 
@@ -477,13 +469,23 @@ require("lazy").setup({
           ['<C-d>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<CR>'] = cmp.mapping.confirm { select = true },
+          -- ['<Tab>'] = cmp.mapping(function(fallback)
+          --   if cmp.visible() then
+          --     cmp.select_next_item()
+          --   elseif luasnip.expand_or_locally_jumpable() then 
+          --     luasnip.expand_or_jump()
+          --   elseif has_words_before() then
+          --     cmp.complete()
+          --   else
+          --     fallback()
+          --   end
           ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then 
-              luasnip.expand_or_jump()
-            elseif has_words_before() then
-              cmp.complete()
+            elseif luasnip.jumpable(1) then 
+              luasnip.jump()
+            elseif luasnip.expand() then 
+              luasnip.expand()
             else
               fallback()
             end
@@ -623,42 +625,9 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
--- Terminal
--- Clost terminal window, even if we are in insert mode
-vim.keymap.set('t', '<leader>q', '<C-\\><C-n>:q<cr>')
-
--- switch to normal mode with esc
-vim.keymap.set('t', '<ESC>', '<C-\\><C-n>')
-
--- Open terminal in vertical and horizontal split
-vim.keymap.set('n', '<leader>tv', '<cmd>vnew term://fish<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>ts', '<cmd>split term://fish<CR>', { noremap = true })
-
--- Open terminal in vertical and horizontal split, inside the terminal
-vim.keymap.set('t', '<leader>tv', '<c-w><cmd>vnew term://fish<CR>', { noremap = true })
-vim.keymap.set('t', '<leader>ts', '<c-w><cmd>split term://fish<CR>', { noremap = true })
-
--- mappings to move out from terminal to other views
-vim.keymap.set('t', '<C-h>', '<C-\\><C-n><C-w>h')
-vim.keymap.set('t', '<C-j>', '<C-\\><C-n><C-w>j')
-vim.keymap.set('t', '<C-k>', '<C-\\><C-n><C-w>k')
-vim.keymap.set('t', '<C-l>', '<C-\\><C-n><C-w>l')
-
 -- we don't use netrw (because of nvim-tree), hence re-implement gx to open
 -- links in browser
 vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>')
-
--- automatically switch to insert mode when entering a Term buffer
-vim.api.nvim_create_autocmd({ "WinEnter", "BufWinEnter", "TermOpen" }, {
-    group = vim.api.nvim_create_augroup("openTermInsert", {}),
-    callback = function(args)
-        -- we don't use vim.startswith() and look for test:// because of vim-test
-        -- vim-test starts tests in a terminal, which we want to keep in normal mode
-        if vim.endswith(vim.api.nvim_buf_get_name(args.buf), "fish") then
-            vim.cmd("startinsert")
-        end
-    end,
-})
 
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
@@ -669,10 +638,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
 })
 
--- don't show number
-vim.api.nvim_create_autocmd("TermOpen", {
-    command = [[setlocal nonumber norelativenumber]]
-})
 
 
 -- git.nvim
@@ -687,9 +652,15 @@ vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true
   nargs = "*",
 })
 
+-- other.nvim
+vim.keymap.set("n", "<leader>ta", ":Other<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>tv", ":OtherVSplit<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>ts", ":OtherSplit<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>tc", ":OtherClear<CR>", { noremap = true, silent = true })
+
 -- File-tree mappings
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>f', ':NvimTreeFindFile!<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
 
 -- vim-test
 vim.keymap.set('n', '<leader>tt', ':TestNearest -v<CR>', { noremap = true, silent = true })
