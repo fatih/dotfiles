@@ -1,2 +1,5 @@
 terraform.tfstate*
 .terraform
+
+o.fish
+s.fish
