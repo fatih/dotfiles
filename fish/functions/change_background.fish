@@ -1,5 +1,5 @@
 function change_background --argument mode_setting
-  # change background to the given mode. If mode is missing, 
+  # change background to the given mode. If mode is missing,
   # we try to deduct it from the system settings.
 
   set -l mode "light" # default value
@@ -39,17 +39,14 @@ function change_background --argument mode_setting
 
   # # change alacritty
   function alacritty-theme --argument mode_setting
-    # NOTE(rubinette): this is all hardcoded and probably won't work in other
-    # settings. It's fine for me for now, but there might be better solutions.
-    # I have to many things in my life, so I just keep it this way.
     pushd /Users/rubinette/Code/dotfiles
 
     cp alacritty.toml alacritty.toml.backup
-    set -l line "import = [\"/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml\"]"
-    echo $line> alacritty.toml
-    
-    cat alacritty.toml.backup |tail -n+2>> alacritty.toml
-    rm alacritty.toml.backup
+    set -l path "/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml"
+    sed -i '' "/import/c\\
+import = [\"$path\"]
+" alacritty.toml.backup
+    mv alacritty.toml.backup alacritty.toml
 
     popd
   end

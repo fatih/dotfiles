@@ -1,5 +1,6 @@
-import = ["/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-light.toml"]
+[general]
 live_config_reload = true
+import = ["/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-dark.toml"]
 
 [bell]
 animation = "EaseOutExpo"
@@ -19,7 +20,7 @@ render_timer = false
 TERM = "xterm-256color"
 
 [font]
-size = 15.0
+size = 16.0
 
 [font.bold]
 family = "BerkeleyMono Nerd Font"
@@ -722,7 +723,7 @@ multiplier = 3
 save_to_clipboard = true
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
-[shell]
+[terminal.shell]
 args = ["new-session", "-A", "-D", "-s", "main"]
 program = "/opt/homebrew/bin/tmux"
 
@@ -733,7 +734,7 @@ dynamic_title = true
 opacity = 1.0
 
 [window.dimensions]
-columns = 160
+columns = 120
 lines = 48
 
 [window.padding]

@@ -1,4 +1,4 @@
-set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin 
+set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin /opt/flutter/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
@@ -39,3 +39,6 @@ set -g fish_user_paths "/usr/homebrew/opt/mysql-client/bin" $fish_user_paths
 # The next line updates PATH for the Google Cloud SDK.
 # if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end
 
+
+# Created by `pipx` on 2024-08-08 06:55:22
+set PATH $PATH /Users/rubinette/.local/bin
