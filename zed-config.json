@@ -1,0 +1,66 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "theme": {
+    "mode": "system",
+    "light": "Gruvbox Light",
+    "dark": "Gruvbox Dark Hard"
+  },
+  "features": {
+    "copilot": false
+  },
+  "cursor_blink": false,
+  "tab_size": 2,
+  "scrollbar": {
+    "show": "never"
+  },
+  "ui_font_size": 14,
+  "ui_font_family": "Berkeley Mono",
+  "buffer_font_size": 14,
+  "buffer_font_family": "Berkeley Mono",
+  "buffer_line_height": {
+    "custom": 1.25
+  },
+  // allow cursor to reach edges of screen
+  "vertical_scroll_margin": 0,
+  "vim_mode": true,
+  "vim": {
+    // "always": use system clipboard
+    // "never": don't use system clipboard
+    // "on_yank": use system clipboard for yank operations
+    "use_system_clipboard": "always",
+    // Lets `f` and `t` motions extend across multiple lines
+    "use_multiline_find": true
+  },
+  "lsp": {
+    "gopls": {
+      "initialization_options": {
+        "hints": {
+          "assignVariableTypes": true,
+          "compositeLiteralFields": true,
+          "compositeLiteralTypes": true,
+          "constantValues": true,
+          "functionTypeParameters": true,
+          "parameterNames": true,
+          "rangeVariableTypes": true
+        }
+      }
+    }
+  },
+  "terminal": {
+    "font_size": 14,
+    "font_family": "Berkeley Mono",
+    "line_height": {
+      "custom": 1.25
+    }
+  },
+  "git": {
+    "git_gutter": "tracked_files"
+  }
+}
