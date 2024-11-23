@@ -3,6 +3,9 @@ set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
 
+# shell integration, if we don't set it, working directory features won't work
+set -gx GHOSTTY_SHELL_INTEGRATION_XDG_DIR /Applications/Ghostty.app/Contents/Resources/ghostty/shell-integration
+
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
 set -g __fish_git_prompt_showdirtystate 'yes'
