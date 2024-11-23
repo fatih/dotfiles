@@ -15,7 +15,7 @@ sync:
 	[ -f ~/.config/ghostty/config ] || ln -s $(PWD)/ghostty.config ~/.config/ghostty/config
 
 	[ -f ~/.config/zed/settings.json ] || ln -s $(PWD)/zed-config.json ~/.config/zed/settings.json
-	[ -f ~/.config/zed/keymaps.json ] || ln -s $(PWD)/zed-keymaps.json ~/.config/zed/keymaps.json
+	[ -f ~/.config/zed/keymap.json ] || ln -s $(PWD)/zed-keymap.json ~/.config/zed/keymap.json
 	[ -f ~/.config/zed/tasks.json ] || ln -s $(PWD)/zed-tasks.json ~/.config/zed/tasks.json
 
 	# don't show last login message
@@ -31,7 +31,7 @@ clean:
 	rm -f ~/.agignore
 	rm -f ~/.config/ghostty/config
 	rm -f ~/.config/zed/settings.json
-	rm -f ~/.config/zed/keymaps.json
+	rm -f ~/.config/zed/keymap.json
 	rm -f ~/.config/zed/tasks.json
 
 .PHONY: all clean sync 
