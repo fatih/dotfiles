@@ -41,4 +41,3 @@ bind -M insert \cr _atuin_search
 
 # The next line updates PATH for the Google Cloud SDK.
 # if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end
-
