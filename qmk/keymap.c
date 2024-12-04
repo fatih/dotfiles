@@ -60,7 +60,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 				    KC_HYPR,
                    KC_LGUI, KC_BSPC, HYPR(KC_5),
 
-    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, TG(_NUMPAD), RESET,
+    KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, TG(_NUMPAD), QK_BOOT,
 	KC_6   ,KC_7   ,KC_8   ,KC_9   ,KC_0   ,KC_MINS,
 	KC_Y   ,KC_U   ,KC_I   ,KC_O   ,KC_P   ,KC_BSLS,
 	KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_SCLN,RCTL_T(KC_QUOT),
@@ -76,7 +76,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          _______,  _______,  HYPR(KC_1),  HYPR(KC_2),  HYPR(KC_3),  _______,
          _______,  KC_EXCLAIM,  KC_AT,  KC_LEFT_CURLY_BRACE,  KC_RIGHT_CURLY_BRACE,  KC_PIPE,
          _______,  KC_AMPERSAND,  KC_DOLLAR,  KC_LEFT_PAREN,  KC_RIGHT_PAREN,  KC_GRAVE,
-         _______,  KC_HASH,  KC_CIRCUMFLEX,  KC_LBRACKET,  KC_RBRACKET,  KC_TILDE,
+         _______,  KC_HASH,  KC_CIRCUMFLEX,  KC_LEFT_BRACKET,  KC_RIGHT_BRACKET,  KC_TILDE,
                    _______,  _______,  _______,  _______,
                              _______,  _______,
                                        _______,
