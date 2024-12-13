@@ -1,4 +1,4 @@
-set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin 
+set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin /opt/homebrew/opt/node@20/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
@@ -34,6 +34,9 @@ source ~/.private.fish
 set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
 set -g fish_user_paths "/usr/local/opt/mysql-client/bin" $fish_user_paths
 
+# node
+set -gx LDFLAGS "-L/opt/homebrew/opt/node@20/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/node@20/include"
 # status --is-interactive; and rbenv init - fish | source
 
 set -gx ATUIN_NOBIND "true"
