@@ -16,3 +16,8 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight. 
 SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 
+# Do not enter lower-power sleep mode when on the ChibiOS idle thread.
+# See https://github.com/qmk/qmk_firmware/issues/23053.
+#
+# also add to qmk_firmware/keyboards/kinesis/kint41/rules.mk
+OPT_DEFS += -DCORTEX_ENABLE_WFI_IDLE=FALSE
