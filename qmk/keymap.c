@@ -49,16 +49,16 @@ enum layer_names {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [_QWERTY] = LAYOUT(
-           KC_ESC, KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8,   KC_F9  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_PSCR ,MACLOCK  ,KC_PAUS, TG(_NUMPAD), QK_BOOT,
+           KC_ESC, KC_F1  ,KC_F2  ,KC_F3  ,KC_F4  ,KC_F5  ,KC_F6  ,KC_F7  ,KC_F8,   QK_BOOT  ,KC_F10 ,KC_F11 ,KC_F12 ,KC_MUTE ,KC_VOLD  ,KC_VOLU, TG(_NUMPAD), MACLOCK,
            KC_EQL, KC_1   ,KC_2   ,KC_3   ,KC_4   ,KC_5              ,    KC_6   ,KC_7   ,KC_8     ,KC_9   ,KC_0    ,KC_MINS,
            KC_TAB, KC_Q   ,KC_W   ,KC_E   ,KC_R   ,KC_T              ,    KC_Y   ,KC_U   ,KC_I     ,KC_O   ,KC_P    ,KC_BSLS,
            KC_LCTL,KC_A   ,KC_S   ,KC_D   ,LT(_NUMPAD, KC_F), KC_G   ,    KC_H   ,KC_J   ,KC_K     ,KC_L   ,KC_SCLN ,RCTL_T(KC_QUOT),
            KC_LSFT,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B              ,    KC_N   ,KC_M   ,KC_COMM  ,KC_DOT ,KC_SLSH ,KC_RSFT,
                    KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,                       KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
 
-			       HYPR(KC_7),HYPR(KC_8),    KC_RALT, KC_ESC,
-				                 KC_HYPR,    KC_PGUP,
-            KC_LGUI, KC_BSPC, HYPR(KC_5),    HYPR(KC_5), KC_ENTER , LT(_SYMBOLS, KC_SPACE)
+			             HYPR(KC_7),HYPR(KC_8),    KC_RALT, KC_ESC,
+				                         KC_HYPR,    KC_PGUP,
+            KC_LGUI, KC_BSPC, HYPR(KC_5),    KC_RALT, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
