@@ -56,9 +56,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
            OSM(MOD_LSFT)  ,KC_Z   ,KC_X   ,KC_C   ,KC_V   ,KC_B              ,    KC_N   ,KC_M   ,KC_COMM  ,KC_DOT ,KC_SLSH ,OSM(MOD_RSFT),
                    KC_GRV ,KC_INS ,KC_LEFT,KC_RGHT,                       KC_UP  ,KC_DOWN,KC_LBRC,KC_RBRC,
 
-			             HYPR(KC_7),HYPR(KC_8),    KC_RALT, KC_ESC,
+			             OSM(MOD_LSFT),HYPR(KC_8),    KC_RALT, OSM(MOD_RSFT),
 				                         KC_HYPR,    KC_PGUP,
-            KC_LGUI, KC_BSPC, HYPR(KC_5),    KC_RALT, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
+            KC_LGUI, KC_BSPC, HYPR(KC_5),    KC_ESC, KC_ENTER , LT(_SYMBOLS, KC_SPACE)
     ),
 
 [_SYMBOLS] = LAYOUT(
