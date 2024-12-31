@@ -1,5 +1,8 @@
 # My custom keymap for the Kinesis
 
+I modded my Kinesis Advantage 2 with Stapelberg's KINT project. Hence the
+following steps assume you use a modded Kinesis.
+
 Setup:
 
 

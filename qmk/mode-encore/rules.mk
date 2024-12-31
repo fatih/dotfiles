@@ -13,3 +13,6 @@ BLUETOOTH_ENABLE = no       # Enable Bluetooth with the Adafruit EZ-Key HID
 RGBLIGHT_ENABLE = no        # Enable WS2812 RGB underlight. 
 SLEEP_LED_ENABLE = no       # Breathing sleep LED during USB suspend
 
+DYNAMIC_TAPPING_TERM_ENABLE = yes
+TAP_DANCE_ENABLE = yes
+
