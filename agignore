@@ -1,6 +1,5 @@
 /go/pkg
 *.js
-*.css
 *.pdf
 *.git
 *vendor

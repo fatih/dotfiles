@@ -1,7 +1,10 @@
-set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin 
+set -gxp PATH $HOME/go/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin /opt/homebrew/opt/node@20/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
+
+# shell integration, if we don't set it, working directory features won't work
+set -gx GHOSTTY_SHELL_INTEGRATION_XDG_DIR /Applications/Ghostty.app/Contents/Resources/ghostty/shell-integration
 
 # git prompt settings
 set -g __fish_git_prompt_show_informative_status 1
@@ -31,6 +34,9 @@ source ~/.private.fish
 set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
 set -g fish_user_paths "/usr/local/opt/mysql-client/bin" $fish_user_paths
 
+# node
+set -gx LDFLAGS "-L/opt/homebrew/opt/node@20/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/node@20/include"
 # status --is-interactive; and rbenv init - fish | source
 
 set -gx ATUIN_NOBIND "true"
@@ -41,4 +47,3 @@ bind -M insert \cr _atuin_search
 
 # The next line updates PATH for the Google Cloud SDK.
 # if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end
-

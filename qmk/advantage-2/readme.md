@@ -1,5 +1,8 @@
 # My custom keymap for the Kinesis
 
+I modded my Kinesis Advantage 2 with Stapelberg's KINT project. Hence the
+following steps assume you use a modded Kinesis.
+
 Setup:
 
 
@@ -8,11 +11,10 @@ Setup:
 brew install qmk/qmk/qmk
 
 # Clone qmk repository with 
-qmk setup -b develop
+qmk setup
 
-# copy the custom keymaps into the keymaps folder
-cd ~/qmk_firmware/
-cp -r ~/Code/dotfiles/qmk/ keyboards/kinesis/keymaps/fatih
+# link keymap into the qmk folder
+ln -s ~/Code/dotfiles/qmk/advantage-2/ ~/qmk_firmware/keyboards/kinesis/keymaps/fatih
 
 # compile the firmware
 qmk compile -kb kinesis/kint41 -km fatih
