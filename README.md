@@ -6,7 +6,7 @@ My personal dotfiles.
 Please only open pull requests that fix bugs or adds improvements without any
 breaking changes. These dotfiles are very personal, and I know that everyone
 has a different taste; hence fork this repository or copy/paste them into your
-own `dotfiles` repo. Hence I might refuse PR's if they change my workflow
+own `dotfiles` repo. I might refuse PR's if they change my workflow
 significantly.
 
 # On a new machine
