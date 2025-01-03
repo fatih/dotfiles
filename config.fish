@@ -18,7 +18,7 @@ set -g __fish_git_prompt_char_conflictedstate "+"
 set -g __fish_git_prompt_color_dirtystate yellow
 set -g __fish_git_prompt_color_cleanstate green --bold
 set -g __fish_git_prompt_color_invalidstate red
-set -g __fish_git_prompt_color_branch cyan --dim --italics
+set -g __fish_git_prompt_color_branch cyan --dim 
 
 # don't show any greetings
 set fish_greeting ""
@@ -34,10 +34,10 @@ source ~/.private.fish
 set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
 set -g fish_user_paths "/usr/local/opt/mysql-client/bin" $fish_user_paths
 
-# node
+# node, needed for developing my theme at arslan.io
 set -gx LDFLAGS "-L/opt/homebrew/opt/node@20/lib"
 set -gx CPPFLAGS "-I/opt/homebrew/opt/node@20/include"
-# status --is-interactive; and rbenv init - fish | source
+
 
 set -gx ATUIN_NOBIND "true"
 status --is-interactive; atuin init fish | source
@@ -47,3 +47,5 @@ bind -M insert \cr _atuin_search
 
 # The next line updates PATH for the Google Cloud SDK.
 # if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end
+
+# status --is-interactive; and rbenv init - fish | source
