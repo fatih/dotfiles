@@ -25,6 +25,7 @@ qmk userspace-add -kb splitkb/halcyon/kyria/rev4 -km fatih -e HLC_ENCODER=1 -e T
 ln -s ~/Code/dotfiles/qmk/kyria/ ~/qmk_firmware/keyboards/splitkb/halcyon/kyria/keymaps/fatih
 
 # compile the firmware, for left with display, for right with the encoder
+# this is for verification, we only need do it once, we'll use qmk flash later
 qmk compile -kb splitkb/halcyon/kyria/rev4 -km fatih -e HLC_TFT_DISPLAY=1 -e TARGET=splitkb_halcyon_kyria_rev4_default_hlc_display
 qmk compile -kb splitkb/halcyon/kyria/rev4 -km fatih -e HLC_ENCODER=1 -e TARGET=splitkb_halcyon_kyria_rev4_default_hlc_encoder
 
