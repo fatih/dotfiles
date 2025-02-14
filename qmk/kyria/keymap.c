@@ -13,20 +13,13 @@ enum layers {
 // Aliases for readability
 #define MACLOCK LGUI(LCTL(KC_Q))
 
+#define BROWSER_SEARCH LGUI(KC_F)
+#define BROWSER_NEWTAB LGUI(KC_T)
+#define BROWSER_CLOSETTAB LGUI(KC_W)
+#define BROWSER_NEXTTAB LAG(KC_RIGHT)
+#define BROWSER_PREVTAB LAG(KC_LEFT)
+
 #define CTL_QUOT MT(MOD_RCTL, KC_QUOTE)
-
-// Left-hand home row mods
-#define HOME_A LCTL_T(KC_A)
-#define HOME_S LALT_T(KC_S)
-#define HOME_D LGUI_T(KC_D)
-#define HOME_F LSFT_T(KC_F)
-
-// Right-hand home row mods
-#define HOME_J RSFT_T(KC_J)
-#define HOME_K RGUI_T(KC_K)
-#define HOME_L LALT_T(KC_L)
-#define HOME_SCLN RCTL_T(KC_SCLN)
-
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -38,9 +31,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
  * |  Ctrl  |   A  |   S  |   D  |   F  |   G  |                              |   H  |   J  |   K  |   L  | ;  : |Ctrl/' |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |   B  | Shift|Hyper |  |  ESC | Shift|   N  |   M  | ,  < | . >  | /  ? | RShift |
+ * | LShift |   Z  |   X  |   C  |   V  |   B  | Shift|Hyper |  | LOCK | ESC  |   N  |   M  | ,  < | . >  | /  ? | RShift |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
- *                        |Left  | Right| GUI  | Bspc | ALT  |  |  ALT | Enter| Space| Up   | Down |
+ *                        |Left  | Right| GUI  | Bspc | ALT  |  |  TAB | Enter| Space| Up   | Down |
  *                        |      |      | Enter|      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  * ,-----------------------------------.                                              ,-----------------------------------.
@@ -48,9 +41,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------'                                              `-----------------------------------'
  */
     [_QWERTY] = LAYOUT_split_3x6_5_hlc(
-     KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                        KC_Y,   KC_U ,  KC_I ,   KC_O ,  KC_P , KC_BSLS,
-     KC_LCTL , KC_A ,  KC_S   ,  KC_D  ,   LT(_NUMPAD, KC_F) ,   LSFT_T(KC_G),                           RSFT_T(KC_H),  KC_J ,  KC_K ,   KC_L ,KC_SCLN, CTL_QUOT,
-     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , OSM(MOD_LSFT),  HYPR(KC_5),     KC_ESC  , OSM(MOD_RSFT), KC_N,   KC_M ,KC_COMM, KC_DOT ,KC_SLSH, KC_RSFT,
+     KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                                   KC_Y,          KC_U ,  KC_I ,   KC_O ,  KC_P , KC_BSLS,
+     KC_LCTL , KC_A ,  KC_S   ,  KC_D  ,   LT(_NUMPAD, KC_F) ,   LSFT_T(KC_G),                               RSFT_T(KC_H),  KC_J ,  KC_K ,   KC_L ,  KC_SCLN, CTL_QUOT,
+     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , OSM(MOD_LSFT),  HYPR(KC_5),     MACLOCK, KC_ESC  , KC_N,          KC_M ,  KC_COMM, KC_DOT ,KC_SLSH, KC_RSFT,
                                 KC_LEFT , KC_RIGHT, KC_LGUI, KC_BSPC , KC_LALT,     KC_TAB    , KC_ENT , LT(_SYMBOLS, KC_SPC), KC_UP, KC_DOWN,
      KC_MUTE, KC_NO,  KC_NO, KC_NO, KC_NO,                                                                KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO
     ),
@@ -59,7 +52,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * Symbol Layer template
   *
   * ,-------------------------------------------.                              ,-------------------------------------------.
-  * |        |   !  |   @  |   {  |  {   |   |  |                              |   F1 | F2   |      |      |  *   |        |
+  * |        |   !  |   @  |   {  |  {   |   |  |                              |   F1 | F2   | VOLU | VOLD |  *   |        |
   * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
   * |        |   &  |   $  |   (  |  )   |  `   |                              | Left | Down | Up   | Right|  +   |        |
   * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
@@ -73,10 +66,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * `-----------------------------------'                                              `-----------------------------------'
   */
      [_SYMBOLS] = LAYOUT_split_3x6_5_hlc(
-       _______, KC_EXCLAIM,   KC_AT,        KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE, KC_PIPE,                                      KC_F1,         KC_F2,   _______, _______,   KC_ASTERISK, _______,
-       _______, KC_AMPERSAND, KC_DOLLAR,    KC_LEFT_PAREN,       KC_RIGHT_PAREN,       KC_GRAVE,                                     KC_LEFT,       KC_DOWN, KC_UP,   KC_RIGHT,  KC_KP_PLUS, _______,
+       _______, KC_EXCLAIM,   KC_AT,        KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE, KC_PIPE,                                      KC_F1,         KC_F2,   KC_VOLU, KC_VOLD,   KC_ASTERISK, _______,
+       BROWSER_NEWTAB, KC_AMPERSAND, KC_DOLLAR,    KC_LEFT_PAREN,       KC_RIGHT_PAREN,       KC_GRAVE,                                     KC_LEFT,       KC_DOWN, KC_UP,   KC_RIGHT,  KC_PLUS, _______,
        _______, KC_HASH,      KC_CIRCUMFLEX,KC_LBRC,             KC_RBRC,              KC_TILDE,_______, _______,  _______, _______, KC_UNDERSCORE, KC_MINUS,KC_EQUAL,KC_PERCENT,_______, _______,
-                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+                                  _______, _______, BROWSER_PREVTAB, BROWSER_NEXTTAB, BROWSER_CLOSETTAB, _______, _______, _______, _______, _______,
 
        _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
      ),
@@ -99,10 +92,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * `-----------------------------------'                                              `-----------------------------------'
   */
      [_NUMPAD] = LAYOUT_split_3x6_5_hlc(
-       _______, KC_1, KC_2, KC_3, KC_4, KC_5,                                     KC_6, KC_KP_7,  KC_KP_8,  KC_KP_9,  KC_KP_MINUS, QK_BOOT,
-       _______, _______, _______, _______, _______, _______,                                     KC_COMM, KC_KP_4,  KC_KP_5,  KC_KP_6,  KC_KP_PLUS, _______,
-       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DOT, KC_KP_1,  KC_KP_2,  KC_KP_3,  KC_SLSH, _______,
-                                  _______, _______, KC_LGUI, KC_BSPC, _______, KC_SPC, KC_KP_ENTER, KC_KP_0, _______, _______,
+       _______, KC_1, KC_2, KC_3, KC_4, KC_5,                                     KC_6, KC_7,  KC_8,  KC_9,  KC_MINUS, QK_BOOT,
+       _______, _______, _______, _______, _______, _______,                                     KC_COMM, KC_4,  KC_5,  KC_6,  KC_PLUS, _______,
+       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DOT, KC_1,  KC_2,  KC_3,  KC_SLSH, _______,
+                                  _______, _______, KC_LGUI, KC_BSPC, _______, KC_SPC, KC_ENTER, KC_0, _______, _______,
 
        _______, _______, _______, _______, _______,                                                       _______, _______, _______, _______, _______
      ),
