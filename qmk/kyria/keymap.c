@@ -34,7 +34,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * | LShift |   Z  |   X  |   C  |   V  |   B  | Shift|Hyper |  | LOCK | ESC  |   N  |   M  | ,  < | . >  | /  ? | RShift |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |Left  | Right| GUI  | Bspc | ALT  |  |  TAB | Enter| Space| Up   | Down |
- *                        |      |      | Enter|      |      |  |      |      |      |      |      |
+ *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        `----------------------------------'  `----------------------------------'
  * ,-----------------------------------.                                              ,-----------------------------------.
  * | MUTE | ____ | _____ | ____ | ____ |                                              | MUTE | ____ | _____ | ____ | ____ |
@@ -43,8 +43,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_QWERTY] = LAYOUT_split_3x6_5_hlc(
      KC_TAB  , KC_Q ,  KC_W   ,  KC_E  ,   KC_R ,   KC_T ,                                                   KC_Y,          KC_U ,  KC_I ,   KC_O ,  KC_P , KC_BSLS,
      KC_LCTL , KC_A ,  KC_S   ,  KC_D  ,   LT(_NUMPAD, KC_F) ,   LSFT_T(KC_G),                               RSFT_T(KC_H),  KC_J ,  KC_K ,   KC_L ,  KC_SCLN, CTL_QUOT,
-     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , OSM(MOD_LSFT),  HYPR(KC_5),     MACLOCK, KC_ESC  , KC_N,          KC_M ,  KC_COMM, KC_DOT ,KC_SLSH, KC_RSFT,
-                                KC_LEFT , KC_RIGHT, KC_LGUI, KC_BSPC , KC_LALT,     KC_TAB    , KC_ENT , LT(_SYMBOLS, KC_SPC), KC_UP, KC_DOWN,
+     KC_LSFT , KC_Z ,  KC_X   ,  KC_C  ,   KC_V ,   KC_B , OSM(MOD_LSFT),  HYPR(KC_5),     MACLOCK, KC_ESC , KC_N,          KC_M ,  KC_COMM, KC_DOT ,KC_SLSH, KC_RSFT,
+                                KC_LEFT , KC_RIGHT, KC_LGUI, KC_BSPC , LALT_T(KC_TAB),    RALT_T(KC_TAB) , KC_ENT , LT(_SYMBOLS, KC_SPC),  KC_UP,   KC_DOWN,
      KC_MUTE, KC_NO,  KC_NO, KC_NO, KC_NO,                                                                KC_MUTE, KC_NO, KC_NO, KC_NO, KC_NO
     ),
 
@@ -66,7 +66,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   * `-----------------------------------'                                              `-----------------------------------'
   */
      [_SYMBOLS] = LAYOUT_split_3x6_5_hlc(
-       _______, KC_EXCLAIM,   KC_AT,        KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE, KC_PIPE,                                      KC_F1,         KC_F2,   KC_VOLU, KC_VOLD,   KC_ASTERISK, _______,
+       _______, KC_EXCLAIM,   KC_AT,        KC_LEFT_CURLY_BRACE, KC_RIGHT_CURLY_BRACE, KC_PIPE,                                      KC_F1,         KC_F2,   KC_VOLU, KC_VOLD,   KC_ASTERISK, KC_MUTE,
        BROWSER_NEWTAB, KC_AMPERSAND, KC_DOLLAR,    KC_LEFT_PAREN,       KC_RIGHT_PAREN,       KC_GRAVE,                                     KC_LEFT,       KC_DOWN, KC_UP,   KC_RIGHT,  KC_PLUS, _______,
        _______, KC_HASH,      KC_CIRCUMFLEX,KC_LBRC,             KC_RBRC,              KC_TILDE,_______, _______,  _______, _______, KC_UNDERSCORE, KC_MINUS,KC_EQUAL,KC_PERCENT,_______, _______,
                                   _______, _______, BROWSER_PREVTAB, BROWSER_NEXTTAB, BROWSER_CLOSETTAB, _______, _______, _______, _______, _______,
