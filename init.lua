@@ -291,7 +291,6 @@ require("lazy").setup({
   ---@type snacks.Config
   opts = {
     bigfile = { enabled = true },
-    input = { enabled = true },
     notifier = {
       enabled = true,
       timeout = 3000,
@@ -305,7 +304,7 @@ require("lazy").setup({
     { "<C-n>", function() Snacks.explorer() end, desc = "File Explorer" },
     -- find
     { "<C-p>", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
-    { "<C-r>", function() Snacks.picker.recent() end, desc = "Recent" },
+    -- { "<C-r>", function() Snacks.picker.recent() end, desc = "Recent" },
     { "<C-g>", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" }
   }
   },
