@@ -312,11 +312,23 @@ require("lazy").setup({
 
     config = function()
       require('telescope').setup {
+        defaults = {
+          layout_strategy = 'center',
+          sorting_strategy = "ascending",
+          layout_config = {
+            prompt_position = "top"  -- search bar at the top
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
         },
+        picker = {
+          find_files = {
+            theme = "dropdown",
+          }
+        }
       }
 
       -- Enable Telescope extensions if they are installed
