@@ -496,6 +496,8 @@ require("lazy").setup({
             comparators = {
                 compare.offset,
                 compare.exact,
+                compare.score,
+                compare.locality,
                 function(entry1, entry2) -- sort by length ignoring "=~"
                     local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
                     local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
@@ -511,7 +513,6 @@ require("lazy").setup({
                         return kind1 - kind2 < 0
                     end
                 end,
-                compare.score,
                 require("cmp-under-comparator").under,
                 compare.kind,
             },
