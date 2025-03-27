@@ -6,10 +6,10 @@
       // ", space": "buffer_search::Dismiss",
 
       // put key-bindings here if you want them to work in normal & visual mode
-      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"],
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown",
       "ctrl-w z": "workspace::ToggleZoom",
       "ctrl-w t": "terminal_panel::ToggleFocus",
       "g c c": "editor::ToggleComments",
@@ -18,20 +18,10 @@
       "g a": "editor::ToggleCodeActions",
       "ctrl-g": "outline::Toggle",
       "ctrl-shift-g": "go_to_line::Toggle",
-      ", g b": "editor::ToggleGitBlame",
+      ", g b": "git::Blame",
       "ctrl-p": "file_finder::Toggle",
-      "j": [
-        "vim::Down",
-        {
-          "displayLines": true
-        }
-      ],
-      "k": [
-        "vim::Up",
-        {
-          "displayLines": true
-        }
-      ],
+      "j": ["vim::Down", { "display_lines": true }],
+      "k": ["vim::Up", { "display_lines": true }],
       "space": "editor::SelectLargerSyntaxNode",
       "backspace": "editor::SelectSmallerSyntaxNode",
       // filetree
@@ -45,7 +35,7 @@
       ", v": "editor::GoToDefinitionSplit",
       "g r": "editor::FindAllReferences",
       "ctrl-n": "editor::GoToDiagnostic",
-      "ctrl-m": "editor::GoToPrevDiagnostic"
+      "ctrl-m": "editor::GoToPreviousDiagnostic"
     }
   },
   {
@@ -59,18 +49,18 @@
     "context": "Editor && showing_completions",
     "bindings": {
       "enter": "editor::ConfirmCompletion",
-      "shift-tab": "editor::ContextMenuPrev",
+      "shift-tab": "editor::ContextMenuPrevious",
       "tab": "editor::ContextMenuNext",
       "g g": "editor::ContextMenuFirst",
       "shift-G": "editor::ContextMenuLast"
     }
   },
   {
-    "context": "Editor && mode == full && inline_completion",
+    "context": "Editor && mode == full && edit_prediction",
     "bindings": {
-      "tab": "editor::NextInlineCompletion",
-      "shift-tab": "editor::PreviousInlineCompletion",
-      "enter": "editor::AcceptPartialInlineCompletion"
+      "tab": "editor::NextEditPrediction",
+      "shift-tab": "editor::PreviousEditPrediction",
+      "enter": "editor::AcceptPartialEditPrediction"
     }
   },
   {
@@ -80,7 +70,7 @@
       "j j": "vim::NormalBefore",
       "j k": "vim::NormalBefore",
       "tab": "menu::SelectNext",
-      "shift-tab": "menu::SelectPrev"
+      "shift-tab": "menu::SelectPrevious"
     }
   },
   {
@@ -113,10 +103,10 @@
   {
     "context": "Dock",
     "bindings": {
-      "ctrl-h": ["workspace::ActivatePaneInDirection", "Left"],
-      "ctrl-l": ["workspace::ActivatePaneInDirection", "Right"],
-      "ctrl-k": ["workspace::ActivatePaneInDirection", "Up"],
-      "ctrl-j": ["workspace::ActivatePaneInDirection", "Down"]
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   {

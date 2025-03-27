@@ -12,6 +12,11 @@
     "light": "Gruvbox Light",
     "dark": "Gruvbox Dark Hard"
   },
+  "auto_install_extensions": {
+    "html": true,
+    "make": true,
+    "dockerfile": true
+  },
   "features": {
     "copilot": false
   },
@@ -20,8 +25,10 @@
   "scrollbar": {
     "show": "never"
   },
-  "ui_font_size": 14,
+  "ui_font_size": 15,
   "ui_font_family": "TX-02",
+
+  // font used to render text in the editor
   "buffer_font_size": 14,
   "buffer_font_family": "TX-02",
   "buffer_line_height": {
