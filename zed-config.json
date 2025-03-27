@@ -17,6 +17,7 @@
     "make": true,
     "dockerfile": true
   },
+  "soft_wrap": "editor_width",
   "features": {
     "copilot": false
   },
