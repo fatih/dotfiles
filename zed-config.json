@@ -21,9 +21,9 @@
     "show": "never"
   },
   "ui_font_size": 14,
-  "ui_font_family": "Berkeley Mono",
+  "ui_font_family": "TX-02",
   "buffer_font_size": 14,
-  "buffer_font_family": "Berkeley Mono",
+  "buffer_font_family": "TX-02",
   "buffer_line_height": {
     "custom": 1.25
   },
@@ -55,7 +55,7 @@
   },
   "terminal": {
     "font_size": 14,
-    "font_family": "Berkeley Mono",
+    "font_family": "TX-02",
     "line_height": {
       "custom": 1.25
     }
