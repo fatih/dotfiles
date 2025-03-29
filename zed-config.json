@@ -19,6 +19,7 @@
   },
   "soft_wrap": "editor_width",
   "features": {
+    "edit_prediction_provider": "zed",
     "copilot": false
   },
   "cursor_blink": false,
