@@ -33,6 +33,7 @@
 enum {
     TD_3,
     TD_MUTE,
+    TD_GRAVE,
 };
 
 // Tap Dance definitions
@@ -40,13 +41,16 @@ tap_dance_action_t tap_dance_actions[] = {
     // Tap once for 3, twice for CMD + SHIFT + 3
     [TD_3] = ACTION_TAP_DANCE_DOUBLE(KC_3, LSG(KC_3)),
 
-    // Tap once for mute twice for ESC
-    [TD_MUTE] = ACTION_TAP_DANCE_DOUBLE(KC_MUTE, KC_ESC),
+    // Tap once for ESC twice for mute
+    [TD_MUTE] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_MUTE),
+
+    // Tap once for ESC twice for mute
+    [TD_GRAVE] = ACTION_TAP_DANCE_DOUBLE(KC_ESC, KC_GRAVE),
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [0] = LAYOUT_65_ansi_blocker( /* Base */
-    KC_GRAVE     , KC_1    , KC_2    , TD(TD_3), KC_4   , KC_5  , KC_6   , KC_7   , KC_8    , KC_9    , KC_0       , KC_MINS         , KC_EQL , KC_BSPC, TD(TD_MUTE),
+    TD(TD_GRAVE) , KC_1    , KC_2    , TD(TD_3), KC_4   , KC_5  , KC_6   , KC_7   , KC_8    , KC_9    , KC_0       , KC_MINS         , KC_EQL , KC_BSPC, TD(TD_MUTE),
     KC_TAB       , KC_Q    , KC_W    , KC_E    , KC_R   , KC_T  , KC_Y   , KC_U   , KC_I    , KC_O    , KC_P       , KC_LBRC         , KC_RBRC, KC_BSLS, KC_VOLU,
     KC_LCTL      , KC_A    , KC_S    , KC_D    , KC_F   , KC_G  , KC_H   , KC_J   , KC_K    , KC_L    , KC_SCLN    , RCTL_T(KC_QUOT) , KC_ENT , KC_VOLD,
     OSM(MOD_LSFT), KC_Z    , KC_X    , KC_C    , KC_V   , KC_B  , KC_N   , KC_M   , KC_COMM , KC_DOT  , KC_SLSH    , OSM(MOD_RSFT)   , KC_UP  , MACLOCK ,
@@ -58,7 +62,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS , KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, DT_UP  , DT_DOWN, DT_PRNT, KC_VOLU,
     KC_TRNS , KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_UP  , KC_RGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_VOLD,
     KC_TRNS , KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_BSPC, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, QK_BOOT,
-    KC_TRNS , KC_TRNS, KC_TRNS,                            KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS 
+    KC_TRNS , KC_TRNS, KC_TRNS,                            KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS
 )
+
 
 };
