@@ -19,13 +19,14 @@
       "ctrl-g": "outline::Toggle",
       "ctrl-shift-g": "go_to_line::Toggle",
       ", g b": "git::Blame",
+      ", g g": "git_panel::ToggleFocus",
       "ctrl-p": "file_finder::Toggle",
       "j": ["vim::Down", { "display_lines": true }],
       "k": ["vim::Up", { "display_lines": true }],
       "space": "editor::SelectLargerSyntaxNode",
       "backspace": "editor::SelectSmallerSyntaxNode",
       // filetree
-      ", n": "workspace::ToggleLeftDock"
+      ", n": "project_panel::ToggleFocus"
     }
   },
   {
