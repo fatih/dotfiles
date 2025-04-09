@@ -1,11 +1,28 @@
 [
   {
+    // root context, put key-bindings here that should work globally and you're
+    // sure there are no other conflicting keybindings
+    "context": "Workspace",
+    "bindings": {
+      ", b": ["task::Spawn", { "task_name": "Go Build" }],
+      ", t": ["task::Spawn", { "task_name": "Go Test" }],
+      ", a": ["task::Spawn", { "task_name": "Go Alternative" }],
+      "cmd-ctrl-b": "git_panel::ToggleFocus",
+      "cmd-ctrl-n": "project_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-ctrl-b": "git_panel::ToggleFocus",
+      "cmd-ctrl-n": "project_panel::ToggleFocus"
+    }
+  },
+  {
     "context": "Editor && VimControl && !VimWaiting && !menu",
     "bindings": {
-      // doesn't work, check why
-      // ", space": "buffer_search::Dismiss",
-
       // put key-bindings here if you want them to work in normal & visual mode
+      ", space": "buffer_search::Dismiss",
       "ctrl-h": "workspace::ActivatePaneLeft",
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
@@ -17,16 +34,17 @@
       "g shift-r": "editor::FindAllReferences",
       "g a": "editor::ToggleCodeActions",
       "ctrl-g": "outline::Toggle",
-      "ctrl-shift-g": "go_to_line::Toggle",
       ", g b": "git::Blame",
-      ", g g": "git_panel::ToggleFocus",
       "ctrl-p": "file_finder::Toggle",
       "j": ["vim::Down", { "display_lines": true }],
       "k": ["vim::Up", { "display_lines": true }],
       "space": "editor::SelectLargerSyntaxNode",
       "backspace": "editor::SelectSmallerSyntaxNode",
       // filetree
-      ", n": "project_panel::ToggleFocus"
+      ", n": "project_panel::ToggleFocus",
+      // "ctrl-b": "git_panel::ToggleFocus",
+      // "ctrl-n": "project_panel::ToggleFocus",
+      "cmd-ctrl-n": "project_panel::ToggleFocus"
     }
   },
   {
@@ -35,6 +53,7 @@
       // put key-bindings here if you want them to work only in normal mode
       ", v": "editor::GoToDefinitionSplit",
       "g r": "editor::FindAllReferences",
+      // TODO fatih move them to be only called in diagnostic window
       "ctrl-n": "editor::GoToDiagnostic",
       "ctrl-m": "editor::GoToPreviousDiagnostic"
     }
@@ -98,7 +117,17 @@
     "context": "Terminal",
     "bindings": {
       "ctrl-w t": "workspace::ToggleZoom",
-      "ctrl-u": "terminal::Clear"
+      "ctrl-u": "terminal::Clear",
+      "ctrl-l": ["terminal::SendKeystroke", "ctrl-l"]
+    }
+  },
+  {
+    "context": "Editor && CommitEditor",
+    "bindings": {
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-l": "workspace::ActivatePaneRight",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-j": "workspace::ActivatePaneDown"
     }
   },
   {
@@ -108,13 +137,6 @@
       "ctrl-l": "workspace::ActivatePaneRight",
       "ctrl-k": "workspace::ActivatePaneUp",
       "ctrl-j": "workspace::ActivatePaneDown"
-    }
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      ", b": ["task::Spawn", { "task_name": "Go Build" }],
-      ", a": ["task::Spawn", { "task_name": "Go Alternative" }]
     }
   }
 ]
