@@ -8,6 +8,8 @@
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
   "assistant": {
+    "default_profile": "write",
+    "always_allow_tool_actions": true,
     "default_model": {
       "provider": "anthropic",
       "model": "claude-3-7-sonnet-latest"
@@ -16,7 +18,7 @@
   },
   "theme": {
     "mode": "system",
-    "light": "Gruvbox Light",
+    "light": "Gruvbox Light Hard",
     "dark": "Gruvbox Dark Hard"
   },
   "auto_install_extensions": {
