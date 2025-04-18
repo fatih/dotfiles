@@ -1,6 +1,3 @@
-import = ["/Users/fatih/.config/alacritty/themes/alacritty-gruvbox-light.toml"]
-live_config_reload = true
-
 [bell]
 animation = "EaseOutExpo"
 duration = 0
@@ -725,7 +722,7 @@ multiplier = 3
 save_to_clipboard = true
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
-[shell]
+[terminal.shell]
 args = ["new-session", "-A", "-D", "-s", "main"]
 program = "/opt/homebrew/bin/tmux"
 
@@ -742,3 +739,9 @@ lines = 48
 [window.padding]
 x = 2
 y = 2
+
+[general]
+live_config_reload = true
+import = ["/Users/fatih/.config/alacritty/themes/alacritty-gruvbox-light.toml"]
+
+[terminal]

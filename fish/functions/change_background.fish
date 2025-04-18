@@ -19,16 +19,6 @@ function change_background --argument mode_setting
     end
   end
 
-  # change neovim
-  for addr in (/opt/homebrew/bin/nvr --serverlist)
-    switch $mode
-      case dark
-        /opt/homebrew/bin/nvr --servername "$addr" -c "set background=dark"
-      case light
-        /opt/homebrew/bin/nvr --servername "$addr" -c "set background=light"
-    end
-  end
-
   # change tmux
   switch $mode
     case dark
