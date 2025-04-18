@@ -21,22 +21,6 @@ size = 15.0
 [font.normal]
 family = "TX-02"
 
-# [font.bold]
-# family = "BerkeleyMono Nerd Font Mono"
-# style = "Bold"
-#
-# [font.glyph_offset]
-# x = 0
-# y = 0
-#
-# [font.italic]
-# family = "BerkeleyMono Nerd Font Mono"
-# style = "Italic"
-#
-# [font.normal]
-# family = "BerkeleyMono Nerd Font Mono"
-# style = "Regular"
-
 [font.offset]
 x = 0
 y = 0
