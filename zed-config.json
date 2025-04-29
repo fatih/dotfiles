@@ -31,6 +31,7 @@
     "edit_prediction_provider": "zed",
     "copilot": false
   },
+  "bottom_dock_layout": "right_aligned",
   "cursor_blink": false,
   "tab_size": 2,
   "scrollbar": {

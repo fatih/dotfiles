@@ -634,6 +634,9 @@ vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', 'jk', '<ESC>')
 
+-- Copy current filepath to system clipboard
+vim.keymap.set('n', '<Leader>e', ":let @+ = expand('%:p')<CR>", { silent = true })
+
 -- Remove search highlight
 vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
 
@@ -650,6 +653,8 @@ local function stay_star()
   vim.fn.winrestview(sview)
 end
 vim.keymap.set('n', '*', stay_star, {noremap = true, silent = true})
+
+
 
 -- We don't need this keymap, but here we are. If I do a ctrl-v and select
 -- lines vertically, insert stuff, they get lost for all lines if we use
@@ -680,6 +685,7 @@ vim.keymap.set('n', 'Y', 'y$')
 -- we don't use netrw (because of nvim-tree), hence re-implement gx to open
 -- links in browser
 vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>')
+
 
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
