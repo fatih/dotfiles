@@ -28,6 +28,12 @@ vim
 defaults -currentHost write -g AppleFontSmoothing -int 0
 ```
 
+## Keyboards
+
+# Configuring Kinesis Advantage 360 Pro
+
+Follow instructions in https://github.com/fatih/Adv360-Pro-ZMK
+
 # Configuring MoErgo Glove80 Keyboard
 
 See `zmk/readme.md`
