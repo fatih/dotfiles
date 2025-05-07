@@ -13,9 +13,9 @@
       "proxy": null,
       "proxy_no_verify": null
     },
-    "enabled_in_assistant": false
+    "enabled_in_text_threads": false
   },
-  "assistant": {
+  "agent": {
     "default_profile": "write",
     "always_allow_tool_actions": true,
     "default_model": {
