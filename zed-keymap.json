@@ -85,10 +85,14 @@
   },
   {
     "context": "Editor && showing_completions",
+    "use_key_equivalents": true,
     "bindings": {
       "enter": "editor::ConfirmCompletion",
-      "shift-tab": "editor::ContextMenuPrevious",
+      "shift-enter": "editor::Newline",
+      "j j": "vim::NormalBefore",
+      "j k": "vim::NormalBefore",
       "tab": "editor::ContextMenuNext",
+      "shift-tab": "editor::ContextMenuPrevious",
       "g g": "editor::ContextMenuFirst",
       "shift-G": "editor::ContextMenuLast"
     }

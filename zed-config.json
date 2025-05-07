@@ -24,6 +24,13 @@
     },
     "version": "2"
   },
+  "chat_panel": {
+    "button": "never"
+  },
+  "notification_panel": {
+    "dock": "left",
+    "button": false
+  },
   "theme": {
     "mode": "system",
     "light": "Gruvbox Light Hard",
@@ -81,6 +88,7 @@
     }
   },
   "terminal": {
+    "dock": "right",
     "font_size": 14,
     "font_family": "TX-02",
     "line_height": {
