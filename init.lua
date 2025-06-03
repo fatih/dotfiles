@@ -634,8 +634,17 @@ vim.keymap.set('n', 'k', 'gk')
 vim.keymap.set('i', 'jj', '<ESC>')
 vim.keymap.set('i', 'jk', '<ESC>')
 
--- Copy current filepath to system clipboard
-vim.keymap.set('n', '<Leader>e', ":let @+ = expand('%:p')<CR>", { silent = true })
+-- Copy current filepath to system clipboard (relative to git root, fallback to absolute path)
+vim.keymap.set('n', '<Leader>e', function()
+  local filepath = vim.fn.expand('%:p')
+  local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
+  if vim.v.shell_error == 0 and git_root ~= '' then
+    local relative_path = filepath:gsub('^' .. git_root .. '/', '')
+    vim.fn.setreg('+', relative_path)
+  else
+    vim.fn.setreg('+', filepath)
+  end
+end, { silent = true })
 
 -- Remove search highlight
 vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
