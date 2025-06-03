@@ -639,7 +639,12 @@ vim.keymap.set('n', '<Leader>e', function()
   local filepath = vim.fn.expand('%:p')
   local git_root = vim.fn.system('git rev-parse --show-toplevel'):gsub('\n', '')
   if vim.v.shell_error == 0 and git_root ~= '' then
-    local relative_path = filepath:gsub('^' .. git_root .. '/', '')
+    -- Ensure git_root ends with slash for proper matching
+    local git_root_pattern = git_root:gsub('([%^%$%(%)%%%.%[%]%*%+%-%?])', '%%%1')
+    if not git_root_pattern:match('/$') then
+      git_root_pattern = git_root_pattern .. '/'
+    end
+    local relative_path = filepath:gsub('^' .. git_root_pattern, '')
     vim.fn.setreg('+', relative_path)
   else
     vim.fn.setreg('+', filepath)
