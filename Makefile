@@ -32,11 +32,10 @@ clean:
 	rm -f ~/.config/alacritty/themes/alacritty-gruvbox-dark.toml
 	rm -f ~/.config/alacritty/themes/alacritty-gruvbox-light.toml
 	rm -f ~/.config/fish/config.fish
-	rm -f ~/.config/fish/functions/
+	rm -rf ~/.config/fish/functions/
 	rm -f ~/.tmux.conf
 	rm -f ~/.tigrc
 	rm -f ~/.gitconfig
-	rm -f ~/.agignore
 	rm -f ~/.agignore
 	rm -f ~/Library/LaunchAgents/io.arslan.dark-mode-notify.plist
 

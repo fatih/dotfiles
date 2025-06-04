@@ -39,10 +39,10 @@ function change_background --argument mode_setting
 
   # # change alacritty
   function alacritty-theme --argument mode_setting
-    pushd /Users/rubinette/Code/dotfiles
+    pushd "$HOME/Code/dotfiles"
 
     cp alacritty.toml alacritty.toml.backup
-    set -l path "/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml"
+    set -l path "$HOME/.config/alacritty/themes/alacritty-gruvbox-$mode_setting.toml"
     sed -i '' "/import/c\\
 import = [\"$path\"]
 " alacritty.toml.backup

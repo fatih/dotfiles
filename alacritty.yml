@@ -1,6 +1,6 @@
 # Configuration for Alacritty, the GPU enhanced terminal emulator
 import:
-  - "/Users/rubinette/.config/alacritty/color.yml"
+  - "~/.config/alacritty/color.yml"
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables

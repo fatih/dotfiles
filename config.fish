@@ -41,4 +41,4 @@ set -g fish_user_paths "/usr/homebrew/opt/mysql-client/bin" $fish_user_paths
 
 
 # Created by `pipx` on 2024-08-08 06:55:22
-set PATH $PATH /Users/rubinette/.local/bin
+set PATH $PATH "$HOME/.local/bin"

@@ -1,6 +1,6 @@
 [general]
 live_config_reload = true
-import = ["/Users/rubinette/.config/alacritty/themes/alacritty-gruvbox-dark.toml"]
+import = ["~/.config/alacritty/themes/alacritty-gruvbox-dark.toml"]
 
 [bell]
 animation = "EaseOutExpo"
