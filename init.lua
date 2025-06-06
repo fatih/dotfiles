@@ -11,18 +11,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- ChangeBackground changes the background mode based on macOS's `Appearance
--- setting. 
-local function change_background()
-  local m = vim.fn.system("defaults read -g AppleInterfaceStyle")
-  m = m:gsub("%s+", "") -- trim whitespace
-  if m == "Dark" then
-    vim.o.background = "dark" 
-  else
-    vim.o.background = "light" 
-  end
-end
-
 -- run :GoBuild or :GoTestCompile based on the go file
 local function build_go_files()
   if vim.endswith(vim.api.nvim_buf_get_name(0), "_test.go") then
@@ -42,11 +30,18 @@ require("lazy").setup({
     "ellisonleao/gruvbox.nvim", 
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function ()
-      change_background()
       require("gruvbox").setup({
         contrast = "hard"
       })
       vim.cmd([[colorscheme gruvbox]])
+    end,
+  },
+
+  -- automatic dark mode
+  { 
+    "cormacrelf/dark-notify",
+    config = function ()
+      require("dark_notify").run()
     end,
   },
 
