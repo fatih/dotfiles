@@ -38,6 +38,7 @@ require("lazy").setup({
   },
 
   -- automatic dark mode
+  -- requires: brew install cormacrelf/tap/dark-notify
   { 
     "cormacrelf/dark-notify",
     config = function ()

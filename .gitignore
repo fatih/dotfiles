@@ -1,5 +1,6 @@
 terraform.tfstate*
 .terraform
+.claude
 
 o.fish
 s.fish
