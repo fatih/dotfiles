@@ -45,3 +45,7 @@ See `qmk/advantage-2/readme.md`
 # Configuring Mode Encore Series
 
 See `qmk/mode-encore/readme.md`
+
+# Configuring Halcyon Elora
+
+See `qmk/halcyon-elora/readme.md`
