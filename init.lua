@@ -666,6 +666,12 @@ vim.keymap.set('', '<C-k>', '<C-W>k')
 vim.keymap.set('', '<C-h>', '<C-W>h')
 vim.keymap.set('', '<C-l>', '<C-W>l')
 
+-- Terminal mode window switching
+vim.keymap.set('t', '<C-h>', '<C-\\><C-N><C-w>h')
+vim.keymap.set('t', '<C-j>', '<C-\\><C-N><C-w>j')
+vim.keymap.set('t', '<C-k>', '<C-\\><C-N><C-w>k')
+vim.keymap.set('t', '<C-l>', '<C-\\><C-N><C-w>l')
+
 -- Visual linewise up and down by default (and use gj gk to go quicker)
 vim.keymap.set('n', '<Up>', 'gk')
 vim.keymap.set('n', '<Down>', 'gj')
