@@ -25,6 +25,14 @@ local noop_session_active = false
 
 local noop_terminal_provider = {
   setup = function(config)
+    -- Change to git root directory first
+    local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+    if vim.v.shell_error == 0 and git_root ~= "" then
+      vim.cmd("cd " .. git_root)
+    end
+  end,
+
+  open = function(cmd_string, env_table, effective_config, focus)
     -- Clean up existing Claude Code websocket servers (Neovim processes only)
     local claude_dir = vim.fn.expand("~/.claude/ide")
     if vim.fn.isdirectory(claude_dir) == 1 then
@@ -41,15 +49,7 @@ local noop_terminal_provider = {
         end
       end
     end
-    
-    -- Change to git root directory first
-    local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
-    if vim.v.shell_error == 0 and git_root ~= "" then
-      vim.cmd("cd " .. git_root)
-    end
-  end,
 
-  open = function(cmd_string, env_table, effective_config, focus)
     -- Mark session as active when opening
     noop_session_active = true
     print("ClaudeCode session started")
@@ -374,6 +374,14 @@ require("lazy").setup({
 
   {
     "coder/claudecode.nvim",
+    config = function() 
+      require("claudecode").setup({
+        terminal = {
+          provider = noop_terminal_provider,
+        },
+      })
+    end,
+    lazy = false,
     opts = {
       terminal_cmd = "/Users/fatih/.local/bin/claude",
     },
@@ -404,14 +412,7 @@ require("lazy").setup({
       },
       { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
       { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-    },
-    config = function() 
-      require("claudecode").setup({
-        terminal = {
-          provider = noop_terminal_provider,
-        },
-      })
-    end
+    }
   },
 
   -- { -- Fuzzy Finder (files, lsp, etc)
@@ -866,7 +867,8 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 
 -- ClaudeCode mapping
-vim.keymap.set({'n'}, '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
 
 -- The cleanup and git root logic is now handled in the open function above
 
