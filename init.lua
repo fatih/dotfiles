@@ -43,7 +43,10 @@ local noop_terminal_provider = {
   simple_toggle = function(cmd_string, env_table, effective_config)
     -- Check if already active and print message
     if noop_session_active then
-      print("ClaudeCode is already running")
+      print("ClaudeCode is already running, focusing")
+
+      -- Jump to the rightmost tmux pane (where Claude usually runs)
+      vim.fn.system("tmux select-pane -R")
       return
     end
     
