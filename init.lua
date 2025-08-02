@@ -374,7 +374,6 @@ require("lazy").setup({
 
   {
     "coder/claudecode.nvim",
-    dependencies = { "folke/snacks.nvim" },
     opts = {
       terminal_cmd = "/Users/fatih/.local/bin/claude",
     },
@@ -395,7 +394,7 @@ require("lazy").setup({
       { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
       { "<leader>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
       { "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-      { "<leader>cb", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+      { "<leader>ca", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
       { "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
       {
         "<leader>cs",
@@ -403,8 +402,8 @@ require("lazy").setup({
         desc = "Add file",
         ft = { "NvimTree", "neo-tree", "oil" },
       },
-      { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-      { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+      { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+      { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },
     config = function() 
       require("claudecode").setup({
@@ -414,27 +413,6 @@ require("lazy").setup({
       })
     end
   },
-
-  {
-    "pittcat/claude-fzf.nvim",
-    dependencies = {
-      "ibhagwan/fzf-lua",
-      "coder/claudecode.nvim"
-    },
-    opts = {
-      auto_context = true,
-      batch_size = 10,
-    },
-    cmd = { "ClaudeFzf", "ClaudeFzfFiles", "ClaudeFzfGrep", "ClaudeFzfBuffers", "ClaudeFzfGitFiles", "ClaudeFzfDirectory" },
-    keys = {
-      { "<leader>cf", "<cmd>ClaudeFzfFiles<cr>", desc = "Claude: Add files" },
-      { "<leader>cg", "<cmd>ClaudeFzfGrep<cr>", desc = "Claude: Search and add" },
-      { "<leader>cb", "<cmd>ClaudeFzfBuffers<cr>", desc = "Claude: Add buffers" },
-      { "<leader>cgf", "<cmd>ClaudeFzfGitFiles<cr>", desc = "Claude: Add Git files" },
-      { "<leader>cd", "<cmd>ClaudeFzfDirectory<cr>", desc = "Claude: Add directory files" },
-    },
-  },
-
 
   -- { -- Fuzzy Finder (files, lsp, etc)
   {
@@ -776,12 +754,14 @@ vim.keymap.set('i', 'jk', '<ESC>')
 -- Copy current filepath to system clipboard (relative to git root, fallback to absolute path)
 vim.keymap.set('n', '<Leader>e', function()
   local git_prefix = vim.fn.system('git rev-parse --show-prefix'):gsub('\n', '')
+  local path
   if vim.v.shell_error == 0 then
-    local relative_path = git_prefix .. vim.fn.expand('%')
-    vim.fn.setreg('+', relative_path)
+    path = git_prefix .. vim.fn.expand('%')
   else
-    vim.fn.setreg('+', vim.fn.expand('%:p'))
+    path = vim.fn.expand('%:p')
   end
+  vim.fn.setreg('+', path)
+  print('Copied to clipboard: ' .. path)
 end, { silent = true })
 
 -- Remove search highlight
@@ -886,7 +866,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 
 -- ClaudeCode mapping
-vim.keymap.set({'n', 'v'}, '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
+vim.keymap.set({'n'}, '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
 
 -- The cleanup and git root logic is now handled in the open function above
 
