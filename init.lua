@@ -20,6 +20,48 @@ local function build_go_files()
   end
 end
 
+local noop_terminal_provider = {
+  setup = function(config)
+    -- Do nothing - just store config if needed
+  end,
+
+  open = function(cmd_string, env_table, effective_config, focus)
+    -- Do nothing - no terminal to open
+  end,
+
+  close = function()
+    -- Do nothing - no terminal to close
+  end,
+
+  simple_toggle = function(cmd_string, env_table, effective_config)
+    -- Do nothing - no terminal to toggle
+  end,
+
+  focus_toggle = function(cmd_string, env_table, effective_config)
+    -- Do nothing - no terminal to focus/hide
+  end,
+
+  get_active_bufnr = function()
+    -- Return nil since there's no terminal buffer
+    return nil
+  end,
+
+  is_available = function()
+    -- Always available since it does nothing
+    return true
+  end,
+
+  -- Optional function
+  toggle = function(cmd_string, env_table, effective_config)
+    -- Do nothing - no terminal to toggle
+  end,
+
+  _get_terminal_for_test = function()
+    -- For testing only - return nil
+    return nil
+  end,
+}
+
 ----------------
 --- plugins ---
 ----------------
@@ -280,6 +322,7 @@ require("lazy").setup({
     end
   },
 
+
   {
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
@@ -298,7 +341,7 @@ require("lazy").setup({
     },
     keys = {
       { "<leader>c", nil, desc = "AI/Claude Code" },
-      { "<leader>cc", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+      { "<C-t>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
       { "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
       { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
       { "<leader>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
@@ -314,7 +357,35 @@ require("lazy").setup({
       { "<leader>ca", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
       { "<leader>cd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     },
+    config = function() 
+      require("claudecode").setup({
+        terminal = {
+          provider = noop_terminal_provider,
+        },
+      })
+    end
   },
+
+  {
+    "pittcat/claude-fzf.nvim",
+    dependencies = {
+      "ibhagwan/fzf-lua",
+      "coder/claudecode.nvim"
+    },
+    opts = {
+      auto_context = true,
+      batch_size = 10,
+    },
+    cmd = { "ClaudeFzf", "ClaudeFzfFiles", "ClaudeFzfGrep", "ClaudeFzfBuffers", "ClaudeFzfGitFiles", "ClaudeFzfDirectory" },
+    keys = {
+      { "<leader>cf", "<cmd>ClaudeFzfFiles<cr>", desc = "Claude: Add files" },
+      { "<leader>cg", "<cmd>ClaudeFzfGrep<cr>", desc = "Claude: Search and add" },
+      { "<leader>cb", "<cmd>ClaudeFzfBuffers<cr>", desc = "Claude: Add buffers" },
+      { "<leader>cgf", "<cmd>ClaudeFzfGitFiles<cr>", desc = "Claude: Add Git files" },
+      { "<leader>cd", "<cmd>ClaudeFzfDirectory<cr>", desc = "Claude: Add directory files" },
+    },
+  },
+
 
   -- { -- Fuzzy Finder (files, lsp, etc)
   {
@@ -761,6 +832,22 @@ vim.api.nvim_create_autocmd('Filetype', {
   group = vim.api.nvim_create_augroup('setIndent', { clear = true }),
   pattern = { 'go' },
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
+})
+
+
+-- see: https://github.com/coder/claudecode.nvim/issues/100
+vim.api.nvim_create_user_command("ClaudeCode", function(opts)
+  -- Change to git root directory
+  local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+  if vim.v.shell_error == 0 and git_root ~= "" then
+    vim.cmd("cd " .. git_root)
+  end
+
+  -- Call the original ClaudeCode command
+  require("claudecode.terminal").simple_toggle({}, opts.args)
+end, {
+  nargs = "*",
+  desc = "Toggle Claude Code terminal from git root"
 })
 
 
