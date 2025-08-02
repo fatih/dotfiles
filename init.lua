@@ -53,7 +53,9 @@ local noop_terminal_provider = {
   end,
 
   focus_toggle = function(cmd_string, env_table, effective_config)
-    -- Do nothing - no terminal to focus/hide
+    print("Focused on Claude")
+    -- Jump to the rightmost tmux pane (where Claude usually runs)
+    vim.fn.system("tmux select-pane -R")
   end,
 
   get_active_bufnr = function()
