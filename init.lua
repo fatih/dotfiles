@@ -837,6 +837,28 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 -- see: https://github.com/coder/claudecode.nvim/issues/100
 vim.api.nvim_create_user_command("ClaudeCode", function(opts)
+  -- Clean up any existing Claude Code websocket servers (Neovim processes only)
+  local claude_dir = vim.fn.expand("~/.claude/ide")
+  if vim.fn.isdirectory(claude_dir) == 1 then
+    local lock_files = vim.fn.glob(claude_dir .. "/*.lock", false, true)
+    for _, lock_file in ipairs(lock_files) do
+      local port = vim.fn.fnamemodify(lock_file, ":t:r")
+      -- Find processes listening on this port and filter for nvim processes
+      local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
+      if pids ~= "" then
+        for pid in pids:gmatch("%S+") do
+          local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
+          -- Only kill if it's a neovim process
+          if cmd:match("nvim") then
+            vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
+            -- Remove the lock file only if we killed the nvim process
+            vim.fn.delete(lock_file)
+          end
+        end
+      end
+    end
+  end
+
   -- Change to git root directory
   local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
   if vim.v.shell_error == 0 and git_root ~= "" then
