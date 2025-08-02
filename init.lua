@@ -20,21 +20,36 @@ local function build_go_files()
   end
 end
 
+-- Track session state globally for the noop provider
+local noop_session_active = false
+
 local noop_terminal_provider = {
   setup = function(config)
     -- Do nothing - just store config if needed
   end,
 
   open = function(cmd_string, env_table, effective_config, focus)
-    -- Do nothing - no terminal to open
+    -- Mark session as active when opening
+    noop_session_active = true
+    print("ClaudeCode session started")
   end,
 
   close = function()
-    -- Do nothing - no terminal to close
+    -- Mark session as inactive when closing
+    noop_session_active = false
+    print("ClaudeCode session closed")
   end,
 
   simple_toggle = function(cmd_string, env_table, effective_config)
-    -- Do nothing - no terminal to toggle
+    -- Check if already active and print message
+    if noop_session_active then
+      print("ClaudeCode is already running")
+      return
+    end
+    
+    -- Mark session as active when starting
+    noop_session_active = true
+    print("ClaudeCode session started")
   end,
 
   focus_toggle = function(cmd_string, env_table, effective_config)
@@ -53,7 +68,15 @@ local noop_terminal_provider = {
 
   -- Optional function
   toggle = function(cmd_string, env_table, effective_config)
-    -- Do nothing - no terminal to toggle
+    -- Check if already active and print message
+    if noop_session_active then
+      print("ClaudeCode is already running")
+      return
+    end
+    
+    -- Mark session as active when starting
+    noop_session_active = true
+    print("ClaudeCode session started")
   end,
 
   _get_terminal_for_test = function()
@@ -820,6 +843,7 @@ vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true
 vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
 
+
 -- vim-go
 vim.keymap.set('n', '<leader>b', build_go_files)
 vim.api.nvim_create_user_command("A", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'edit'})<CR>", {})
@@ -834,6 +858,9 @@ vim.api.nvim_create_autocmd('Filetype', {
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
 })
 
+
+-- ClaudeCode mapping
+vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
 
 -- see: https://github.com/coder/claudecode.nvim/issues/100
 vim.api.nvim_create_user_command("ClaudeCode", function(opts)
@@ -853,14 +880,14 @@ vim.api.nvim_create_user_command("ClaudeCode", function(opts)
       end
     end
   end
-
-  -- Change to git root directory
+  
+  -- Change to git root directory first
   local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
   if vim.v.shell_error == 0 and git_root ~= "" then
     vim.cmd("cd " .. git_root)
   end
 
-  -- Call the original ClaudeCode command
+  -- Call the original ClaudeCode command first
   require("claudecode.terminal").simple_toggle({}, opts.args)
 end, {
   nargs = "*",
