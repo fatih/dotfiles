@@ -25,7 +25,28 @@ local noop_session_active = false
 
 local noop_terminal_provider = {
   setup = function(config)
-    -- Do nothing - just store config if needed
+    -- Clean up existing Claude Code websocket servers (Neovim processes only)
+    local claude_dir = vim.fn.expand("~/.claude/ide")
+    if vim.fn.isdirectory(claude_dir) == 1 then
+      for _, lock_file in ipairs(vim.fn.glob(claude_dir .. "/*.lock", false, true)) do
+        local port = vim.fn.fnamemodify(lock_file, ":t:r")
+        local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
+        
+        for pid in pids:gmatch("%S+") do
+          local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
+          if cmd:match("nvim") then
+            vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
+            vim.fn.delete(lock_file)
+          end
+        end
+      end
+    end
+    
+    -- Change to git root directory first
+    local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+    if vim.v.shell_error == 0 and git_root ~= "" then
+      vim.cmd("cd " .. git_root)
+    end
   end,
 
   open = function(cmd_string, env_table, effective_config, focus)
@@ -865,39 +886,9 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 
 -- ClaudeCode mapping
-vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
+vim.keymap.set({'n', 'v'}, '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
 
--- see: https://github.com/coder/claudecode.nvim/issues/100
-vim.api.nvim_create_user_command("ClaudeCode", function(opts)
-  -- Clean up existing Claude Code websocket servers (Neovim processes only)
-  local claude_dir = vim.fn.expand("~/.claude/ide")
-  if vim.fn.isdirectory(claude_dir) == 1 then
-    for _, lock_file in ipairs(vim.fn.glob(claude_dir .. "/*.lock", false, true)) do
-      local port = vim.fn.fnamemodify(lock_file, ":t:r")
-      local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
-      
-      for pid in pids:gmatch("%S+") do
-        local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
-        if cmd:match("nvim") then
-          vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
-          vim.fn.delete(lock_file)
-        end
-      end
-    end
-  end
-  
-  -- Change to git root directory first
-  local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
-  if vim.v.shell_error == 0 and git_root ~= "" then
-    vim.cmd("cd " .. git_root)
-  end
-
-  -- Call the original ClaudeCode command first
-  require("claudecode.terminal").simple_toggle({}, opts.args)
-end, {
-  nargs = "*",
-  desc = "Toggle Claude Code terminal from git root"
-})
+-- The cleanup and git root logic is now handled in the open function above
 
 
 -- automatically resize all vim buffers if I resize the terminal window
