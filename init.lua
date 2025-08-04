@@ -30,29 +30,29 @@ local noop_terminal_provider = {
     if vim.v.shell_error == 0 and git_root ~= "" then
       vim.cmd("cd " .. git_root)
     end
+    print("ClaudeCode session configured")
   end,
 
   open = function(cmd_string, env_table, effective_config, focus)
-    -- Clean up existing Claude Code websocket servers (Neovim processes only)
-    local claude_dir = vim.fn.expand("~/.claude/ide")
-    if vim.fn.isdirectory(claude_dir) == 1 then
-      for _, lock_file in ipairs(vim.fn.glob(claude_dir .. "/*.lock", false, true)) do
-        local port = vim.fn.fnamemodify(lock_file, ":t:r")
-        local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
-        
-        for pid in pids:gmatch("%S+") do
-          local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
-          if cmd:match("nvim") then
-            vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
-            vim.fn.delete(lock_file)
-          end
-        end
-      end
-    end
+    -- -- Clean up existing Claude Code websocket servers (Neovim processes only)
+    -- local claude_dir = vim.fn.expand("~/.claude/ide")
+    -- if vim.fn.isdirectory(claude_dir) == 1 then
+    --   for _, lock_file in ipairs(vim.fn.glob(claude_dir .. "/*.lock", false, true)) do
+    --     local port = vim.fn.fnamemodify(lock_file, ":t:r")
+    --     local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
+    --     
+    --     for pid in pids:gmatch("%S+") do
+    --       local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
+    --       if cmd:match("nvim") then
+    --         vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
+    --         vim.fn.delete(lock_file)
+    --       end
+    --     end
+    --   end
+    -- end
 
     -- Mark session as active when opening
     noop_session_active = true
-    print("ClaudeCode session started")
   end,
 
   close = function()
@@ -432,6 +432,7 @@ require("lazy").setup({
           backdrop = 100,
           border = "single",
           preview = {
+            hidden = true,
             default = "bat",
             border = "rounded",
             title = false,
@@ -869,6 +870,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 -- ClaudeCode mapping
 vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
+vim.keymap.set({'n', 'v'}, '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
 
 -- The cleanup and git root logic is now handled in the open function above
 
