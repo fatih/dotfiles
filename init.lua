@@ -331,20 +331,6 @@ require("lazy").setup({
     end,
   },
 
-  -- markdown
-  {
-    "iamcco/markdown-preview.nvim",
-    dependencies = {
-      "zhaozg/vim-diagram",
-      "aklt/plantuml-syntax",
-    },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-    ft = "markdown",
-    cmd = { "MarkdownPreview" },
-  },
-
   -- commenting out lines
   {
     "numToStr/Comment.nvim",
@@ -413,6 +399,14 @@ require("lazy").setup({
       { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
       { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
     }
+  },
+
+  {
+      'brianhuster/live-preview.nvim',
+      dependencies = {
+        'ibhagwan/fzf-lua',
+  		  'folke/snacks.nvim',
+      },
   },
 
   -- { -- Fuzzy Finder (files, lsp, etc)
