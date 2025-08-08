@@ -1,0 +1,82 @@
+[
+  {
+    "key": ", w",
+    "command": "workbench.action.files.save",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": ", q",
+    "command": "workbench.action.closeActiveEditor",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "workbench.action.showNextError",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "workbench.action.showPreviousError",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": ", a",
+    "command": "workbench.actions.view.problems",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": ", space",
+    "command": "vim.remap",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+j",
+    "command": "workbench.action.navigateDown",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+k",
+    "command": "workbench.action.navigateUp",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+h",
+    "command": "workbench.action.navigateLeft",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "workbench.action.navigateRight",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": ", n",
+    "command": "workbench.view.explorer",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": ", f",
+    "command": "workbench.view.explorer",
+    "when": "vim.mode == 'Normal'"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "!terminalFocus"
+  },
+  {
+    "key": "j j",
+    "command": "vim.remap",
+    "when": "vim.mode == 'Insert'"
+  },
+  {
+    "key": "j k",
+    "command": "vim.remap",
+    "when": "vim.mode == 'Insert'"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "vim.remap",
+    "when": "vim.mode == 'Insert'"
+  }
+]

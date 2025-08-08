@@ -1,0 +1,49 @@
+{
+  "vim.useSystemClipboard": true,
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.ignorecase": true,
+  "vim.smartcase": true,
+  "vim.autoindent": true,
+  "vim.leader": ",",
+  "editor.wordWrap": "on",
+  "editor.lineNumbers": "on",
+  "editor.renderWhitespace": "boundary",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.autoIndent": "full",
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.fontFamily": "TX-02",
+  "editor.fontSize": 13,
+  "terminal.integrated.defaultProfile.osx": "fish",
+  "git.enableSmartCommit": true,
+  "git.confirmSync": false,
+  "search.useGlobalIgnoreFiles": true,
+  "search.useParentIgnoreFiles": true,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false,
+  "workbench.colorTheme": "Default Dark+",
+  "workbench.iconTheme": "vs-seti",
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.enablePreviewFromQuickOpen": false,
+  "extensions.autoUpdate": true,
+  "extensions.autoCheckUpdates": true,
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true,
+    "**/.git/**": true
+  },
+  "cursor.composer.textSizeScale": 1.15,
+  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "files.associations": {
+    "*.go": "go"
+  },
+  "[go]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.formatOnSave": true
+  }
+}
