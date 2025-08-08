@@ -65,16 +65,6 @@
     "when": "!terminalFocus"
   },
   {
-    "key": "j j",
-    "command": "vim.remap",
-    "when": "vim.mode == 'Insert'"
-  },
-  {
-    "key": "j k",
-    "command": "vim.remap",
-    "when": "vim.mode == 'Insert'"
-  },
-  {
     "key": "ctrl+c",
     "command": "vim.remap",
     "when": "vim.mode == 'Insert'"

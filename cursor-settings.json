@@ -6,6 +6,17 @@
   "vim.smartcase": true,
   "vim.autoindent": true,
   "vim.leader": ",",
+  "vim.normalModeKeyBindings": [
+    {
+      "before": [
+        ",",
+        "w"
+      ],
+      "commands": [
+        "workbench.action.files.save"
+      ]
+    }
+  ],
   "vim.insertModeKeyBindings": [
     {
       "before": [
@@ -58,5 +69,6 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "editor.formatOnSave": true
-  }
+  },
+  "workbench.settings.openDefaultKeybindings": true
 }
