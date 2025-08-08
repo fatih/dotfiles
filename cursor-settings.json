@@ -6,6 +6,17 @@
   "vim.smartcase": true,
   "vim.autoindent": true,
   "vim.leader": ",",
+  "vim.insertModeKeyBindings": [
+    {
+      "before": [
+        "j",
+        "j"
+      ],
+      "after": [
+        "<Esc>"
+      ]
+    }
+  ],
   "editor.wordWrap": "on",
   "editor.lineNumbers": "on",
   "editor.renderWhitespace": "boundary",
@@ -24,7 +35,9 @@
   "search.useParentIgnoreFiles": true,
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
-  "workbench.colorTheme": "Default Dark+",
+  "window.autoDetectColorScheme": true,
+  "workbench.preferredLightColorTheme": "Gruvbox Light Hard",
+  "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "workbench.iconTheme": "vs-seti",
   "workbench.editor.enablePreview": false,
   "workbench.editor.enablePreviewFromQuickOpen": false,
