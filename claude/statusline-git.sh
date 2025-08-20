@@ -6,6 +6,19 @@ input=$(cat)
 # Extract information from JSON
 model_name=$(echo "$input" | jq -r '.model.display_name')
 current_dir=$(echo "$input" | jq -r '.workspace.current_dir')
+# Extract cost information - it's a JSON object with total_cost_usd
+cost_data=$(echo "$input" | jq -r '.cost // .session_cost // empty')
+if [ -n "$cost_data" ] && [ "$cost_data" != "null" ] && [ "$cost_data" != "empty" ]; then
+    session_cost=$(echo "$cost_data" | jq -r '.total_cost_usd // empty' 2>/dev/null)
+    if [ -n "$session_cost" ] && [ "$session_cost" != "null" ] && [ "$session_cost" != "empty" ]; then
+        # Format to 4 decimal places
+        session_cost=$(printf "%.4f" "$session_cost" 2>/dev/null || echo "$session_cost")
+    else
+        session_cost=""
+    fi
+else
+    session_cost=""
+fi
 
 # Get directory name (basename)
 dir_name=$(basename "$current_dir")
@@ -51,5 +64,11 @@ else
     git_info=""
 fi
 
+# Add session cost if available
+cost_info=""
+if [ -n "$session_cost" ] && [ "$session_cost" != "null" ] && [ "$session_cost" != "empty" ]; then
+    cost_info=" ${GRAY}[\$$session_cost]${NC}"
+fi
+
 # Output the status line
-echo -e "${BLUE}${dir_name}${NC} ${CYAN}${model_name}${NC}${git_info}"
+echo -e "${BLUE}${dir_name}${NC} ${GRAY}|${NC} ${CYAN}${model_name}${NC}${git_info:+ ${GRAY}|${NC}}${git_info}${cost_info}"
