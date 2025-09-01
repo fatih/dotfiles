@@ -800,10 +800,6 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
--- we don't use netrw (because of nvim-tree), hence re-implement gx to open
--- links in browser
-vim.keymap.set("n", "gx", '<Cmd>call jobstart(["open", expand("<cfile>")], {"detach": v:true})<CR>')
-
 if vim.fn.getenv("TERM_PROGRAM") == "ghostty" then
   vim.opt.title = true
   vim.opt.titlestring = "%{getcwd()}/%{bufname()}"
