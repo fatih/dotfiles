@@ -463,26 +463,11 @@ require("lazy").setup({
   { 'Bilal2453/luvit-meta', lazy = true },
 
   {
-    -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for Neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
-      'williamboman/mason-lspconfig.nvim',
-      'WhoIsSethDaniel/mason-tool-installer.nvim',
-
-      -- Useful status updates for LSP.
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
-
-      -- Allows extra capabilities provided by nvim-cmp
-      'hrsh7th/cmp-nvim-lsp',
-    },
-    config = function()
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
-
-      local servers = {
+    dependencies = { 'saghen/blink.cmp' },
+  
+    opts = {
+      servers = {
         gopls = {
           capabilities = capabilities,
         },
@@ -496,186 +481,64 @@ require("lazy").setup({
           },
         },
       }
+    },
+    config = function(_, opts)
+      local lspconfig = require('lspconfig')
+      for server, config in pairs(opts.servers) do
+        -- passing config.capabilities to blink.cmp merges with the capabilities in your
+        -- `opts[server].capabilities, if you've defined it
+        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
+        lspconfig[server].setup(config)
+      end
 
-      -- Ensure the servers and tools above are installed
-      --  To check the current status of installed tools and/or manually install
-      --  other tools, you can run
-      --    :Mason
-      --
-      --  You can press `g?` for help in this menu.
-      require('mason').setup()
-
-      -- You can add other tools here that you want Mason to install
-      -- for you, so that they are available from within Neovim.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
-        'gofumpt', -- Used to format Lua code
-      })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
-    end,
-  },
-
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    config = function() 
-      require("luasnip.loaders.from_vscode").lazy_load()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      local lspconfig = require('lspconfig')
+  
+      lspconfig['lua_ls'].setup({ capabilities = capabilities })
     end
   },
 
+  { "rafamadriz/friendly-snippets" },
+
   -- autocompletion
   {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "onsails/lspkind-nvim",
-      "lukas-reineke/cmp-under-comparator",
+    'saghen/blink.cmp',
+    dependencies = { 'rafamadriz/friendly-snippets' },
+    version = '1.*',
+    opts = {
+      keymap = { 
+        preset = 'enter',
+        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+        ["<S-Tab>"] = { "select_next", "snippet_forward", "fallback" },
+      },
+      appearance = {
+        nerd_font_variant = 'mono'
+      },
+      completion = { 
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 100,
+        },
+        menu = {
+          border = 'rounded',
+          draw = {
+            treesitter = { 'lsp' },
+          },
+        },
+        list = {
+           selection = {
+             preselect = false,
+             auto_insert = true,
+          },
+        },
+      },
+      sources = {
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+      },
+      fuzzy = { implementation = "prefer_rust_with_warning" }
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-      local types = require("cmp.types")
-      local compare = require("cmp.config.compare")
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-
-      luasnip.config.setup {}
-
-      local modified_priority = {
-          [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-          [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-          [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-          [types.lsp.CompletionItemKind.Text] = 100, -- bottom
-      }
-
-      local function modified_kind(kind)
-          return modified_priority[kind] or kind
-      end
-
-
-      require('cmp').setup({
-        preselect = false,
-        completion = {
-            completeopt = "menu,menuone,preview,noselect",
-        },
-        snippet = {
-            expand = function(args)
-              luasnip.lsp_expand(args.body)
-            end,
-        },
-        formatting = {
-          format = lspkind.cmp_format {
-            with_text = true,
-            menu = {
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              nvim_lua = "[Lua]",
-            },
-          },
-        },
-
-        sorting = {
-            priority_weight = 1.0,
-            comparators = {
-                compare.offset,
-                compare.exact,
-                compare.score,
-                compare.locality,
-                function(entry1, entry2) -- sort by length ignoring "=~"
-                    local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-                    local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-                    if len1 ~= len2 then
-                        return len1 - len2 < 0
-                    end
-                end,
-                compare.recently_used,
-                function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-                    local kind1 = modified_kind(entry1:get_kind())
-                    local kind2 = modified_kind(entry2:get_kind())
-                    if kind1 ~= kind2 then
-                        return kind1 - kind2 < 0
-                    end
-                end,
-                require("cmp-under-comparator").under,
-                compare.kind,
-            },
-        },
-
-        matching = {
-           disallow_fuzzy_matching = true,
-           disallow_fullfuzzy_matching = true,
-           disallow_partial_fuzzy_matching = true,
-           disallow_partial_matching = false,
-           disallow_prefix_unmatching = true,
-        },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-          end, { 'i', 's' }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-             if cmp.visible() then
-                 cmp.select_prev_item()
-             elseif luasnip.jumpable(-1) then
-                 luasnip.jump(-1)
-             else
-                 fallback()
-             end
-          end, { "i", "s" }),
-
-        },
-        window = { documentation = cmp.config.window.bordered(), completion = cmp.config.window.bordered() },
-        view = {
-          entries = {
-            name = "custom",
-            selection_order = "near_cursor",
-          },
-        },
-        confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Insert,
-        },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = "luasnip", keyword_length = 2},
-          { name = "buffer", keyword_length = 5},
-        },
-        performance = {
-          max_view_entries = 20,
-        },
-      })
-    end,
+    opts_extend = { "sources.default" }
   },
-
-
 })
 
 ----------------
