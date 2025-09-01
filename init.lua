@@ -331,19 +331,6 @@ require("lazy").setup({
     end,
   },
 
-  -- commenting out lines
-  {
-    "numToStr/Comment.nvim",
-    config = function()
-      require('Comment').setup({
-        opleader = {
-          ---Block-comment keymap
-          block = '<Nop>',
-        },
-      }) 
-    end
-  },
-
   { 
     "AndrewRadev/splitjoin.vim"
   },
@@ -472,7 +459,9 @@ require("lazy").setup({
       },
     },
   },
+
   { 'Bilal2453/luvit-meta', lazy = true },
+
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
