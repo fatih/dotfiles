@@ -476,13 +476,15 @@ require("lazy").setup({
 
       'saghen/blink.cmp',
     },
-  
-    opts = {
-      servers = {
+    config = function()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
+
+      local servers = {
         gopls = {
           capabilities = capabilities,
         },
         lua_ls = {
+          capabilities = capabilities,
           settings = {
             Lua = {
               completion = {
@@ -492,20 +494,6 @@ require("lazy").setup({
           },
         },
       }
-    },
-    config = function(_, opts)
-      local lspconfig = require('lspconfig')
-      for server, config in pairs(opts.servers) do
-        -- passing config.capabilities to blink.cmp merges with the capabilities in your
-        -- `opts[server].capabilities, if you've defined it
-        config.capabilities = require('blink.cmp').get_lsp_capabilities(config.capabilities)
-        lspconfig[server].setup(config)
-      end
-
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
-      local lspconfig = require('lspconfig')
-  
-      lspconfig['lua_ls'].setup({ capabilities = capabilities })
 
       -- Ensure the servers and tools above are installed
       --  To check the current status of installed tools and/or manually install
@@ -842,7 +830,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
