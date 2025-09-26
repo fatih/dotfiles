@@ -756,6 +756,7 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 -- Amp mapping
 vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
+vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
 vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
 vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
 
@@ -775,15 +776,27 @@ end, {
 
 -- Open new scratch buffer for Amp prompts
 vim.api.nvim_create_user_command("AmpBuffer", function(opts)
+	local lines = {}
+	if opts.range > 0 then
+		-- Get lines from the provided range
+		lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+	end
+	
 	vim.cmd("vsplit")
 	local buf = vim.api.nvim_create_buf(false, true)
 	vim.api.nvim_win_set_buf(0, buf)
 	vim.bo[buf].buftype = "nofile"
 	vim.bo[buf].swapfile = false
 	vim.api.nvim_buf_set_name(buf, "amp-scratch")
+	
+	-- Populate buffer with selected lines
+	if #lines > 0 then
+		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	end
 end, {
 	nargs = 0,
 	desc = "Open scratch buffer for Amp prompts",
+	range = true,
 })
 
 -- Send entire buffer contents and close the buffer
@@ -927,4 +940,5 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
   end,
 })
+
 
