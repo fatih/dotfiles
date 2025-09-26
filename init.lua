@@ -778,21 +778,55 @@ end, {
 -- Open new scratch buffer for Amp prompts
 vim.api.nvim_create_user_command("AmpBuffer", function(opts)
 	local lines = {}
-	if opts.range > 0 then
-		-- Get lines from the provided range
+	-- Only get lines if we have a valid range
+	local has_range = (opts.range > 0) and (opts.line2 > 0) and (opts.line2 >= opts.line1)
+	if has_range then
 		lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
 	end
 	
-	vim.cmd("vsplit")
-	local buf = vim.api.nvim_create_buf(false, true)
-	vim.api.nvim_win_set_buf(0, buf)
-	vim.bo[buf].buftype = "nofile"
-	vim.bo[buf].swapfile = false
-	vim.api.nvim_buf_set_name(buf, "amp-scratch")
+	-- Check if amp-scratch buffer already exists
+	local existing_buf = nil
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.api.nvim_buf_is_valid(buf) then
+			local buf_name = vim.api.nvim_buf_get_name(buf)
+			if buf_name:match("amp%-scratch$") then
+				existing_buf = buf
+				break
+			end
+		end
+	end
 	
-	-- Populate buffer with selected lines
-	if #lines > 0 then
-		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+	if existing_buf then
+		-- Open existing buffer in a vertical split
+		vim.cmd("vsplit")
+		vim.api.nvim_win_set_buf(0, existing_buf)
+		
+		-- Only append new lines if we have a selection
+		if #lines > 0 then
+			local existing_lines = vim.api.nvim_buf_get_lines(existing_buf, 0, -1, false)
+			if #existing_lines > 0 and existing_lines[#existing_lines] ~= "" then
+				table.insert(existing_lines, "") -- Add blank line separator
+			end
+			for _, line in ipairs(lines) do
+				table.insert(existing_lines, line)
+			end
+			vim.api.nvim_buf_set_lines(existing_buf, 0, -1, false, existing_lines)
+		end
+		-- If no selection, just open the existing buffer without modifying it
+	else
+		-- Create new buffer
+		vim.cmd("vsplit")
+		local buf = vim.api.nvim_create_buf(false, true)
+		vim.api.nvim_win_set_buf(0, buf)
+		vim.bo[buf].buftype = "nofile"
+		vim.bo[buf].bufhidden = "hide"
+		vim.bo[buf].swapfile = false
+		vim.api.nvim_buf_set_name(buf, "amp-scratch")
+		
+		-- Populate buffer with selected lines
+		if #lines > 0 then
+			vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+		end
 	end
 end, {
 	nargs = 0,
