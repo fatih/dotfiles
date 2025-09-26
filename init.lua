@@ -780,6 +780,7 @@ vim.api.nvim_create_user_command("AmpBuffer", function(opts)
 	vim.api.nvim_win_set_buf(0, buf)
 	vim.bo[buf].buftype = "nofile"
 	vim.bo[buf].swapfile = false
+	vim.api.nvim_buf_set_name(buf, "amp-scratch")
 end, {
 	nargs = 0,
 	desc = "Open scratch buffer for Amp prompts",
@@ -791,12 +792,45 @@ vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
 	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 	local content = table.concat(lines, "\n")
 
-	local amp_message = require("amp.message")
-	amp_message.send_message(content)
+	-- Check if content is empty
+	if content:match("^%s*$") then
+		print("Buffer is empty, nothing to send")
+		return
+	end
 
-	-- Clear buffer contents and close it
-	vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
-	vim.api.nvim_buf_delete(buf, { force = true })
+	-- Check if Amp server is running
+	local amp = require("amp")
+	if not amp.state.server then
+		print("Amp server is not running - start it first with :AmpStart")
+		return
+	end
+
+	-- Check if there are actually connected clients
+	local server_status = amp.state.server.get_status and amp.state.server.get_status()
+	if not server_status or server_status.client_count == 0 then
+		print("No Amp clients connected")
+		return
+	end
+
+	-- Store buffer info before attempting send (failsafe)
+	local should_close_buffer = false
+	local amp_message = require("amp.message")
+	
+	-- Send message and check return value
+	local success = amp_message.send_message(content)
+	
+	if success then
+		should_close_buffer = true
+		print("Message sent to Amp")
+	else
+		print("Failed to send to Amp - connection failed")
+	end
+	
+	-- Only close buffer if we explicitly marked it as safe to close
+	if should_close_buffer then
+		vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
+		vim.api.nvim_buf_delete(buf, { force = true })
+	end
 end, {
 	nargs = "?",
 	desc = "Send current buffer contents to Amp",
