@@ -802,6 +802,14 @@ end, {
 -- Send entire buffer contents and close the buffer
 vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
 	local buf = vim.api.nvim_get_current_buf()
+	local buf_name = vim.api.nvim_buf_get_name(buf)
+	
+	-- Check if we're in an amp-scratch buffer
+	if not buf_name:match("amp%-scratch$") then
+		print("AmpSendBuffer can only be used in amp-scratch buffers")
+		return
+	end
+	
 	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 	local content = table.concat(lines, "\n")
 
