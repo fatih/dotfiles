@@ -338,9 +338,14 @@ require("lazy").setup({
   {
     "windwp/nvim-autopairs",
     config = function() 
-      require("nvim-autopairs").setup {
+      local npairs = require("nvim-autopairs")
+      npairs.setup {
         check_ts = true,
       }
+      
+      -- Remove backtick pairing
+      local Rule = require('nvim-autopairs.rule')
+      npairs.remove_rule('`')
     end
   },
 
