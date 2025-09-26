@@ -759,6 +759,7 @@ vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buf
 vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
 vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
 vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
+vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
 
 vim.api.nvim_create_user_command("AmpMessage", function(opts)
   local message = opts.args
@@ -855,6 +856,54 @@ vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
 end, {
 	nargs = "?",
 	desc = "Send current buffer contents to Amp",
+})
+
+-- Append selected lines to amp-scratch buffer in @filename#L12-46 format
+vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname == "" then
+    print("Current buffer has no filename")
+    return
+  end
+
+  local relative_path = vim.fn.fnamemodify(bufname, ":.")
+  local ref = "@" .. relative_path
+  if opts.line1 ~= opts.line2 then
+    ref = ref .. "#L" .. opts.line1 .. "-" .. opts.line2
+  elseif opts.line1 > 1 then
+    ref = ref .. "#L" .. opts.line1
+  end
+
+  -- Find amp-scratch buffer
+  local scratch_buf = nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    local buf_name = vim.api.nvim_buf_get_name(buf)
+    if buf_name:match("amp%-scratch$") then
+      scratch_buf = buf
+      break
+    end
+  end
+  
+  if not scratch_buf then
+    print("No amp-scratch buffer found")
+    return
+  end
+  
+  -- Get current lines in scratch buffer and append the reference to the last line
+  local scratch_lines = vim.api.nvim_buf_get_lines(scratch_buf, 0, -1, false)
+  if #scratch_lines == 0 then
+    -- Empty buffer, just add the reference
+    table.insert(scratch_lines, ref)
+  else
+    -- Append to the last line with a space
+    scratch_lines[#scratch_lines] = scratch_lines[#scratch_lines] .. " " .. ref
+  end
+  vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, scratch_lines)
+  
+  print("Appended " .. ref .. " to amp-scratch buffer")
+end, {
+  range = true,
+  desc = "Add file reference (with selection) to amp-scratch buffer",
 })
 
 -- The cleanup and git root logic is now handled in the open function above
