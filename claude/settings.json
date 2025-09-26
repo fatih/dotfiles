@@ -1,10 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
-  "feedbackSurveyState": {
-    "lastShownTime": 1754080232837
-  },
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-git.sh"
-  }
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1754080232837
+  },
+  "model": "opusplan"
 }
