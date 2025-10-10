@@ -109,7 +109,7 @@ end
 --     return nil
 --   end,
 -- }
-
+--
 ----------------
 --- plugins ---
 ----------------
@@ -750,16 +750,52 @@ vim.api.nvim_create_autocmd('Filetype', {
 })
 
 -- -- ClaudeCode mapping
--- vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
--- vim.keymap.set({'n', 'v'}, '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
+vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
+vim.keymap.set({'n', 'v'}, '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
 
 -- Amp mapping
 vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
 vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
-vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
+-- vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
+vim.keymap.set('v', '<leader>as', ":'<,'>AmpPromptRef<CR>", { desc = "Send selection to Prompt" })
 vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
 vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
+
+-- Add selected text directly to prompt
+vim.api.nvim_create_user_command("AmpPromptSelection", function(opts)
+  local lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+  local text = table.concat(lines, "\n")
+
+  local amp_message = require("amp.message")
+  amp_message.send_to_prompt(text)
+end, {
+  range = true,
+  desc = "Add selected text to Amp prompt",
+})
+
+-- Add file+selection reference to prompt
+vim.api.nvim_create_user_command("AmpPromptRef", function(opts)
+  local bufname = vim.api.nvim_buf_get_name(0)
+  if bufname == "" then
+    print("Current buffer has no filename")
+    return
+  end
+
+  local relative_path = vim.fn.fnamemodify(bufname, ":.")
+  local ref = "@" .. relative_path
+  if opts.line1 ~= opts.line2 then
+    ref = ref .. "#L" .. opts.line1 .. "-" .. opts.line2
+  elseif opts.line1 > 1 then
+    ref = ref .. "#L" .. opts.line1
+  end
+
+  local amp_message = require("amp.message")
+  amp_message.send_to_prompt(ref)
+end, {
+  range = true,
+  desc = "Add file reference (with selection) to Amp prompt",
+})
 
 vim.api.nvim_create_user_command("AmpMessage", function(opts)
   local message = opts.args
@@ -767,7 +803,7 @@ vim.api.nvim_create_user_command("AmpMessage", function(opts)
     print("Please provide a message to send")
     return
   end
-  
+
   local amp_message = require("amp.message")
   amp_message.send_message(message)
 end, {
@@ -783,7 +819,7 @@ vim.api.nvim_create_user_command("AmpBuffer", function(opts)
 	if has_range then
 		lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
 	end
-	
+
 	-- Check if amp-scratch buffer already exists
 	local existing_buf = nil
 	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
@@ -795,12 +831,12 @@ vim.api.nvim_create_user_command("AmpBuffer", function(opts)
 			end
 		end
 	end
-	
+
 	if existing_buf then
 		-- Open existing buffer in a vertical split
 		vim.cmd("vsplit")
 		vim.api.nvim_win_set_buf(0, existing_buf)
-		
+
 		-- Only append new lines if we have a selection
 		if #lines > 0 then
 			local existing_lines = vim.api.nvim_buf_get_lines(existing_buf, 0, -1, false)
@@ -822,7 +858,7 @@ vim.api.nvim_create_user_command("AmpBuffer", function(opts)
 		vim.bo[buf].bufhidden = "hide"
 		vim.bo[buf].swapfile = false
 		vim.api.nvim_buf_set_name(buf, "amp-scratch")
-		
+
 		-- Populate buffer with selected lines
 		if #lines > 0 then
 			vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
@@ -838,13 +874,13 @@ end, {
 vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
 	local buf = vim.api.nvim_get_current_buf()
 	local buf_name = vim.api.nvim_buf_get_name(buf)
-	
+
 	-- Check if we're in an amp-scratch buffer
 	if not buf_name:match("amp%-scratch$") then
 		print("AmpSendBuffer can only be used in amp-scratch buffers")
 		return
 	end
-	
+
 	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 	local content = table.concat(lines, "\n")
 
@@ -871,17 +907,17 @@ vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
 	-- Store buffer info before attempting send (failsafe)
 	local should_close_buffer = false
 	local amp_message = require("amp.message")
-	
+
 	-- Send message and check return value
 	local success = amp_message.send_message(content)
-	
+
 	if success then
 		should_close_buffer = true
 		print("Message sent to Amp")
 	else
 		print("Failed to send to Amp - connection failed")
 	end
-	
+
 	-- Only close buffer if we explicitly marked it as safe to close
 	if should_close_buffer then
 		vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
@@ -917,12 +953,12 @@ vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
       break
     end
   end
-  
+
   if not scratch_buf then
     print("No amp-scratch buffer found")
     return
   end
-  
+
   -- Get current lines in scratch buffer and append the reference to the last line
   local scratch_lines = vim.api.nvim_buf_get_lines(scratch_buf, 0, -1, false)
   if #scratch_lines == 0 then
@@ -933,14 +969,13 @@ vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
     scratch_lines[#scratch_lines] = scratch_lines[#scratch_lines] .. " " .. ref
   end
   vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, scratch_lines)
-  
+
   print("Appended " .. ref .. " to amp-scratch buffer")
 end, {
   range = true,
   desc = "Add file reference (with selection) to amp-scratch buffer",
 })
 
--- The cleanup and git root logic is now handled in the open function above
 
 
 -- automatically resize all vim buffers if I resize the terminal window
