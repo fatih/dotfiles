@@ -65,6 +65,11 @@
     "when": "!terminalFocus"
   },
   {
+    "key": "ctrl+t",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminalFocus"
+  },
+  {
     "key": "ctrl+c",
     "command": "vim.remap",
     "when": "vim.mode == 'Insert'"
