@@ -70,6 +70,11 @@
     "when": "terminalFocus"
   },
   {
+    "key": "cmd+w",
+    "command": "workbench.action.terminal.kill",
+    "when": "terminalFocus"
+  },
+  {
     "key": "ctrl+c",
     "command": "vim.remap",
     "when": "vim.mode == 'Insert'"
