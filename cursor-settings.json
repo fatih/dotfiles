@@ -30,7 +30,7 @@
   ],
   "editor.wordWrap": "on",
   "editor.lineNumbers": "on",
-  "editor.renderWhitespace": "boundary",
+  "editor.renderWhitespace": "none",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
@@ -48,7 +48,6 @@
   "explorer.confirmDragAndDrop": false,
   "window.autoDetectColorScheme": true,
   "workbench.preferredLightColorTheme": "Gruvbox Light Hard",
-  "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "workbench.iconTheme": "vs-seti",
   "workbench.editor.enablePreview": false,
   "workbench.editor.enablePreviewFromQuickOpen": false,
@@ -70,5 +69,7 @@
     "editor.insertSpaces": true,
     "editor.formatOnSave": true
   },
-  "workbench.settings.openDefaultKeybindings": true
+  "workbench.settings.openDefaultKeybindings": true,
+  "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
+  "editor.renderControlCharacters": false
 }

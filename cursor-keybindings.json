@@ -75,6 +75,18 @@
     "when": "terminalFocus"
   },
   {
+    "key": "ctrl+1",
+    "command": "workbench.view.explorer"
+  },
+  {
+    "key": "ctrl+2",
+    "command": "workbench.view.search"
+  },
+  {
+    "key": "ctrl+3",
+    "command": "workbench.view.scm"
+  },
+  {
     "key": "ctrl+c",
     "command": "vim.remap",
     "when": "vim.mode == 'Insert'"
