@@ -5,7 +5,7 @@
     "type": "command",
     "command": "bash ~/.claude/statusline-git.sh"
   },
-  "alwaysThinkingEnabled": false,
+  "alwaysThinkingEnabled": true,
   "feedbackSurveyState": {
     "lastShownTime": 1754080232837
   }

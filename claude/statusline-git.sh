@@ -6,6 +6,27 @@ input=$(cat)
 # Extract information from JSON
 model_name=$(echo "$input" | jq -r '.model.display_name')
 current_dir=$(echo "$input" | jq -r '.workspace.current_dir')
+
+# Extract context window information
+context_size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
+current_usage=$(echo "$input" | jq '.context_window.current_usage')
+
+# Calculate context percentage
+if [ "$current_usage" != "null" ]; then
+    current_tokens=$(echo "$current_usage" | jq '.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens')
+    context_percent=$((current_tokens * 100 / context_size))
+else
+    context_percent=0
+fi
+
+# Build context progress bar (20 chars wide)
+bar_width=15
+filled=$((context_percent * bar_width / 100))
+empty=$((bar_width - filled))
+bar=""
+for ((i=0; i<filled; i++)); do bar+="█"; done
+for ((i=0; i<empty; i++)); do bar+="░"; done
+
 # Extract cost information
 session_cost=$(echo "$input" | jq -r '.cost.total_cost_usd // empty')
 [ "$session_cost" != "empty" ] && session_cost=$(printf "%.4f" "$session_cost") || session_cost=""
@@ -60,5 +81,8 @@ if [ -n "$session_cost" ] && [ "$session_cost" != "null" ] && [ "$session_cost" 
     cost_info=" ${GRAY}[\$$session_cost]${NC}"
 fi
 
+# Build context bar display
+context_info="${GRAY}${bar}${NC} ${context_percent}%"
+
 # Output the status line
-echo -e "${BLUE}${dir_name}${NC} ${GRAY}|${NC} ${CYAN}${model_name}${NC}${git_info:+ ${GRAY}|${NC}}${git_info}${cost_info}"
+echo -e "${BLUE}${dir_name}${NC} ${GRAY}|${NC} ${CYAN}${model_name}${NC} ${GRAY}|${NC} ${context_info}${git_info:+ ${GRAY}|${NC}}${git_info}${cost_info}"
