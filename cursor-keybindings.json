@@ -50,6 +50,22 @@
     "when": "vim.mode == 'Normal'"
   },
   {
+    "key": "cmd+j",
+    "command": "workbench.action.focusPanel"
+  },
+  {
+    "key": "cmd+k",
+    "command": "workbench.action.focusActiveEditorGroup"
+  },
+  {
+    "key": "cmd+h",
+    "command": "workbench.action.focusSideBar"
+  },
+  {
+    "key": "cmd+l",
+    "command": "workbench.action.focusAuxiliaryBar"
+  },
+  {
     "key": ", n",
     "command": "workbench.view.explorer",
     "when": "vim.mode == 'Normal'"
