@@ -70,13 +70,13 @@
   },
   {
     "key": "cmd+l",
-    "command": "workbench.action.focusActiveEditorGroup",
-    "when": "sideBarFocus"
+    "command": "aichat.newchataction",
+    "when": "editorHasSelection"
   },
   {
     "key": "cmd+l",
     "command": "workbench.action.focusAuxiliaryBar",
-    "when": "editorFocus"
+    "when": "editorFocus && !editorHasSelection"
   },
   {
     "key": ", n",
@@ -173,5 +173,9 @@
   {
     "key": "ctrl+g",
     "command": "-workbench.action.gotoLine"
+  },
+  {
+    "key": "shift+cmd+l",
+    "command": "-composer.newAgentChat"
   }
 ]
