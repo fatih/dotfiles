@@ -55,15 +55,28 @@
   },
   {
     "key": "cmd+k",
-    "command": "workbench.action.focusActiveEditorGroup"
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "panelFocus || terminalFocus"
   },
   {
     "key": "cmd+h",
-    "command": "workbench.action.focusSideBar"
+    "command": "workbench.action.focusSideBar",
+    "when": "editorFocus"
+  },
+  {
+    "key": "cmd+h",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "auxiliaryBarFocus || composerFocused"
   },
   {
     "key": "cmd+l",
-    "command": "workbench.action.focusAuxiliaryBar"
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "sideBarFocus"
+  },
+  {
+    "key": "cmd+l",
+    "command": "workbench.action.focusAuxiliaryBar",
+    "when": "editorFocus"
   },
   {
     "key": ", n",
