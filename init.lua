@@ -20,96 +20,6 @@ local function build_go_files()
   end
 end
 
--- Track session state globally for the noop provider
--- local noop_session_active = false
--- local noop_terminal_provider = {
---   setup = function(config)
---     -- Change to git root directory first
---     local git_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
---     if vim.v.shell_error == 0 and git_root ~= "" then
---       vim.cmd("cd " .. git_root)
---     end
---     print("ClaudeCode session configured")
---   end,
---
---   open = function(cmd_string, env_table, effective_config, focus)
---     -- -- Clean up existing Claude Code websocket servers (Neovim processes only)
---     -- local claude_dir = vim.fn.expand("~/.claude/ide")
---     -- if vim.fn.isdirectory(claude_dir) == 1 then
---     --   for _, lock_file in ipairs(vim.fn.glob(claude_dir .. "/*.lock", false, true)) do
---     --     local port = vim.fn.fnamemodify(lock_file, ":t:r")
---     --     local pids = vim.fn.system("lsof -ti:" .. port .. " 2>/dev/null"):gsub("\n", " ")
---     --     
---     --     for pid in pids:gmatch("%S+") do
---     --       local cmd = vim.fn.system("ps -p " .. pid .. " -o comm= 2>/dev/null"):gsub("\n", "")
---     --       if cmd:match("nvim") then
---     --         vim.fn.system("kill -9 " .. pid .. " 2>/dev/null")
---     --         vim.fn.delete(lock_file)
---     --       end
---     --     end
---     --   end
---     -- end
---
---     -- Mark session as active when opening
---     noop_session_active = true
---   end,
---
---   close = function()
---     -- Mark session as inactive when closing
---     noop_session_active = false
---     print("ClaudeCode session closed")
---   end,
---
---   simple_toggle = function(cmd_string, env_table, effective_config)
---     -- Check if already active and print message
---     if noop_session_active then
---       print("ClaudeCode is already running, focusing")
---
---       -- Jump to the rightmost tmux pane (where Claude usually runs)
---       vim.fn.system("tmux select-pane -R")
---       return
---     end
---
---     -- Mark session as active when starting
---     noop_session_active = true
---     print("ClaudeCode session started")
---   end,
---
---   focus_toggle = function(cmd_string, env_table, effective_config)
---     print("Focused on Claude")
---     -- Jump to the rightmost tmux pane (where Claude usually runs)
---     vim.fn.system("tmux select-pane -R")
---   end,
---
---   get_active_bufnr = function()
---     -- Return nil since there's no terminal buffer
---     return nil
---   end,
---
---   is_available = function()
---     -- Always available since it does nothing
---     return true
---   end,
---
---   -- Optional function
---   toggle = function(cmd_string, env_table, effective_config)
---     -- Check if already active and print message
---     if noop_session_active then
---       print("ClaudeCode is already running")
---       return
---     end
---
---     -- Mark session as active when starting
---     noop_session_active = true
---     print("ClaudeCode session started")
---   end,
---
---   _get_terminal_for_test = function()
---     -- For testing only - return nil
---     return nil
---   end,
--- }
---
 ----------------
 --- plugins ---
 ----------------
@@ -349,55 +259,51 @@ require("lazy").setup({
   },
 
 
-  -- {
-  --   "coder/claudecode.nvim",
-  --   config = function() 
-  --     require("claudecode").setup({
-  --       terminal = {
-  --         provider = noop_terminal_provider,
-  --       },
-  --     })
-  --   end,
-  --   lazy = false,
-  --   opts = {
-  --     terminal_cmd = "/Users/fatih/.local/bin/claude",
-  --   },
-  --   cmd = {
-  --     "ClaudeCode",
-  --     "ClaudeCodeFocus",
-  --     "ClaudeCodeSelectModel",
-  --     "ClaudeCodeAdd",
-  --     "ClaudeCodeSend",
-  --     "ClaudeCodeTreeAdd",
-  --     "ClaudeCodeDiffAccept",
-  --     "ClaudeCodeDiffDeny",
-  --   },
-  --   keys = {
-  --     { "<leader>c", nil, desc = "AI/Claude Code" },
-  --     { "<C-t>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
-  --     { "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
-  --     { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
-  --     { "<leader>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
-  --     { "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-  --     { "<leader>ca", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-  --     { "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
-  --     {
-  --       "<leader>cs",
-  --       "<cmd>ClaudeCodeTreeAdd<cr>",
-  --       desc = "Add file",
-  --       ft = { "NvimTree", "neo-tree", "oil" },
-  --     },
-  --     { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-  --     { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-  --   }
-  -- },
-
   {
-    "sourcegraph/amp.nvim",
-    branch = "main", 
+    "coder/claudecode.nvim",
     lazy = false,
-    opts = { auto_start = true, log_level = "info" },
+    opts = {
+      terminal_cmd = "/Users/fatih/.local/bin/claude",
+      terminal = {
+          provider = "none", -- no UI actions; server + tools remain available
+      },
+    },
+    cmd = {
+      "ClaudeCode",
+      "ClaudeCodeFocus",
+      "ClaudeCodeSelectModel",
+      "ClaudeCodeAdd",
+      "ClaudeCodeSend",
+      "ClaudeCodeTreeAdd",
+      "ClaudeCodeDiffAccept",
+      "ClaudeCodeDiffDeny",
+    },
+    keys = {
+      { "<leader>c", nil, desc = "AI/Claude Code" },
+      { "<C-t>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+      { "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+      { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+      { "<leader>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+      { "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+      { "<leader>ca", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+      { "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+      {
+        "<leader>cs",
+        "<cmd>ClaudeCodeTreeAdd<cr>",
+        desc = "Add file",
+        ft = { "NvimTree", "neo-tree", "oil" },
+      },
+      { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+      { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+    }
   },
+
+  -- {
+  --   "sourcegraph/amp.nvim",
+  --   branch = "main", 
+  --   lazy = false,
+  --   opts = { auto_start = true, log_level = "info" },
+  -- },
 
   {
       'brianhuster/live-preview.nvim',
@@ -857,16 +763,16 @@ vim.api.nvim_create_autocmd('Filetype', {
 
 -- -- ClaudeCode mapping
 vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
-vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
-vim.keymap.set({'n', 'v'}, '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
+vim.keymap.set('n', '<leader>aa', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
+vim.keymap.set({'n', 'v'}, '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
 
--- Amp mapping
-vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
-vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
--- vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
-vim.keymap.set('v', '<leader>as', ":'<,'>AmpPromptRef<CR>", { desc = "Send selection to Prompt" })
-vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
-vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
+-- -- Amp mapping
+-- vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
+-- vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
+-- -- vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
+-- vim.keymap.set('v', '<leader>as', ":'<,'>AmpPromptRef<CR>", { desc = "Send selection to Prompt" })
+-- vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
+-- vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
 
 -- Add selected text directly to prompt
 vim.api.nvim_create_user_command("AmpPromptSelection", function(opts)
