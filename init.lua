@@ -316,9 +316,12 @@ require("lazy").setup({
   -- { -- Fuzzy Finder (files, lsp, etc)
   {
     "ibhagwan/fzf-lua",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+      "elanmed/fzf-lua-frecency.nvim",
+    },
     opts = {},
-    config = function() 
+    config = function()
       require("fzf-lua").register_ui_select()
       require('fzf-lua').setup {
         oldfiles = {
@@ -357,7 +360,22 @@ require("lazy").setup({
         }
       }
 
-     vim.keymap.set("n", "<C-p>", require("fzf-lua").git_files, {})
+      -- Setup frecency for fzf-lua (tracks frequently + recently used files)
+      require('fzf-lua-frecency').setup()
+
+     vim.keymap.set("n", "<C-p>", function()
+       -- Get git root to use as cwd (handles autochdir)
+       local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+       if vim.v.shell_error ~= 0 then
+         git_root = vim.fn.getcwd()
+       end
+       require('fzf-lua-frecency').frecency({
+         file_icons = false,
+         git_icons = false,
+         cwd_only = true,  -- only show files from current repo
+         cwd = git_root,   -- use git root, not autochdir path
+       })
+     end, {})
      vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
      vim.keymap.set("n", "<C-g>", require("fzf-lua").lsp_document_symbols, {})
     end
