@@ -28,7 +28,6 @@ sync:
 
 	[ -d ~/.claude/commands/ ] || ln -s $(PWD)/claude/commands ~/.claude/commands
 	[ -f ~/.claude/statusline-git.sh ] || ln -s $(PWD)/claude/statusline-git.sh ~/.claude/statusline-git.sh
-	[ -f ~/.claude/settings.json ] || ln -s $(PWD)/claude/settings.json ~/.claude/settings.json
 
 	[ -f ~/Library/Application\ Support/Cursor/User/settings.json ] || ln -s $(PWD)/cursor-settings.json ~/Library/Application\ Support/Cursor/User/settings.json
 	[ -f ~/Library/Application\ Support/Cursor/User/keybindings.json ] || ln -s $(PWD)/cursor-keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
@@ -51,7 +50,6 @@ clean:
 	rm -f ~/.tmux.conf
 	rm -rf ~/.claude/commands/
 	rm -f ~/.claude/statusline-git.sh
-	rm -f ~/.claude/settings.json
 	rm -f ~/Library/Application\ Support/Cursor/User/settings.json
 	rm -f ~/Library/Application\ Support/Cursor/User/keybindings.json
 
