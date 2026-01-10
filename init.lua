@@ -985,18 +985,45 @@ end, {
 -- automatically resize all vim buffers if I resize the terminal window
 vim.api.nvim_command('autocmd VimResized * wincmd =')
 
+-- OSC 7: Report working directory to terminal (for Ghostty split inheritance)
 -- https://github.com/neovim/neovim/issues/21771
-local exitgroup = vim.api.nvim_create_augroup('setDir', { clear = true })
+local function osc7_notify()
+  local cwd = vim.fn.getcwd()
+  local hostname = vim.fn.hostname()
+  local osc7 = string.format("\027]7;file://%s%s\027\\", hostname, cwd)
+  vim.fn.chansend(vim.v.stderr, osc7)
+end
+
+local osc7_group = vim.api.nvim_create_augroup('osc7', { clear = true })
+
+-- Send on directory change
 vim.api.nvim_create_autocmd('DirChanged', {
-  group = exitgroup,
+  group = osc7_group,
   pattern = { '*' },
-  command = [[call chansend(v:stderr, printf("\033]7;file://%s\033\\", v:event.cwd))]],
+  callback = osc7_notify,
 })
 
-vim.api.nvim_create_autocmd('VimLeave', {
-  group = exitgroup,
+-- Send on buffer enter (autochdir may change dir without firing DirChanged)
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = osc7_group,
   pattern = { '*' },
-  command = [[call chansend(v:stderr, "\033]7;\033\\")]],
+  callback = osc7_notify,
+})
+
+-- Send on Neovim startup
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = osc7_group,
+  pattern = { '*' },
+  callback = osc7_notify,
+})
+
+-- Clear on exit so terminal falls back to shell's directory
+vim.api.nvim_create_autocmd('VimLeave', {
+  group = osc7_group,
+  pattern = { '*' },
+  callback = function()
+    vim.fn.chansend(vim.v.stderr, "\027]7;\027\\")
+  end,
 })
 
 
