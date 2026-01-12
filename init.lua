@@ -1017,14 +1017,9 @@ vim.api.nvim_create_autocmd('VimEnter', {
   callback = osc7_notify,
 })
 
--- Clear on exit so terminal falls back to shell's directory
-vim.api.nvim_create_autocmd('VimLeave', {
-  group = osc7_group,
-  pattern = { '*' },
-  callback = function()
-    vim.fn.chansend(vim.v.stderr, "\027]7;\027\\")
-  end,
-})
+-- Note: We intentionally don't clear OSC 7 on VimLeave.
+-- The shell (fish) will report its own working directory after Vim exits.
+-- Sending an empty OSC 7 here causes Ghostty to lose track of the CWD.
 
 
 -- put quickfix window always to the bottom
