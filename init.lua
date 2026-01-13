@@ -1090,7 +1090,18 @@ vim.api.nvim_create_autocmd('LspAttach', {
     vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
     vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
 
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'gr', function()
+      vim.lsp.buf.references(nil, {
+        on_list = function(options)
+          vim.fn.setqflist({}, ' ', options)
+          if #options.items > 0 then
+            vim.cmd('copen')
+            vim.cmd('cfirst')
+            vim.cmd('normal! zz')
+          end
+        end
+      })
+    end, opts)
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
     vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
