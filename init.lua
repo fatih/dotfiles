@@ -710,7 +710,21 @@ vim.keymap.set('n', 'Y', 'y$')
 
 if vim.fn.getenv("TERM_PROGRAM") == "ghostty" then
   vim.opt.title = true
-  vim.opt.titlestring = "%{getcwd()}/%{bufname()}"
+
+  local function update_title()
+    local root = vim.fn.systemlist('git rev-parse --show-toplevel 2>/dev/null')
+    if vim.v.shell_error == 0 and #root > 0 and root[1] ~= '' then
+      vim.opt.titlestring = vim.fn.fnamemodify(root[1], ':t')
+    else
+      vim.opt.titlestring = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+    end
+  end
+
+  update_title()
+
+  vim.api.nvim_create_autocmd({'DirChanged', 'VimEnter'}, {
+    callback = update_title,
+  })
 end
 
 -- Open help window in a vertical split to the right.
