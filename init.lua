@@ -657,6 +657,13 @@ vim.keymap.set('n', '<Leader>e', function()
   print('Copied to clipboard: ' .. path)
 end, { silent = true })
 
+-- Copy absolute filepath to system clipboard
+vim.keymap.set('n', '<Leader>r', function()
+  local path = vim.fn.expand('%:p')
+  vim.fn.setreg('+', path)
+  print('Copied to clipboard: ' .. path)
+end, { silent = true })
+
 -- Remove search highlight
 vim.keymap.set('n', '<Leader><space>', ':nohlsearch<CR>')
 
@@ -685,9 +692,6 @@ vim.keymap.set('i', '<C-c>', '<ESC>')
 -- clipboard with the selected word, instead keep my old word in the
 -- clipboard
 vim.keymap.set("x", "p", "\"_dP")
-
--- rename the word under the cursor 
-vim.keymap.set("n", "<leader>rw", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
 
 -- Better split switching
 vim.keymap.set('', '<C-j>', '<C-W>j')
