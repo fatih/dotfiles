@@ -6,6 +6,7 @@ sync:
 	mkdir -p ~/.config/ghostty
 	mkdir -p ~/.tmux/
 	mkdir -p ~/.claude
+	mkdir -p ~/.cursor
 	mkdir -p ~/.config/amp
 	mkdir -p ~/Library/Application\ Support/Cursor/User
 
@@ -23,9 +24,10 @@ sync:
 	[ -f ~/.tmux/tmux-dark.conf ] || ln -s $(PWD)/tmux-dark.conf ~/.tmux/tmux-dark.conf
 	[ -f ~/.tmux/tmux-light.conf ] || ln -s $(PWD)/tmux-light.conf ~/.tmux/tmux-light.conf
 
-	[ -d ~/.claude/commands/ ] || ln -s $(PWD)/claude/commands ~/.claude/commands
-	[ -f ~/.claude/statusline-git.sh ] || ln -s $(PWD)/claude/statusline-git.sh ~/.claude/statusline-git.sh
-	[ -d ~/.config/amp/commands/ ] || ln -s $(PWD)/amp/commands ~/.config/amp/commands
+	[ -d ~/.claude/commands/ ] || ln -s $(PWD)/agent/commands ~/.claude/commands
+	[ -f ~/.claude/statusline-git.sh ] || ln -s $(PWD)/agent/statusline-git.sh ~/.claude/statusline-git.sh
+	[ -d ~/.cursor/commands/ ] || ln -s $(PWD)/agent/commands ~/.cursor/commands
+	[ -d ~/.config/amp/commands/ ] || ln -s $(PWD)/agent/commands ~/.config/amp/commands
 
 	[ -f ~/Library/Application\ Support/Cursor/User/settings.json ] || ln -s $(PWD)/cursor-settings.json ~/Library/Application\ Support/Cursor/User/settings.json
 	[ -f ~/Library/Application\ Support/Cursor/User/keybindings.json ] || ln -s $(PWD)/cursor-keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
@@ -46,6 +48,7 @@ clean:
 	rm -f ~/.tmux.conf
 	rm -rf ~/.claude/commands/
 	rm -f ~/.claude/statusline-git.sh
+	rm -rf ~/.cursor/commands/
 	rm -rf ~/.config/amp/commands/
 	rm -f ~/Library/Application\ Support/Cursor/User/settings.json
 	rm -f ~/Library/Application\ Support/Cursor/User/keybindings.json
