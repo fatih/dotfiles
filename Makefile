@@ -29,6 +29,10 @@ sync:
 	[ -d ~/.cursor/commands/ ] || ln -s $(PWD)/agent/commands ~/.cursor/commands
 	[ -d ~/.config/amp/commands/ ] || ln -s $(PWD)/agent/commands ~/.config/amp/commands
 
+	[ -d ~/.cursor/skills/ ] || ln -s $(PWD)/agent/skills ~/.cursor/skills
+	[ -d ~/.claude/skills/ ] || ln -s $(PWD)/agent/skills ~/.claude/skills
+	[ -d ~/.codex/skills/ ] || ln -s $(PWD)/agent/skills ~/.codex/skills
+
 	[ -f ~/Library/Application\ Support/Cursor/User/settings.json ] || ln -s $(PWD)/cursor-settings.json ~/Library/Application\ Support/Cursor/User/settings.json
 	[ -f ~/Library/Application\ Support/Cursor/User/keybindings.json ] || ln -s $(PWD)/cursor-keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
 
@@ -46,12 +50,15 @@ clean:
 	rm -f ~/.config/ghostty/config
 
 	rm -f ~/.tmux.conf
-	rm -rf ~/.claude/commands/
-	rm -f ~/.claude/statusline-git.sh
-	rm -rf ~/.cursor/commands/
-	rm -rf ~/.config/amp/commands/
-	rm -f ~/Library/Application\ Support/Cursor/User/settings.json
-	rm -f ~/Library/Application\ Support/Cursor/User/keybindings.json
+	[ ! -L ~/.claude/commands/ ] || rm -rf ~/.claude/commands/
+	[ ! -L ~/.claude/statusline-git.sh ] || rm -f ~/.claude/statusline-git.sh
+	[ ! -L ~/.cursor/commands/ ] || rm -rf ~/.cursor/commands/
+	[ ! -L ~/.config/amp/commands/ ] || rm -rf ~/.config/amp/commands/
+	[ ! -L ~/.cursor/skills/ ] || rm -rf ~/.cursor/skills/
+	[ ! -L ~/.claude/skills/ ] || rm -rf ~/.claude/skills/
+	[ ! -L ~/.codex/skills/ ] || rm -rf ~/.codex/skills/
+	[ ! -L ~/Library/Application\ Support/Cursor/User/settings.json ] || rm -f ~/Library/Application\ Support/Cursor/User/settings.json
+	[ ! -L ~/Library/Application\ Support/Cursor/User/keybindings.json ] || rm -f ~/Library/Application\ Support/Cursor/User/keybindings.json
 
 
 .PHONY: all clean sync 
