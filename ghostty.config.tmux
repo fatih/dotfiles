@@ -1,0 +1,81 @@
+# The configuration can be reloaded at runtime by cmd+shift+, (macOS). 
+theme = light:Gruvbox Light Hard,dark:Gruvbox Dark Hard
+
+font-family = "TX-02"
+font-size = 14
+
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+cursor-style-blink = false
+cursor-style = block
+adjust-cursor-thickness = 300%
+
+# don't ask when closing
+confirm-close-surface = false
+
+window-theme = system
+
+# don't show an overlay when resizing a window
+resize-overlay = never
+
+# always save the state of window when quitting
+window-save-state = always
+
+shell-integration = fish
+window-inherit-working-directory=true
+
+# The opacity level (opposite of transparency) of an unfocused split.
+# Unfocused splits by default are slightly faded out to make it easier to see
+# which split is focused. To disable this feature, set this value to 1.
+unfocused-split-opacity = 0.80
+unfocused-split-fill = #a33503
+split-divider-color = #FF4F00
+
+# in Claude you can now change the Plan with alt+p on the fly, and the thinking
+# mode via alt+t. But in macOS, we use option, and it's not exactly an alt key.
+# This makes sure we treat the alt key as option, but only the left Option key.
+# That way my left key is acting as Alt and my right key as Option.
+macos-option-as-alt = left
+
+# Keybindings
+
+# open vertical split
+keybind = super+d=text:\x06\x76
+
+# open horizontal split
+keybind = super+shift+d=text:\x06\x73
+
+# close pane
+keybind = super+w=text:\x06\x78
+ 
+# navigate between tmux panes
+# This works only because I remmapped "Hide Ghostty" in macOS keyboards
+# settings to a different keybinding (F9)
+# https://github.com/alacritty/alacritty/issues/5346#issuecomment-1055695103
+keybind = super+h=text:\x06\x68
+keybind = super+j=text:\x06\x6a
+keybind = super+k=text:\x06\x6b
+keybind = super+l=text:\x06\x6c
+
+# resize panes
+keybind = super+right=text:\x06\x4c
+keybind = super+down=text:\x06\x4a
+keybind = super+left=text:\x06\x48
+keybind = super+up=text:\x06\x4b
+
+# command tab
+keybind = super+t=text:\x06\x63
+
+# switch tabs
+keybind = super+digit1=text:\x06\x31
+keybind = super+digit2=text:\x06\x32
+keybind = super+digit3=text:\x06\x33
+keybind = super+digit4=text:\x06\x34
+keybind = super+digit5=text:\x06\x35
+keybind = super+digit6=text:\x06\x36
+keybind = super+digit7=text:\x06\x37
+keybind = super+digit8=text:\x06\x38
+keybind = super+digit9=text:\x06\x39
+
+# Claude Code shift+enter support
+keybind = shift+enter=text:\n

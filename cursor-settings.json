@@ -72,5 +72,6 @@
   "workbench.settings.openDefaultKeybindings": true,
   "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "editor.renderControlCharacters": false,
-  "go.toolsManagement.autoUpdate": true
+  "go.toolsManagement.autoUpdate": true,
+  "workbench.statusBar.visible": false
 }
