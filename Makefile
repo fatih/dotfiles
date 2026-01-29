@@ -24,10 +24,7 @@ sync:
 	[ -f ~/.tmux/tmux-dark.conf ] || ln -s $(PWD)/tmux-dark.conf ~/.tmux/tmux-dark.conf
 	[ -f ~/.tmux/tmux-light.conf ] || ln -s $(PWD)/tmux-light.conf ~/.tmux/tmux-light.conf
 
-	[ -d ~/.claude/commands/ ] || ln -s $(PWD)/agent/commands ~/.claude/commands
 	[ -f ~/.claude/statusline-git.sh ] || ln -s $(PWD)/agent/statusline-git.sh ~/.claude/statusline-git.sh
-	[ -d ~/.cursor/commands/ ] || ln -s $(PWD)/agent/commands ~/.cursor/commands
-	[ -d ~/.config/amp/commands/ ] || ln -s $(PWD)/agent/commands ~/.config/amp/commands
 
 	[ -d ~/.cursor/skills/ ] || ln -s $(PWD)/agent/skills ~/.cursor/skills
 	[ -d ~/.claude/skills/ ] || ln -s $(PWD)/agent/skills ~/.claude/skills
@@ -50,10 +47,7 @@ clean:
 	rm -f ~/.config/ghostty/config
 
 	rm -f ~/.tmux.conf
-	[ ! -L ~/.claude/commands/ ] || rm -rf ~/.claude/commands/
 	[ ! -L ~/.claude/statusline-git.sh ] || rm -f ~/.claude/statusline-git.sh
-	[ ! -L ~/.cursor/commands/ ] || rm -rf ~/.cursor/commands/
-	[ ! -L ~/.config/amp/commands/ ] || rm -rf ~/.config/amp/commands/
 	[ ! -L ~/.cursor/skills/ ] || rm -rf ~/.cursor/skills/
 	[ ! -L ~/.claude/skills/ ] || rm -rf ~/.claude/skills/
 	[ ! -L ~/.codex/skills/ ] || rm -rf ~/.codex/skills/
