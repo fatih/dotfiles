@@ -1,6 +1,8 @@
 # The configuration can be reloaded at runtime by cmd+shift+, (macOS). 
 theme = light:Gruvbox Light Hard,dark:Gruvbox Dark Hard
 
+command = "/opt/homebrew/bin/fish -c 'tmux attach || tmux'"
+
 font-family = "TX-02"
 font-size = 14
 
