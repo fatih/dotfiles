@@ -47,7 +47,7 @@
   "explorer.confirmDelete": false,
   "explorer.confirmDragAndDrop": false,
   "window.autoDetectColorScheme": true,
-  "workbench.preferredLightColorTheme": "Gruvbox Light Hard",
+  "workbench.preferredLightColorTheme": "Cursor Light",
   "workbench.iconTheme": "vs-seti",
   "workbench.editor.enablePreview": false,
   "workbench.editor.enablePreviewFromQuickOpen": false,
@@ -73,5 +73,6 @@
   "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
-  "workbench.statusBar.visible": false
+  "workbench.statusBar.visible": false,
+  "update.releaseTrack": "prerelease"
 }

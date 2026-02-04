@@ -1036,8 +1036,8 @@ local function osc7_notify()
   if cwd:match('/.git$') or cwd:match('/.git/') then
     cwd = cwd:gsub('/.git.*$', '')
   end
-  local hostname = vim.fn.hostname()
-  local osc7 = string.format("\027]7;file://%s%s\027\\", hostname, cwd)
+  -- Omit hostname for simpler parsing by tmux (file:///path instead of file://hostname/path)
+  local osc7 = string.format("\027]7;file://%s\007", cwd)
   vim.fn.chansend(vim.v.stderr, osc7)
 end
 
