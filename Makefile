@@ -28,10 +28,12 @@ sync:
 
 	[ -d ~/.cursor/skills/ ] || ln -s $(PWD)/agent/skills ~/.cursor/skills
 	[ -d ~/.claude/skills/ ] || ln -s $(PWD)/agent/skills ~/.claude/skills
-	[ -d ~/.codex/skills/ ] || ln -s $(PWD)/agent/skills ~/.codex/skills
+
+	# codex hijacks my skills folder with custom .system folder, do not symlink
+	rsync -a --delete $(PWD)/agent/skills/ ~/.codex/skills/
 
 	[ -f ~/.claude/CLAUDE.md ] || ln -s $(PWD)/CLAUDE.md ~/.claude/CLAUDE.md
-	[ -f ~/.codex/AGENTS.md ] || ln -s $(PWD)/AGENTS.md ~/.codex/AGENTS.md
+	cp $(PWD)/AGENTS.md ~/.codex/AGENTS.md
 	[ -f ~/.cursor/rules ] || ln -s $(PWD)/.cursorrules ~/.cursor/rules
 
 	[ -f ~/Library/Application\ Support/Cursor/User/settings.json ] || ln -s $(PWD)/cursor-settings.json ~/Library/Application\ Support/Cursor/User/settings.json
@@ -54,9 +56,9 @@ clean:
 	[ ! -L ~/.claude/statusline-git.sh ] || rm -f ~/.claude/statusline-git.sh
 	[ ! -L ~/.cursor/skills/ ] || rm -rf ~/.cursor/skills/
 	[ ! -L ~/.claude/skills/ ] || rm -rf ~/.claude/skills/
-	[ ! -L ~/.codex/skills/ ] || rm -rf ~/.codex/skills/
+	rm -rf ~/.codex/skills/
 	[ ! -L ~/.claude/CLAUDE.md ] || rm -f ~/.claude/CLAUDE.md
-	[ ! -L ~/.codex/AGENTS.md ] || rm -f ~/.codex/AGENTS.md
+	rm -f ~/.codex/AGENTS.md
 	[ ! -L ~/.cursor/rules ] || rm -f ~/.cursor/rules
 	[ ! -L ~/Library/Application\ Support/Cursor/User/settings.json ] || rm -f ~/Library/Application\ Support/Cursor/User/settings.json
 	[ ! -L ~/Library/Application\ Support/Cursor/User/keybindings.json ] || rm -f ~/Library/Application\ Support/Cursor/User/keybindings.json
