@@ -1,6 +1,6 @@
 ---
 name: pr-comments
-description: Fetches and displays all GitHub PR comments, review comments, and reviews for the current branch. Helps address PR feedback interactively. Use when the user mentions PR comments, PR feedback, review comments, addressing reviewer feedback, or checking PR reviews.
+description: Fetches and displays all GitHub PR comments, review comments, and reviews for the current branch. Use when the user wants to read or review PR comments, check PR feedback, or see what reviewers said. For autonomously fixing all feedback, use pr-fix instead.
 ---
 
 # PR Comments Review
