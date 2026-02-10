@@ -74,5 +74,6 @@
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
   "workbench.statusBar.visible": false,
-  "update.releaseTrack": "prerelease"
+  "update.releaseTrack": "prerelease",
+  "cursor.composer.usageSummaryDisplay": "always"
 }
