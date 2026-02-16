@@ -75,6 +75,5 @@
   "go.toolsManagement.autoUpdate": true,
   "workbench.statusBar.visible": false,
   "update.releaseTrack": "prerelease",
-  "cursor.composer.usageSummaryDisplay": "always",
-  "cursor.composer.queueMessageDefaultBehavior": "stop-and-send"
+  "cursor.composer.usageSummaryDisplay": "always"
 }
