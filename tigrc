@@ -18,7 +18,7 @@ color title-blur black blue
 color id black default bold
 color main-commit default default
 color author blue default
-color date cyan default
+color date color172 default
 
 bind generic r refresh
 bind status d !@?rm -rf %(file) # delete untracked files
