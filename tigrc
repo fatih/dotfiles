@@ -11,9 +11,22 @@ set show-changes = no
 # Optionally, use the old and faster but less acurate graph renderer
 set main-view-commit-title-graph = v1
 
+# Colors for light terminal background
+color cursor black white bold
+color title-focus black blue bold
+color title-blur black blue
+color id black default bold
+color main-commit default default
+color author blue default
+color date cyan default
+
 bind generic r refresh
 bind status d !@?rm -rf %(file) # delete untracked files
-bind generic y @sh -c "printf '%(file)' | pbcopy"
+bind main y @sh -c "printf '%(commit)' | pbcopy"
+bind diff y @sh -c "printf '%(commit)' | pbcopy"
+bind log y @sh -c "printf '%(commit)' | pbcopy"
+bind blame y @sh -c "printf '%(commit)' | pbcopy"
+bind refs y @sh -c "printf '%(commit)' | pbcopy"
 
 
 # Allow moving in the main menu while displaying a diff in the bottom of the
