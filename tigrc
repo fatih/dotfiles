@@ -11,14 +11,52 @@ set show-changes = no
 # Optionally, use the old and faster but less acurate graph renderer
 set main-view-commit-title-graph = v1
 
-# Colors for light terminal background
-color cursor black white bold
-color title-focus black blue bold
-color title-blur black blue
-color id black default bold
+# Gruvbox colorscheme (inherits terminal background)
+color default 235 default
+color cursor default 166 bold
+color title-focus default 244 bold
+color title-blur default 248
+color id 166 default bold
 color main-commit default default
-color author blue default
-color date color172 default
+color author 66 default
+color date 106 default
+color diff-header 172 default bold
+color diff-index 172 default
+color diff-oldmode 172 default
+color diff-newmode 172 default
+color "rename from" 172 default
+color "rename to" 172 default
+color diff-chunk 106 default
+color "Merge:" 66 default
+color "--- " 124 default
+color "+++ " 106 default
+color "@@" 106 default
+color diff-stat 66 default
+color diff-add 106 default
+color diff-del 124 default
+color "diff-add-highlight" 106 default bold
+color "diff-del-highlight" 124 default bold
+color status 106 default
+color "Author:" 166 default
+color "Commit:" 166 default
+color "AuthorDate:" 106 default
+color "CommitDate:" 106 default
+color "Date:" 106 default
+color graph-commit 166 default bold
+color palette-0 166 default
+color palette-1 66 default
+color palette-2 106 default
+color palette-3 172 default
+color palette-4 124 default
+color palette-5 132 default
+color palette-6 72 default
+color delimiter 244 default
+color main-tracked 106 default bold
+color main-tag 172 default bold
+color main-local-tag 172 default
+color main-remote 124 default
+color main-ref 66 default bold
+color main-head 166 default bold
 
 bind generic r refresh
 bind status d !@?rm -rf %(file) # delete untracked files
