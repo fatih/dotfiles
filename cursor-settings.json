@@ -73,7 +73,6 @@
   "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
-  "workbench.statusBar.visible": false,
   "update.releaseTrack": "prerelease",
   "cursor.composer.usageSummaryDisplay": "always"
 }
