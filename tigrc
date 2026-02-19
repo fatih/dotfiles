@@ -11,52 +11,54 @@ set show-changes = no
 # Optionally, use the old and faster but less acurate graph renderer
 set main-view-commit-title-graph = v1
 
-# Gruvbox colorscheme (inherits terminal background)
-color default 235 default
-color cursor default 166 bold
+# Gruvbox colorscheme — faded accents (inherits terminal background)
+# red=#9d0006(88) green=#79740e(100) yellow=#b57614(136)
+# blue=#076678(24) purple=#8f3f71(96) aqua=#427b58(65) orange=#af3a03(130)
+color default default default
+color cursor default 130 bold
 color title-focus default 244 bold
 color title-blur default 248
-color id 166 default bold
+color id 130 default bold
 color main-commit default default
-color author 66 default
-color date 106 default
-color diff-header 172 default bold
-color diff-index 172 default
-color diff-oldmode 172 default
-color diff-newmode 172 default
-color "rename from" 172 default
-color "rename to" 172 default
-color diff-chunk 106 default
-color "Merge:" 66 default
-color "--- " 124 default
-color "+++ " 106 default
-color "@@" 106 default
-color diff-stat 66 default
-color diff-add 106 default
-color diff-del 124 default
-color "diff-add-highlight" 106 default bold
-color "diff-del-highlight" 124 default bold
-color status 106 default
-color "Author:" 166 default
-color "Commit:" 166 default
-color "AuthorDate:" 106 default
-color "CommitDate:" 106 default
-color "Date:" 106 default
-color graph-commit 166 default bold
-color palette-0 166 default
-color palette-1 66 default
-color palette-2 106 default
-color palette-3 172 default
-color palette-4 124 default
-color palette-5 132 default
-color palette-6 72 default
+color author 24 default
+color date 100 default
+color diff-header 136 default bold
+color diff-index 136 default
+color diff-oldmode 136 default
+color diff-newmode 136 default
+color "rename from" 136 default
+color "rename to" 136 default
+color diff-chunk 96 default
+color "Merge:" 24 default
+color "--- " 88 default
+color "+++ " 100 default
+color "@@" 96 default
+color diff-stat 24 default
+color diff-add 100 default
+color diff-del 88 default
+color "diff-add-highlight" 100 default bold
+color "diff-del-highlight" 88 default bold
+color status 100 default
+color "Author:" 130 default
+color "Commit:" 130 default
+color "AuthorDate:" 100 default
+color "CommitDate:" 100 default
+color "Date:" 100 default
+color graph-commit 130 default bold
+color palette-0 130 default
+color palette-1 24 default
+color palette-2 100 default
+color palette-3 136 default
+color palette-4 88 default
+color palette-5 96 default
+color palette-6 65 default
 color delimiter 244 default
-color main-tracked 106 default bold
-color main-tag 172 default bold
-color main-local-tag 172 default
-color main-remote 124 default
-color main-ref 66 default bold
-color main-head 166 default bold
+color main-tracked 100 default bold
+color main-tag 136 default bold
+color main-local-tag 136 default
+color main-remote 88 default
+color main-ref 24 default bold
+color main-head 130 default bold
 
 bind generic r refresh
 bind status d !@?rm -rf %(file) # delete untracked files
