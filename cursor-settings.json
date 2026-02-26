@@ -1,4 +1,5 @@
 {
+  "vim.enable": true,
   "vim.useSystemClipboard": true,
   "vim.hlsearch": true,
   "vim.incsearch": true,
