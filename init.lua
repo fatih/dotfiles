@@ -1,15 +1,23 @@
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
-end
-vim.opt.rtp:prepend(lazypath)
+-- Enable Lua module caching for faster startup
+vim.loader.enable()
+
+-- Set leader key early (before any mappings)
+vim.g.mapleader = ','
+
+-- Disable netrw (we use nvim-tree)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
+-- vim-go settings (must be set before plugin loads)
+vim.g['go_gopls_enabled'] = 0
+vim.g['go_code_completion_enabled'] = 0
+vim.g['go_fmt_autosave'] = 0
+vim.g['go_imports_autosave'] = 0
+vim.g['go_mod_fmt_autosave'] = 0
+vim.g['go_doc_keywordprg_enabled'] = 0
+vim.g['go_def_mapping_enabled'] = 0
+vim.g['go_textobj_enabled'] = 0
+vim.g['go_list_type'] = 'quickfix'
 
 -- run :GoBuild or :GoTestCompile based on the go file
 local function build_go_files()
@@ -20,540 +28,327 @@ local function build_go_files()
   end
 end
 
+-- Hook: run TSUpdate when nvim-treesitter is installed/updated
+vim.api.nvim_create_autocmd('PackChanged', { callback = function(ev)
+  local name, kind = ev.data.spec.name, ev.data.kind
+  if name == 'nvim-treesitter' and (kind == 'install' or kind == 'update') then
+    if not ev.data.active then vim.cmd.packadd('nvim-treesitter') end
+    vim.cmd('TSUpdate')
+  end
+end })
+
 ----------------
 --- plugins ---
 ----------------
-require("lazy").setup({
+vim.pack.add({
+  'https://github.com/ellisonleao/gruvbox.nvim',
+  'https://github.com/cormacrelf/dark-notify',
+  'https://github.com/nvim-tree/nvim-web-devicons',
+  'https://github.com/nvim-lualine/lualine.nvim',
+  'https://github.com/fatih/vim-go',
+  'https://github.com/nvim-treesitter/nvim-treesitter',
+  'https://github.com/nvim-treesitter/nvim-treesitter-textobjects',
+  'https://github.com/bronson/vim-visual-star-search',
+  'https://github.com/dinhhuy258/git.nvim',
+  'https://github.com/nvim-tree/nvim-tree.lua',
+  'https://github.com/AndrewRadev/splitjoin.vim',
+  'https://github.com/windwp/nvim-autopairs',
+  'https://github.com/coder/claudecode.nvim',
+  { src = 'https://github.com/sourcegraph/amp.nvim', version = 'main' },
+  'https://github.com/brianhuster/live-preview.nvim',
+  'https://github.com/folke/snacks.nvim',
+  'https://github.com/ibhagwan/fzf-lua',
+  'https://github.com/elanmed/fzf-lua-frecency.nvim',
+  'https://github.com/folke/lazydev.nvim',
+  'https://github.com/hrsh7th/nvim-cmp',
+  'https://github.com/hrsh7th/cmp-nvim-lsp',
+  'https://github.com/hrsh7th/cmp-buffer',
+  'https://github.com/L3MON4D3/LuaSnip',
+  'https://github.com/saadparwaiz1/cmp_luasnip',
+  'https://github.com/onsails/lspkind-nvim',
+  'https://github.com/lukas-reineke/cmp-under-comparator',
+  'https://github.com/rafamadriz/friendly-snippets',
+})
 
-  -- colorscheme
-  { 
-    "ellisonleao/gruvbox.nvim", 
-    priority = 1000, -- make sure to load this before all the other start plugins
-    config = function ()
-      require("gruvbox").setup({
-        contrast = "hard"
-      })
-      vim.cmd([[colorscheme gruvbox]])
-    end,
-  },
+--------------------------
+--- plugin configs ---
+--------------------------
 
-  -- automatic dark mode
-  -- requires: brew install cormacrelf/tap/dark-notify
-  { 
-    "cormacrelf/dark-notify",
-    config = function ()
-      require("dark_notify").run()
-    end,
-  },
+-- Colorscheme
+require("gruvbox").setup({ contrast = "hard" })
+vim.cmd([[colorscheme gruvbox]])
 
-  -- statusline
-  { 
-    "nvim-lualine/lualine.nvim",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function ()
-      require("lualine").setup({
-        options = { theme = 'gruvbox' },
-        sections = {
-          lualine_c = {
-            {
-              'filename',
-              file_status = true, -- displays file status (readonly status, modified status)
-              path = 2 -- 0 = just filename, 1 = relative path, 2 = absolute path
-            }
-          }
-        }
-      })
-    end,
-  },
+-- Automatic dark mode (requires: brew install cormacrelf/tap/dark-notify)
+require("dark_notify").run()
 
-  -- you know the drill
-  {
-    "fatih/vim-go",
-    config = function ()
-      -- we disable most of these features because treesitter and nvim-lsp
-      -- take care of it
-      vim.g['go_gopls_enabled'] = 0
-      vim.g['go_code_completion_enabled'] = 0
-      vim.g['go_fmt_autosave'] = 0
-      vim.g['go_imports_autosave'] = 0
-      vim.g['go_mod_fmt_autosave'] = 0
-      vim.g['go_doc_keywordprg_enabled'] = 0
-      vim.g['go_def_mapping_enabled'] = 0
-      vim.g['go_textobj_enabled'] = 0
-      vim.g['go_list_type'] = 'quickfix'
-    end,
-  },
-
-  -- Highlight, edit, and navigate code
-  { 
-    'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+-- Statusline
+require("lualine").setup({
+  options = { theme = 'gruvbox' },
+  sections = {
+    lualine_b = {
+      'branch',
+      function() return vim.lsp.status() end, -- built-in LSP progress (Neovim 0.12)
     },
-    build = ":TSUpdate",
-    config = function()
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = {
-          'go',
-          'gomod',
-          'proto',
-          'lua',
-          'vimdoc',
-          'vim',
-          'bash',
-          'fish',
-          'json',
-          'markdown',
-          'markdown_inline',
-          'mermaid',
-        },
-        indent = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<space>", -- maps in normal mode to init the node/scope selection with space
-            node_incremental = "<space>", -- increment to the upper named parent
-            node_decremental = "<bs>", -- decrement to the previous node
-            scope_incremental = "<tab>", -- increment to the upper scope (as defined in locals.scm)
-          },
-        },
-        autopairs = {
-          enable = true,
-        },
-        highlight = {
-          enable = true,
-
-          -- Disable slow treesitter highlight for large files
-          disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-              return true
-            end
-          end,
-
-          -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-          -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-          -- Using this option may slow down your editor, and you may see some duplicate highlights.
-          -- Instead of true it can also be a list of languages
-          additional_vim_regex_highlighting = false,
-        },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true, -- Automatically jump forward to textobj, similar to targets.vim
-            keymaps = {
-              -- You can use the capture groups defined in textobjects.scm
-              ['aa'] = '@parameter.outer',
-              ['ia'] = '@parameter.inner',
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = '@class.inner',
-              ["iB"] = "@block.inner",
-              ["aB"] = "@block.outer",
-            },
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              [']]'] = '@function.outer',
-            },
-            goto_next_end = {
-              [']['] = '@function.outer',
-            },
-            goto_previous_start = {
-              ['[['] = '@function.outer',
-            },
-            goto_previous_end = {
-              ['[]'] = '@function.outer',
-            },
-          },
-          swap = {
-            enable = true,
-            swap_next = {
-              ['<leader>sn'] = '@parameter.inner',
-            },
-            swap_previous = {
-              ['<leader>sp'] = '@parameter.inner',
-            },
-          },
-        },
-      })
-    end,
-  },
-
-  -- search selection via *
-  { 'bronson/vim-visual-star-search' },
-
-  {
-    'dinhhuy258/git.nvim',
-    config = function ()
-      require("git").setup()
-    end,
-  },
-
-  -- file explorer
-  {
-    "nvim-tree/nvim-tree.lua",
-    version = "*",
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
-    config = function()
-      require("nvim-tree").setup({
-        sort_by = "case_sensitive",
-        filters = {
-          dotfiles = true,
-        },
-        on_attach = function(bufnr)
-          local api = require('nvim-tree.api')
-
-          local function opts(desc)
-            return {
-              desc = 'nvim-tree: ' .. desc,
-              buffer = bufnr,
-              noremap = true,
-              silent = true,
-              nowait = true,
-            }
-          end
-
-          api.config.mappings.default_on_attach(bufnr)
-
-          vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
-          vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
-          vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
-        end
-      })
-    end,
-  },
-
-  -- save my last cursor position
-  {
-    "ethanholz/nvim-lastplace",
-    config = function()
-      require("nvim-lastplace").setup({
-        lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-        lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-        lastplace_open_folds = true
-      })
-    end,
-  },
-
-  { 
-    "AndrewRadev/splitjoin.vim"
-  },
-
-  {
-    "windwp/nvim-autopairs",
-    config = function() 
-      local npairs = require("nvim-autopairs")
-      npairs.setup {
-        check_ts = true,
-      }
-      
-      -- Remove backtick pairing
-      local Rule = require('nvim-autopairs.rule')
-      npairs.remove_rule('`')
-    end
-  },
-
-
-  {
-    "coder/claudecode.nvim",
-    lazy = false,
-    opts = {
-      terminal_cmd = "/Users/fatih/.local/bin/claude",
-      terminal = {
-          provider = "none", -- no UI actions; server + tools remain available
-      },
-    },
-    cmd = {
-      "ClaudeCode",
-      "ClaudeCodeFocus",
-      "ClaudeCodeSelectModel",
-      "ClaudeCodeAdd",
-      "ClaudeCodeSend",
-      "ClaudeCodeTreeAdd",
-      "ClaudeCodeDiffAccept",
-      "ClaudeCodeDiffDeny",
-    },
-    keys = {
-      { "<leader>c", nil, desc = "AI/Claude Code" },
-      { "<C-t>", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
-      { "<leader>cf", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
-      { "<leader>cr", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
-      { "<leader>cC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
-      { "<leader>cm", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-      { "<leader>ca", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-      { "<leader>cs", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+    lualine_c = {
       {
-        "<leader>cs",
-        "<cmd>ClaudeCodeTreeAdd<cr>",
-        desc = "Add file",
-        ft = { "NvimTree", "neo-tree", "oil" },
-      },
-      { "<leader>da", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-      { "<leader>dd", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+        'filename',
+        file_status = true, -- displays file status (readonly status, modified status)
+        path = 2 -- 0 = just filename, 1 = relative path, 2 = absolute path
+      }
     }
-  },
+  }
+})
 
-  {
-    "sourcegraph/amp.nvim",
-    branch = "main", 
-    lazy = false,
-    opts = { auto_start = true, log_level = "info" },
-  },
-
-  {
-      'brianhuster/live-preview.nvim',
-      dependencies = {
-        'ibhagwan/fzf-lua',
-  		  'folke/snacks.nvim',
-      },
-  },
-
-  -- { -- Fuzzy Finder (files, lsp, etc)
-  {
-    "ibhagwan/fzf-lua",
-    dependencies = {
-      "nvim-tree/nvim-web-devicons",
-      "elanmed/fzf-lua-frecency.nvim",
-    },
-    opts = {},
-    config = function()
-      require("fzf-lua").register_ui_select()
-      require('fzf-lua').setup {
-        oldfiles = {
-           -- include current sessions in old_files mode
-           include_current_session = true,
-        },
-        winopts = {
-          -- split = "belowright 10new",
-          backdrop = 100,
-          border = "single",
-          preview = {
-            hidden = true,
-            default = "bat",
-            border = "rounded",
-            title = false,
-            layout = "vertical",
-            horizontal = "right:50%",
-          },
-        },
-        git = {
-           files = {
-             cwd_header = false,
-             prompt        = '❯ ',
-             cmd           = 'git ls-files --exclude-standard',
-             multiprocess  = true,  -- run command in a separate process
-             git_icons     = false, -- show git icons?
-             file_icons    = false, -- show file icons (true|"devicons"|"mini")?
-             color_icons   = false, -- colorize file|git icons
-           },
-        },
-        files = {
-          git_files = false,
-          cwd_header = false,
-          cwd_prompt = true,
-          file_icons = false,
-        }
-      }
-
-      -- Setup frecency for fzf-lua (tracks frequently + recently used files)
-      require('fzf-lua-frecency').setup()
-
-     vim.keymap.set("n", "<C-p>", function()
-       -- Get git root to use as cwd (handles autochdir)
-       local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-       if vim.v.shell_error ~= 0 then
-         git_root = vim.fn.getcwd()
-       end
-       require('fzf-lua-frecency').frecency({
-         file_icons = false,
-         git_icons = false,
-         cwd_only = true,  -- only show files from current repo
-         cwd = git_root,   -- use git root, not autochdir path
-       })
-     end, {})
-     vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
-     vim.keymap.set("n", "<C-g>", require("fzf-lua").lsp_document_symbols, {})
+-- Treesitter highlighting (Neovim 0.12 native — no more nvim-treesitter.configs)
+-- Parsers must be installed once: :TSInstall go gomod proto lua vimdoc vim bash fish json markdown markdown_inline mermaid
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('treesitter_start', { clear = true }),
+  callback = function(args)
+    -- Skip large files
+    local max_filesize = 100 * 1024 -- 100 KB
+    local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(args.buf))
+    if ok and stats and stats.size > max_filesize then
+      return
     end
-  },
+    pcall(vim.treesitter.start, args.buf)
+  end,
+})
 
-  -- LSP Plugins
-  {
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
-    'folke/lazydev.nvim',
-    ft = 'lua',
-    opts = {
-      library = {
-        -- Load luvit types when the `vim.uv` word is found
-        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
-      },
-    },
-  },
+-- Treesitter textobjects (new API — explicit keymaps)
+require("nvim-treesitter-textobjects").setup({
+  select = { lookahead = true },
+  move = { set_jumps = true },
+})
 
-  { 'Bilal2453/luvit-meta', lazy = true },
+local ts_select = require("nvim-treesitter-textobjects.select")
+local function select_textobject(query)
+  return function() ts_select.select_textobject(query, "textobjects") end
+end
 
-  -- Useful status updates for LSP
-  { 'j-hui/fidget.nvim', opts = {} },
+vim.keymap.set({ "x", "o" }, "aa", select_textobject("@parameter.outer"))
+vim.keymap.set({ "x", "o" }, "ia", select_textobject("@parameter.inner"))
+vim.keymap.set({ "x", "o" }, "af", select_textobject("@function.outer"))
+vim.keymap.set({ "x", "o" }, "if", select_textobject("@function.inner"))
+vim.keymap.set({ "x", "o" }, "ac", select_textobject("@class.outer"))
+vim.keymap.set({ "x", "o" }, "ic", select_textobject("@class.inner"))
+vim.keymap.set({ "x", "o" }, "iB", select_textobject("@block.inner"))
+vim.keymap.set({ "x", "o" }, "aB", select_textobject("@block.outer"))
 
-  -- Extra capabilities for nvim-cmp
-  { 'hrsh7th/cmp-nvim-lsp' },
+local ts_move = require("nvim-treesitter-textobjects.move")
+vim.keymap.set({ "n", "x", "o" }, "]]", function() ts_move.goto_next_start("@function.outer", "textobjects") end)
+vim.keymap.set({ "n", "x", "o" }, "][", function() ts_move.goto_next_end("@function.outer", "textobjects") end)
+vim.keymap.set({ "n", "x", "o" }, "[[", function() ts_move.goto_previous_start("@function.outer", "textobjects") end)
+vim.keymap.set({ "n", "x", "o" }, "[]", function() ts_move.goto_previous_end("@function.outer", "textobjects") end)
 
-  {
-    "L3MON4D3/LuaSnip",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    config = function()
-      require("luasnip.loaders.from_vscode").lazy_load()
+local ts_swap = require("nvim-treesitter-textobjects.swap")
+vim.keymap.set("n", "<leader>sn", function() ts_swap.swap_next("@parameter.inner") end)
+vim.keymap.set("n", "<leader>sp", function() ts_swap.swap_previous("@parameter.inner") end)
+
+-- Incremental selection: Neovim 0.12 built-in — use v then an/in/]n/[n
+-- (replaces old <space>/<bs>/<tab> keymaps from nvim-treesitter)
+
+-- Git
+require("git").setup()
+
+-- File explorer
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  filters = { dotfiles = true },
+  on_attach = function(bufnr)
+    local api = require('nvim-tree.api')
+    local function opts(desc)
+      return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
     end
+    api.config.mappings.default_on_attach(bufnr)
+    vim.keymap.set('n', 's', api.node.open.vertical, opts('Open: Vertical Split'))
+    vim.keymap.set('n', 'i', api.node.open.horizontal, opts('Open: Horizontal Split'))
+    vim.keymap.set('n', 'u', api.tree.change_root_to_parent, opts('Up'))
+  end
+})
+
+-- Autopairs
+local npairs = require("nvim-autopairs")
+npairs.setup { check_ts = true }
+npairs.remove_rule('`')
+
+-- Claude Code
+require("claudecode").setup({
+  terminal_cmd = "/Users/fatih/.local/bin/claude",
+  terminal = { provider = "none" },
+})
+
+-- Amp
+require("amp").setup({ auto_start = true, log_level = "info" })
+
+-- FZF
+require("fzf-lua").register_ui_select()
+require('fzf-lua').setup {
+  oldfiles = {
+    include_current_session = true,
   },
-
-  -- autocompletion
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-      "onsails/lspkind-nvim",
-      "lukas-reineke/cmp-under-comparator",
+  winopts = {
+    backdrop = 100,
+    border = "single",
+    preview = {
+      hidden = true,
+      default = "bat",
+      border = "rounded",
+      title = false,
+      layout = "vertical",
+      horizontal = "right:50%",
     },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-      local lspkind = require("lspkind")
-      local types = require("cmp.types")
-      local compare = require("cmp.config.compare")
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+  },
+  git = {
+    files = {
+      cwd_header = false,
+      prompt        = '❯ ',
+      cmd           = 'git ls-files --exclude-standard',
+      multiprocess  = true,
+      git_icons     = false,
+      file_icons    = false,
+      color_icons   = false,
+    },
+  },
+  files = {
+    git_files = false,
+    cwd_header = false,
+    cwd_prompt = true,
+    file_icons = false,
+  }
+}
+require('fzf-lua-frecency').setup()
 
-      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+-- Lazydev (Lua LSP config helper)
+require("lazydev").setup({})
 
-      luasnip.config.setup {}
+-- Snippets
+require("luasnip.loaders.from_vscode").lazy_load()
 
-      local modified_priority = {
-          [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-          [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-          [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-          [types.lsp.CompletionItemKind.Text] = 100, -- bottom
-      }
+-- Autocompletion
+local cmp = require("cmp")
+local luasnip = require("luasnip")
+local lspkind = require("lspkind")
+local types = require("cmp.types")
+local compare = require("cmp.config.compare")
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 
-      local function modified_kind(kind)
-          return modified_priority[kind] or kind
-      end
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+luasnip.config.setup {}
 
+local modified_priority = {
+  [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
+  [types.lsp.CompletionItemKind.Snippet] = 0, -- top
+  [types.lsp.CompletionItemKind.Keyword] = 0, -- top
+  [types.lsp.CompletionItemKind.Text] = 100, -- bottom
+}
 
-      require('cmp').setup({
-        preselect = false,
-        completion = {
-            completeopt = "menu,menuone,preview,noselect",
-        },
-        snippet = {
-            expand = function(args)
-              luasnip.lsp_expand(args.body)
-            end,
-        },
-        formatting = {
-          format = lspkind.cmp_format {
-            with_text = true,
-            menu = {
-              buffer = "[Buffer]",
-              nvim_lsp = "[LSP]",
-              nvim_lua = "[Lua]",
-            },
-          },
-        },
+local function modified_kind(kind)
+  return modified_priority[kind] or kind
+end
 
-        sorting = {
-            priority_weight = 1.0,
-            comparators = {
-                compare.offset,
-                compare.exact,
-                compare.score,
-                compare.locality,
-                function(entry1, entry2) -- sort by length ignoring "=~"
-                    local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
-                    local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
-                    if len1 ~= len2 then
-                        return len1 - len2 < 0
-                    end
-                end,
-                compare.recently_used,
-                function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-                    local kind1 = modified_kind(entry1:get_kind())
-                    local kind2 = modified_kind(entry2:get_kind())
-                    if kind1 ~= kind2 then
-                        return kind1 - kind2 < 0
-                    end
-                end,
-                require("cmp-under-comparator").under,
-                compare.kind,
-            },
-        },
-
-        matching = {
-           disallow_fuzzy_matching = true,
-           disallow_fullfuzzy_matching = true,
-           disallow_partial_fuzzy_matching = true,
-           disallow_partial_matching = false,
-           disallow_prefix_unmatching = true,
-        },
-        mapping = cmp.mapping.preset.insert {
-          ['<C-n>'] = cmp.mapping.select_next_item(),
-          ['<C-p>'] = cmp.mapping.select_prev_item(),
-          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
-          ["<Tab>"] = cmp.mapping(function(fallback)
-            if cmp.visible() then
-                cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-                luasnip.expand_or_jump()
-            else
-                fallback()
-            end
-          end, { 'i', 's' }),
-          ["<S-Tab>"] = cmp.mapping(function(fallback)
-             if cmp.visible() then
-                 cmp.select_prev_item()
-             elseif luasnip.jumpable(-1) then
-                 luasnip.jump(-1)
-             else
-                 fallback()
-             end
-          end, { "i", "s" }),
-
-        },
-        window = { documentation = cmp.config.window.bordered(), completion = cmp.config.window.bordered() },
-        view = {
-          entries = {
-            name = "custom",
-            selection_order = "near_cursor",
-          },
-        },
-        confirm_opts = {
-          behavior = cmp.ConfirmBehavior.Insert,
-        },
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = "luasnip", keyword_length = 2},
-          { name = "buffer", keyword_length = 5},
-        },
-        performance = {
-          max_view_entries = 20,
-        },
-      })
+cmp.setup({
+  preselect = false,
+  completion = {
+    completeopt = "menu,menuone,preview,noselect",
+  },
+  snippet = {
+    expand = function(args)
+      luasnip.lsp_expand(args.body)
     end,
   },
-
-
+  formatting = {
+    format = lspkind.cmp_format {
+      with_text = true,
+      menu = {
+        buffer = "[Buffer]",
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[Lua]",
+      },
+    },
+  },
+  sorting = {
+    priority_weight = 1.0,
+    comparators = {
+      compare.offset,
+      compare.exact,
+      compare.score,
+      compare.locality,
+      function(entry1, entry2) -- sort by length ignoring "=~"
+        local len1 = string.len(string.gsub(entry1.completion_item.label, "[=~()_]", ""))
+        local len2 = string.len(string.gsub(entry2.completion_item.label, "[=~()_]", ""))
+        if len1 ~= len2 then
+          return len1 - len2 < 0
+        end
+      end,
+      compare.recently_used,
+      function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
+        local kind1 = modified_kind(entry1:get_kind())
+        local kind2 = modified_kind(entry2:get_kind())
+        if kind1 ~= kind2 then
+          return kind1 - kind2 < 0
+        end
+      end,
+      require("cmp-under-comparator").under,
+      compare.kind,
+    },
+  },
+  matching = {
+    disallow_fuzzy_matching = true,
+    disallow_fullfuzzy_matching = true,
+    disallow_partial_fuzzy_matching = true,
+    disallow_partial_matching = false,
+    disallow_prefix_unmatching = true,
+  },
+  mapping = cmp.mapping.preset.insert {
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<CR>'] = cmp.mapping.confirm { select = true },
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, { 'i', 's' }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+  },
+  window = {
+    documentation = cmp.config.window.bordered({ border = 'rounded' }),
+    completion = cmp.config.window.bordered({ border = 'rounded' }),
+  },
+  view = {
+    entries = {
+      name = "custom",
+      selection_order = "near_cursor",
+    },
+  },
+  confirm_opts = {
+    behavior = cmp.ConfirmBehavior.Insert,
+  },
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = "luasnip", keyword_length = 2},
+    { name = "buffer", keyword_length = 5},
+  },
+  performance = {
+    max_view_entries = 20,
+  },
 })
 
 ----------------
---- LSP Setup (Neovim 0.11 native) ---
+--- LSP Setup (Neovim 0.12 native) ---
 ----------------
 
 -- Get capabilities from cmp-nvim-lsp for better completion
@@ -590,10 +385,6 @@ vim.lsp.enable({ 'gopls', 'lua_ls' })
 --- SETTINGS ---
 ----------------
 
--- disable netrw at the very start of our init.lua, because we use nvim-tree
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-
 vim.opt.termguicolors = true -- Enable 24-bit RGB colors
 
 vim.opt.number = true        -- Show line numbers
@@ -607,25 +398,25 @@ vim.opt.mouse = 'a'                -- Enable mouse support
 vim.opt.clipboard = 'unnamedplus'  -- Copy/paste to system clipboard
 vim.opt.swapfile = false           -- Don't use swapfile
 vim.opt.ignorecase = true          -- Search case insensitive...
-vim.opt.smartcase = true           -- ... but not it begins with upper case 
+vim.opt.smartcase = true           -- ... but not it begins with upper case
 vim.opt.completeopt = 'menuone,noinsert,noselect'  -- Autocomplete options
+vim.opt.pumborder = 'rounded'  -- Neovim 0.12: border on popup menus
 
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.stdpath("data") .. "undo"
 
 -- Indent Settings
 -- I'm in the Spaces camp (sorry Tabs folks), so I'm using a combination of
--- settings to insert spaces all the time. 
+-- settings to insert spaces all the time.
 vim.opt.expandtab = true  -- expand tabs into spaces
 vim.opt.shiftwidth = 2    -- number of spaces to use for each step of indent.
 vim.opt.tabstop = 2       -- number of spaces a TAB counts for
 vim.opt.autoindent = true -- copy indent from current line when starting a new line
 vim.opt.wrap = true
 
--- This comes first, because we have mappings that depend on leader
--- With a map leader it's possible to do extra key combinations
--- i.e: <leader>w saves the current file
-vim.g.mapleader = ','
+----------------
+--- KEYMAPS ---
+----------------
 
 -- Fast saving
 vim.keymap.set('n', '<Leader>w', ':write!<CR>')
@@ -681,8 +472,6 @@ local function stay_star()
 end
 vim.keymap.set('n', '*', stay_star, {noremap = true, silent = true})
 
-
-
 -- We don't need this keymap, but here we are. If I do a ctrl-v and select
 -- lines vertically, insert stuff, they get lost for all lines if we use
 -- ctrl-c, but not if we use ESC. So just let's assume Ctrl-c is ESC.
@@ -712,6 +501,67 @@ vim.keymap.set('n', '<Down>', 'gj')
 -- Yanking a line should act like D and C
 vim.keymap.set('n', 'Y', 'y$')
 
+-- FZF keymaps
+vim.keymap.set("n", "<C-p>", function()
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if vim.v.shell_error ~= 0 then
+    git_root = vim.fn.getcwd()
+  end
+  require('fzf-lua-frecency').frecency({
+    file_icons = false,
+    git_icons = false,
+    cwd_only = true,
+    cwd = git_root,
+  })
+end, {})
+vim.keymap.set("n", "<C-b>", require("fzf-lua").files, {})
+vim.keymap.set("n", "<C-g>", require("fzf-lua").lsp_document_symbols, {})
+
+-- Claude Code keymaps
+vim.keymap.set('n', '<C-t>', '<cmd>ClaudeCode<cr>', { desc = "Toggle Claude" })
+vim.keymap.set('n', '<leader>cf', '<cmd>ClaudeCodeFocus<cr>', { desc = "Focus Claude" })
+vim.keymap.set('n', '<leader>cr', '<cmd>ClaudeCode --resume<cr>', { desc = "Resume Claude" })
+vim.keymap.set('n', '<leader>cC', '<cmd>ClaudeCode --continue<cr>', { desc = "Continue Claude" })
+vim.keymap.set('n', '<leader>cm', '<cmd>ClaudeCodeSelectModel<cr>', { desc = "Select Claude model" })
+vim.keymap.set('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
+vim.keymap.set('v', '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
+vim.keymap.set('n', '<leader>da', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = "Accept diff" })
+vim.keymap.set('n', '<leader>dd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = "Deny diff" })
+
+-- git.nvim
+vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
+vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
+vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
+
+-- old habits
+vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
+  range = true,
+  bang = true,
+  nargs = "*",
+})
+
+-- File-tree mappings
+vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
+
+-- vim-go
+vim.keymap.set('n', '<leader>b', build_go_files)
+vim.api.nvim_create_user_command("A", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'edit'})<CR>", {})
+vim.api.nvim_create_user_command("AV", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'vsplit'})<CR>", {})
+vim.api.nvim_create_user_command("AS", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'split'})<CR>", {})
+
+-- Amp mapping
+vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
+vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
+vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
+vim.keymap.set('v', '<leader>as', ":'<,'>AmpPromptRef<CR>", { desc = "Send selection to Prompt" })
+vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
+
+--------------------
+--- AUTOCOMMANDS ---
+--------------------
+
+-- Ghostty title
 if vim.fn.getenv("TERM_PROGRAM") == "ghostty" then
   vim.opt.title = true
 
@@ -740,29 +590,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
 })
 
--- git.nvim
-vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
-vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
-vim.keymap.set('x', '<leader>go', ":<C-u> lua require('git.browse').open(true)<CR>")
-
--- old habits 
-vim.api.nvim_create_user_command("GBrowse", 'lua require("git.browse").open(true)<CR>', {
-  range = true,
-  bang = true,
-  nargs = "*",
-})
-
--- File-tree mappings
-vim.keymap.set('n', '<leader>n', ':NvimTreeToggle<CR>', { noremap = true })
-vim.keymap.set('n', '<leader>f', ':NvimTreeFindFileToggle!<CR>', { noremap = true })
-
-
--- vim-go
-vim.keymap.set('n', '<leader>b', build_go_files)
-vim.api.nvim_create_user_command("A", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'edit'})<CR>", {})
-vim.api.nvim_create_user_command("AV", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'vsplit'})<CR>", {})
-vim.api.nvim_create_user_command("AS", ":lua vim.api.nvim_call_function('go#alternate#Switch', {true, 'split'})<CR>", {})
-
 -- Go uses gofmt, which uses tabs for indentation and spaces for aligment.
 -- Hence override our indentation rules.
 vim.api.nvim_create_autocmd('Filetype', {
@@ -771,18 +598,130 @@ vim.api.nvim_create_autocmd('Filetype', {
   command = 'setlocal noexpandtab tabstop=4 shiftwidth=4'
 })
 
--- -- ClaudeCode mapping
--- vim.keymap.set('n', '<C-t>', ':ClaudeCode<CR>', { noremap = true, silent = true })
--- vim.keymap.set('n', '<leader>aa', '<cmd>ClaudeCodeAdd %<cr>', { desc = "Add current buffer" })
--- vim.keymap.set({'n', 'v'}, '<leader>as', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to Claude" })
+-- automatically resize all vim buffers if I resize the terminal window
+vim.api.nvim_command('autocmd VimResized * wincmd =')
 
--- -- Amp mapping
-vim.keymap.set('n', '<leader>ab', '<cmd>AmpBuffer<cr>', { desc = "Create Amp buffer" })
-vim.keymap.set('x', '<leader>ab', ":'<,'>AmpBuffer<CR>", { desc = "Create Amp buffer from selection" })
-vim.keymap.set('n', '<leader>as', '<cmd>AmpSendBuffer<cr>', { desc = "Send buffer to Amp" })
-vim.keymap.set('v', '<leader>as', ":'<,'>AmpPromptRef<CR>", { desc = "Send selection to Prompt" })
--- vim.keymap.set('n', '<leader>am', '<cmd>AmpMessage %<cr>', { desc = "Send message to Amp" })
-vim.keymap.set('x', '<leader>aa', ":'<,'>AmpAppendBuffer<CR>", { desc = "Append selection to Amp buffer" })
+-- OSC 7: Report working directory to terminal (for Ghostty split inheritance)
+-- https://github.com/neovim/neovim/issues/21771
+local function osc7_notify()
+  local cwd = vim.fn.getcwd()
+  -- If inside a .git directory, report the parent instead
+  if cwd:match('/.git$') or cwd:match('/.git/') then
+    cwd = cwd:gsub('/.git.*$', '')
+  end
+  -- Omit hostname for simpler parsing by tmux (file:///path instead of file://hostname/path)
+  local osc7 = string.format("\027]7;file://%s\007", cwd)
+  vim.fn.chansend(vim.v.stderr, osc7)
+end
+
+local osc7_group = vim.api.nvim_create_augroup('osc7', { clear = true })
+
+vim.api.nvim_create_autocmd('DirChanged', {
+  group = osc7_group,
+  pattern = { '*' },
+  callback = osc7_notify,
+})
+
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = osc7_group,
+  pattern = { '*' },
+  callback = osc7_notify,
+})
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  group = osc7_group,
+  pattern = { '*' },
+  callback = osc7_notify,
+})
+
+-- Note: We intentionally don't clear OSC 7 on VimLeave.
+-- The shell (fish) will report its own working directory after Vim exits.
+-- Sending an empty OSC 7 here causes Ghostty to lose track of the CWD.
+
+-- put quickfix window always to the bottom
+local qfgroup = vim.api.nvim_create_augroup('changeQuickfix', { clear = true })
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  group = qfgroup,
+  command = 'wincmd J',
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'qf',
+  group = qfgroup,
+  command = 'setlocal wrap',
+})
+
+-- Highlight when yanking (copying) text
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
+-- disable diagnostics, I didn't like them
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = false,
+  underline = false,
+  update_in_insert = false,
+})
+
+-- Run gofmt/gofmpt, import packages automatically on save
+vim.api.nvim_create_autocmd('BufWritePre', {
+  group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
+  pattern = '*.go',
+  callback = function()
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { "source.organizeImports" } }
+    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
+    for _, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          vim.lsp.util.apply_workspace_edit(r.edit, "utf-16")
+        else
+          vim.lsp.buf.execute_command(r.command)
+        end
+      end
+    end
+
+    vim.lsp.buf.format()
+  end
+})
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    local opts = { buffer = ev.buf }
+
+    vim.keymap.set('n', 'gd', "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
+    vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
+
+    vim.keymap.set('n', 'gr', function()
+      vim.lsp.buf.references(nil, {
+        on_list = function(options)
+          vim.fn.setqflist({}, ' ', options)
+          if #options.items > 0 then
+            vim.cmd('copen')
+            vim.cmd('cfirst')
+            vim.cmd('normal! zz')
+          end
+        end
+      })
+    end, opts)
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    -- Neovim 0.12 defaults provide: gri (implementation), grx (codelens), grn (rename)
+  end,
+})
+
+--------------------------
+--- Amp user commands ---
+--------------------------
 
 -- Add selected text directly to prompt
 vim.api.nvim_create_user_command("AmpPromptSelection", function(opts)
@@ -835,144 +774,127 @@ end, {
 
 -- Open new scratch buffer for Amp prompts
 vim.api.nvim_create_user_command("AmpBuffer", function(opts)
-	local lines = {}
-	-- Only get lines if we have a valid range
-	local has_range = (opts.range > 0) and (opts.line2 > 0) and (opts.line2 >= opts.line1)
-	if has_range then
-		lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
-	end
+  local lines = {}
+  local has_range = (opts.range > 0) and (opts.line2 > 0) and (opts.line2 >= opts.line1)
+  if has_range then
+    lines = vim.api.nvim_buf_get_lines(0, opts.line1 - 1, opts.line2, false)
+  end
 
-	-- Check if amp-scratch buffer already exists
-	local existing_buf = nil
-	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-		if vim.api.nvim_buf_is_valid(buf) then
-			local buf_name = vim.api.nvim_buf_get_name(buf)
-			if buf_name:match("amp%-scratch$") then
-				existing_buf = buf
-				break
-			end
-		end
-	end
+  local existing_buf = nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_valid(buf) then
+      local buf_name = vim.api.nvim_buf_get_name(buf)
+      if buf_name:match("amp%-scratch$") then
+        existing_buf = buf
+        break
+      end
+    end
+  end
 
-	local target_buf
-	if existing_buf then
-		-- Check if existing buffer is already visible in a window
-		local existing_win = nil
-		for _, win in ipairs(vim.api.nvim_list_wins()) do
-			if vim.api.nvim_win_get_buf(win) == existing_buf then
-				existing_win = win
-				break
-			end
-		end
+  local target_buf
+  if existing_buf then
+    local existing_win = nil
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.api.nvim_win_get_buf(win) == existing_buf then
+        existing_win = win
+        break
+      end
+    end
 
-		if existing_win then
-			-- Switch to existing window
-			vim.api.nvim_set_current_win(existing_win)
-		else
-			-- Open existing buffer in a vertical split
-			vim.cmd("vsplit")
-			vim.api.nvim_win_set_buf(0, existing_buf)
-		end
+    if existing_win then
+      vim.api.nvim_set_current_win(existing_win)
+    else
+      vim.cmd("vsplit")
+      vim.api.nvim_win_set_buf(0, existing_buf)
+    end
 
-		-- Only append new lines if we have a selection
-		if #lines > 0 then
-			local existing_lines = vim.api.nvim_buf_get_lines(existing_buf, 0, -1, false)
-			if #existing_lines > 0 and existing_lines[#existing_lines] ~= "" then
-				table.insert(existing_lines, "") -- Add blank line separator
-			end
-			for _, line in ipairs(lines) do
-				table.insert(existing_lines, line)
-			end
-			vim.api.nvim_buf_set_lines(existing_buf, 0, -1, false, existing_lines)
-		end
-		target_buf = existing_buf
-	else
-		-- Create new buffer
-		vim.cmd("vsplit")
-		local buf = vim.api.nvim_create_buf(false, true)
-		vim.api.nvim_win_set_buf(0, buf)
-		vim.bo[buf].buftype = "nofile"
-		vim.bo[buf].bufhidden = "hide"
-		vim.bo[buf].swapfile = false
-		vim.api.nvim_buf_set_name(buf, "amp-scratch")
+    if #lines > 0 then
+      local existing_lines = vim.api.nvim_buf_get_lines(existing_buf, 0, -1, false)
+      if #existing_lines > 0 and existing_lines[#existing_lines] ~= "" then
+        table.insert(existing_lines, "")
+      end
+      for _, line in ipairs(lines) do
+        table.insert(existing_lines, line)
+      end
+      vim.api.nvim_buf_set_lines(existing_buf, 0, -1, false, existing_lines)
+    end
+    target_buf = existing_buf
+  else
+    vim.cmd("vsplit")
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_win_set_buf(0, buf)
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "hide"
+    vim.bo[buf].swapfile = false
+    vim.api.nvim_buf_set_name(buf, "amp-scratch")
 
-		-- Populate buffer with selected lines
-		if #lines > 0 then
-			vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-		end
-		target_buf = buf
-	end
+    if #lines > 0 then
+      vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    end
+    target_buf = buf
+  end
 
-	-- Add empty lines at end and move cursor there
-	local current_lines = vim.api.nvim_buf_get_lines(target_buf, 0, -1, false)
-	-- Only add newlines if buffer has content
-	if #current_lines > 0 and current_lines[1] ~= "" then
-		vim.api.nvim_buf_set_lines(target_buf, -1, -1, false, { "", "" })
-	end
-	local line_count = vim.api.nvim_buf_line_count(target_buf)
-	vim.api.nvim_win_set_cursor(0, { line_count, 0 })
+  local current_lines = vim.api.nvim_buf_get_lines(target_buf, 0, -1, false)
+  if #current_lines > 0 and current_lines[1] ~= "" then
+    vim.api.nvim_buf_set_lines(target_buf, -1, -1, false, { "", "" })
+  end
+  local line_count = vim.api.nvim_buf_line_count(target_buf)
+  vim.api.nvim_win_set_cursor(0, { line_count, 0 })
 end, {
-	nargs = 0,
-	desc = "Open scratch buffer for Amp prompts",
-	range = true,
+  nargs = 0,
+  desc = "Open scratch buffer for Amp prompts",
+  range = true,
 })
 
 -- Send entire buffer contents and close the buffer
 vim.api.nvim_create_user_command("AmpSendBuffer", function(opts)
-	local buf = vim.api.nvim_get_current_buf()
-	local buf_name = vim.api.nvim_buf_get_name(buf)
+  local buf = vim.api.nvim_get_current_buf()
+  local buf_name = vim.api.nvim_buf_get_name(buf)
 
-	-- Check if we're in an amp-scratch buffer
-	if not buf_name:match("amp%-scratch$") then
-		print("AmpSendBuffer can only be used in amp-scratch buffers")
-		return
-	end
+  if not buf_name:match("amp%-scratch$") then
+    print("AmpSendBuffer can only be used in amp-scratch buffers")
+    return
+  end
 
-	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-	local content = table.concat(lines, "\n")
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local content = table.concat(lines, "\n")
 
-	-- Check if content is empty
-	if content:match("^%s*$") then
-		print("Buffer is empty, nothing to send")
-		return
-	end
+  if content:match("^%s*$") then
+    print("Buffer is empty, nothing to send")
+    return
+  end
 
-	-- Check if Amp server is running
-	local amp = require("amp")
-	if not amp.state.server then
-		print("Amp server is not running - start it first with :AmpStart")
-		return
-	end
+  local amp = require("amp")
+  if not amp.state.server then
+    print("Amp server is not running - start it first with :AmpStart")
+    return
+  end
 
-	-- Check if there are actually connected clients
-	local server_status = amp.state.server.get_status and amp.state.server.get_status()
-	if not server_status or server_status.client_count == 0 then
-		print("No Amp clients connected")
-		return
-	end
+  local server_status = amp.state.server.get_status and amp.state.server.get_status()
+  if not server_status or server_status.client_count == 0 then
+    print("No Amp clients connected")
+    return
+  end
 
-	-- Store buffer info before attempting send (failsafe)
-	local should_close_buffer = false
-	local amp_message = require("amp.message")
+  local should_close_buffer = false
+  local amp_message = require("amp.message")
 
-	-- Send message and check return value
-	local success = amp_message.send_message(content)
+  local success = amp_message.send_message(content)
 
-	if success then
-		should_close_buffer = true
-		print("Message sent to Amp")
-	else
-		print("Failed to send to Amp - connection failed")
-	end
+  if success then
+    should_close_buffer = true
+    print("Message sent to Amp")
+  else
+    print("Failed to send to Amp - connection failed")
+  end
 
-	-- Only close buffer if we explicitly marked it as safe to close
-	if should_close_buffer then
-		vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
-		vim.api.nvim_buf_delete(buf, { force = true })
-	end
+  if should_close_buffer then
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
+    vim.api.nvim_buf_delete(buf, { force = true })
+  end
 end, {
-	nargs = "?",
-	desc = "Send current buffer contents to Amp",
+  nargs = "?",
+  desc = "Send current buffer contents to Amp",
 })
 
 -- Append selected lines to amp-scratch buffer in @filename#L12-46 format
@@ -991,7 +913,6 @@ vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
     ref = ref .. "#L" .. opts.line1
   end
 
-  -- Find amp-scratch buffer
   local scratch_buf = nil
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     local buf_name = vim.api.nvim_buf_get_name(buf)
@@ -1006,13 +927,10 @@ vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
     return
   end
 
-  -- Get current lines in scratch buffer and append the reference to the last line
   local scratch_lines = vim.api.nvim_buf_get_lines(scratch_buf, 0, -1, false)
   if #scratch_lines == 0 then
-    -- Empty buffer, just add the reference
     table.insert(scratch_lines, ref)
   else
-    -- Append to the last line with a space
     scratch_lines[#scratch_lines] = scratch_lines[#scratch_lines] .. " " .. ref
   end
   vim.api.nvim_buf_set_lines(scratch_buf, 0, -1, false, scratch_lines)
@@ -1021,137 +939,4 @@ vim.api.nvim_create_user_command("AmpAppendBuffer", function(opts)
 end, {
   range = true,
   desc = "Add file reference (with selection) to amp-scratch buffer",
-})
-
-
-
--- automatically resize all vim buffers if I resize the terminal window
-vim.api.nvim_command('autocmd VimResized * wincmd =')
-
--- OSC 7: Report working directory to terminal (for Ghostty split inheritance)
--- https://github.com/neovim/neovim/issues/21771
-local function osc7_notify()
-  local cwd = vim.fn.getcwd()
-  -- If inside a .git directory, report the parent instead
-  if cwd:match('/.git$') or cwd:match('/.git/') then
-    cwd = cwd:gsub('/.git.*$', '')
-  end
-  -- Omit hostname for simpler parsing by tmux (file:///path instead of file://hostname/path)
-  local osc7 = string.format("\027]7;file://%s\007", cwd)
-  vim.fn.chansend(vim.v.stderr, osc7)
-end
-
-local osc7_group = vim.api.nvim_create_augroup('osc7', { clear = true })
-
--- Send on directory change
-vim.api.nvim_create_autocmd('DirChanged', {
-  group = osc7_group,
-  pattern = { '*' },
-  callback = osc7_notify,
-})
-
--- Send on buffer enter (autochdir may change dir without firing DirChanged)
-vim.api.nvim_create_autocmd('BufEnter', {
-  group = osc7_group,
-  pattern = { '*' },
-  callback = osc7_notify,
-})
-
--- Send on Neovim startup
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = osc7_group,
-  pattern = { '*' },
-  callback = osc7_notify,
-})
-
--- Note: We intentionally don't clear OSC 7 on VimLeave.
--- The shell (fish) will report its own working directory after Vim exits.
--- Sending an empty OSC 7 here causes Ghostty to lose track of the CWD.
-
-
--- put quickfix window always to the bottom
-local qfgroup = vim.api.nvim_create_augroup('changeQuickfix', { clear = true })
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'qf',
-  group = qfgroup,
-  command = 'wincmd J',
-})
-
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = 'qf',
-  group = qfgroup,
-  command = 'setlocal wrap',
-})
-
--- Highlight when yanking (copying) text
---  Try it with `yap` in normal mode
---  See `:help vim.highlight.on_yank()`
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
-
--- disable diagnostics, I didn't like them
-vim.diagnostic.config({
-  virtual_text = false,
-  signs = false,
-  underline = false,
-  update_in_insert = false,
-})
-
--- Run gofmt/gofmpt, import packages automatically on save
-vim.api.nvim_create_autocmd('BufWritePre', {
-  group = vim.api.nvim_create_augroup('setGoFormatting', { clear = true }),
-  pattern = '*.go',
-  callback = function()
-    local params = vim.lsp.util.make_range_params()
-    params.context = { only = { "source.organizeImports" } }
-    local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
-    for _, res in pairs(result or {}) do
-      for _, r in pairs(res.result or {}) do
-        if r.edit then
-          vim.lsp.util.apply_workspace_edit(r.edit, "utf-16")
-        else
-          vim.lsp.buf.execute_command(r.command)
-        end
-      end
-    end
-
-    vim.lsp.buf.format()
-  end
-})
-
--- Use LspAttach autocommand to only map the following keys
--- after the language server attaches to the current buffer
-vim.api.nvim_create_autocmd('LspAttach', {
-  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
-  callback = function(ev)
-    -- Buffer local mappings.
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    local opts = { buffer = ev.buf }
-
-    vim.keymap.set('n', 'gd', "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-    vim.keymap.set('n', '<leader>v', "<cmd>vsplit | lua vim.lsp.buf.definition()<CR>", opts)
-    vim.keymap.set('n', '<leader>s', "<cmd>belowright split | lua vim.lsp.buf.definition()<CR>", opts)
-
-    vim.keymap.set('n', 'gr', function()
-      vim.lsp.buf.references(nil, {
-        on_list = function(options)
-          vim.fn.setqflist({}, ' ', options)
-          if #options.items > 0 then
-            vim.cmd('copen')
-            vim.cmd('cfirst')
-            vim.cmd('normal! zz')
-          end
-        end
-      })
-    end, opts)
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-    vim.keymap.set('n', '<leader>cl', vim.lsp.codelens.run, opts)
-    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
-  end,
 })
