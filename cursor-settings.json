@@ -75,5 +75,6 @@
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
   "update.releaseTrack": "prerelease",
-  "cursor.composer.usageSummaryDisplay": "always"
+  "cursor.composer.usageSummaryDisplay": "always",
+  "update.mode": "silentlyApplyOnQuit"
 }
