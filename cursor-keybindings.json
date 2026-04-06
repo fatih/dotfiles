@@ -60,23 +60,23 @@
   },
   {
     "key": "cmd+h",
-    "command": "workbench.action.focusSideBar",
-    "when": "editorFocus"
-  },
-  {
-    "key": "cmd+h",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "auxiliaryBarFocus || composerFocused"
   },
   {
-    "key": "cmd+l",
-    "command": "aichat.newchataction",
-    "when": "editorHasSelection"
+    "key": "cmd+h",
+    "command": "glass.focusInput",
+    "when": "!composerFocused && (terminalFocus || terminalFocusInAny || terminalEditorFocus || panelFocus)"
+  },
+  {
+    "key": "cmd+h",
+    "command": "workbench.action.focusSideBar",
+    "when": "editorTextFocus && !composerFocused && !auxiliaryBarFocus"
   },
   {
     "key": "cmd+l",
-    "command": "workbench.action.focusAuxiliaryBar",
-    "when": "editorFocus && !editorHasSelection"
+    "command": "glass.focusInTerminal",
+    "when": "!(terminalFocus || terminalFocusInAny || terminalEditorFocus)"
   },
   {
     "key": ", n",

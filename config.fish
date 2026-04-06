@@ -24,6 +24,9 @@ set -g __fish_git_prompt_color_branch cyan --dim
 # don't show any greetings
 set fish_greeting ""
 
+# suppress direnv verbose output
+# set -x DIRENV_LOG_FORMAT ""
+
 # don't describe the command for darwin
 # https://github.com/fish-shell/fish-shell/issues/6270
 function __fish_describe_command; end
