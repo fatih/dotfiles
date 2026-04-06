@@ -40,7 +40,14 @@
   "editor.formatOnPaste": true,
   "editor.fontFamily": "TX-02",
   "editor.fontSize": 14,
+  "terminal.integrated.profiles.osx": {
+    "fish": {
+      "path": "/opt/homebrew/bin/fish",
+      "args": ["-l"]
+    }
+  },
   "terminal.integrated.defaultProfile.osx": "fish",
+  "terminal.integrated.inheritEnv": true,
   "git.enableSmartCommit": true,
   "git.confirmSync": false,
   "search.useGlobalIgnoreFiles": true,
@@ -74,7 +81,8 @@
   "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
-  "update.releaseTrack": "prerelease",
+  "update.releaseTrack": "dev",
   "cursor.composer.usageSummaryDisplay": "always",
-  "update.mode": "silentlyApplyOnQuit"
+  "update.mode": "silentlyApplyOnQuit",
+  "cursor.general.glassShowWarningNotifications": true
 }
