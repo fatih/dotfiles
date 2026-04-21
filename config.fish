@@ -1,3 +1,9 @@
+# Nix - source before PATH setup so nix paths are available
+set -e __ETC_PROFILE_NIX_SOURCED
+if test -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+    . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish'
+end
+
 set -gxp PATH $HOME/go/bin $HOME/.local/bin /usr/local/opt/python@3.11/libexec/bin /usr/local/sbin /opt/homebrew/bin /opt/homebrew/opt/node@20/bin /opt/homebrew/opt/postgresql@17/bin $HOME/.cargo/bin
 set -gx GOBIN $HOME/go/bin
 set -gx EDITOR nvim
@@ -35,8 +41,8 @@ function __fish_describe_command; end
 # It contains work related stuff, some functions, aliases etc...
 source ~/.private.fish
 
-set -g fish_user_paths "/usr/local/opt/openssl@1.1/bin" $fish_user_paths
-set -g fish_user_paths "/usr/local/opt/mysql-client/bin" $fish_user_paths
+fish_add_path --global "/usr/local/opt/openssl@1.1/bin"
+fish_add_path --global "/usr/local/opt/mysql-client/bin"
 
 # node, needed for developing my theme at arslan.io
 set -gx LDFLAGS "-L/opt/homebrew/opt/node@20/lib"
