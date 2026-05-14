@@ -85,5 +85,6 @@
   "cursor.general.glassShowWarningNotifications": true,
   "cursor.general.fontSmoothingAntialiased": true,
   "update.releaseTrack": "dev",
-  "update.mode": "silentlyApplyOnQuit"
+  "update.mode": "silentlyApplyOnQuit",
+  "workbench.statusBar.visible": false
 }
