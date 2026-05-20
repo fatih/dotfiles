@@ -4,6 +4,7 @@ sync:
 	mkdir -p ~/.config/fish
 	mkdir -p ~/.config/nvim
 	mkdir -p ~/.config/ghostty
+	mkdir -p ~/.config/atuin
 	mkdir -p ~/.tmux/
 	mkdir -p ~/.config/amp
 	mkdir -p ~/Library/Application\ Support/Cursor/User
@@ -17,6 +18,7 @@ sync:
 	[ -f ~/.gitconfig ] || ln -s $(PWD)/gitconfig ~/.gitconfig
 	[ -f ~/.agignore ] || ln -s $(PWD)/agignore ~/.agignore
 	[ -f ~/.config/ghostty/config ] || ln -s $(PWD)/ghostty.config ~/.config/ghostty/config
+	[ -f ~/.config/atuin/config.toml ] || ln -s $(PWD)/atuin.config.toml ~/.config/atuin/config.toml
 
 	[ -f ~/.tmux.conf ] || ln -s $(PWD)/tmux.conf ~/.tmux.conf
 	[ -f ~/.tmux/tmux-dark.conf ] || ln -s $(PWD)/tmux-dark.conf ~/.tmux/tmux-dark.conf
@@ -37,6 +39,7 @@ clean:
 	rm -f ~/.gitconfig
 	rm -f ~/.agignore
 	rm -f ~/.config/ghostty/config
+	rm -f ~/.config/atuin/config.toml
 
 	rm -f ~/.tmux.conf
 	[ ! -L ~/Library/Application\ Support/Cursor/User/settings.json ] || rm -f ~/Library/Application\ Support/Cursor/User/settings.json
