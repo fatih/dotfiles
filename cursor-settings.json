@@ -86,5 +86,6 @@
   "cursor.general.fontSmoothingAntialiased": true,
   "update.releaseTrack": "dev",
   "update.mode": "silentlyApplyOnQuit",
+  "cursor.general.reduceTransparency": true,
   "workbench.statusBar.visible": false
 }
