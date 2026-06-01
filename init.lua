@@ -528,6 +528,13 @@ vim.keymap.set('v', '<leader>cs', '<cmd>ClaudeCodeSend<cr>', { desc = "Send to C
 vim.keymap.set('n', '<leader>da', '<cmd>ClaudeCodeDiffAccept<cr>', { desc = "Accept diff" })
 vim.keymap.set('n', '<leader>dd', '<cmd>ClaudeCodeDiffDeny<cr>', { desc = "Deny diff" })
 
+-- live-preview.nvim: (re)start the preview server. Always closes first so
+-- repeated invocations don't race on port 5500.
+vim.keymap.set('n', '<leader>lr', function()
+  vim.cmd('LivePreview close')
+  vim.defer_fn(function() vim.cmd('LivePreview start') end, 200)
+end, { desc = "LivePreview: (re)start" })
+
 -- git.nvim
 vim.keymap.set('n', '<leader>gb', '<CMD>lua require("git.blame").blame()<CR>')
 vim.keymap.set('n', '<leader>go', "<CMD>lua require('git.browse').open(false)<CR>")
