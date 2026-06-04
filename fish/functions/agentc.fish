@@ -1,3 +1,3 @@
-function agentc --description 'cursor-agent with Composer 2.5'
-    command cursor-agent --model composer-2.5 $argv
+function agentc --description 'cursor-agent with Composer 2.5 Fast'
+    command cursor-agent --model composer-2.5-fast $argv
 end

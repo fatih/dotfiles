@@ -87,5 +87,6 @@
   "update.releaseTrack": "dev",
   "update.mode": "silentlyApplyOnQuit",
   "cursor.general.reduceTransparency": true,
-  "workbench.statusBar.visible": false
+  "workbench.statusBar.visible": false,
+  "cursor.composer.conversationDensity": "detailed"
 }
