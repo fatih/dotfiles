@@ -32,22 +32,22 @@
   {
     "key": "ctrl+j",
     "command": "workbench.action.navigateDown",
-    "when": "vim.mode == 'Normal'"
+    "when": "editorTextFocus && vim.mode == 'Normal'"
   },
   {
     "key": "ctrl+k",
     "command": "workbench.action.navigateUp",
-    "when": "vim.mode == 'Normal'"
+    "when": "editorTextFocus && vim.mode == 'Normal'"
   },
   {
     "key": "ctrl+h",
     "command": "workbench.action.navigateLeft",
-    "when": "vim.mode == 'Normal'"
+    "when": "editorTextFocus && vim.mode == 'Normal'"
   },
   {
     "key": "ctrl+l",
     "command": "workbench.action.navigateRight",
-    "when": "vim.mode == 'Normal'"
+    "when": "editorTextFocus && vim.mode == 'Normal'"
   },
   {
     "key": "cmd+j",
@@ -158,8 +158,8 @@
   },
   {
     "key": "ctrl+g",
-    "command": "workbench.action.gotoSymbol",
-    "when": "!accessibilityHelpIsShown && !accessibleViewIsShown"
+    "command": "editor.action.goToReferences",
+    "when": "editorHasReferenceProvider && editorTextFocus && !inReferenceSearchEditor && !accessibilityHelpIsShown && !accessibleViewIsShown"
   },
   {
     "key": "shift+cmd+o",
