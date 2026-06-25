@@ -1,3 +1,5 @@
 function copy_commandline --description 'Copy current command-line buffer to clipboard'
-    commandline | string collect | pbcopy
+    set -l buf (commandline | string collect)
+    printf '%s' "$buf" | pbcopy
+    _copy_feedback 'command line' "$buf"
 end
