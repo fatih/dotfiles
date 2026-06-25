@@ -81,3 +81,11 @@ keybind = super+digit9=text:\x06\x39
 
 # Claude Code shift+enter support
 keybind = shift+enter=text:\n
+
+# Hyper (cmd+ctrl+alt+shift) copy shortcuts → "\x1d (Ctrl+]) + letter",
+# which passes through tmux to fish bindings (see fish_user_key_bindings.fish).
+# NOTE: no trailing comments below — Ghostty sends the whole text: value verbatim.
+# Hyper+B = copy git branch, Hyper+D = copy directory, Hyper+L = copy command line
+keybind = super+ctrl+alt+shift+b=text:\x1d\x62
+keybind = super+ctrl+alt+shift+d=text:\x1d\x64
+keybind = super+ctrl+alt+shift+l=text:\x1d\x6c
