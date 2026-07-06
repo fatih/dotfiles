@@ -51,7 +51,21 @@
   },
   {
     "key": "cmd+j",
-    "command": "workbench.action.focusPanel"
+    "command": "-workbench.action.togglePanel"
+  },
+  {
+    "key": "cmd+j",
+    "command": "-glass.toggleTerminal"
+  },
+  {
+    "key": "cmd+j",
+    "command": "glass.toggleTerminal",
+    "when": "!glassEditorPanelVisible || glassActiveTabKind != 'terminal'"
+  },
+  {
+    "key": "cmd+j",
+    "command": "glass.focusInTerminal",
+    "when": "glassEditorPanelVisible && glassActiveTabKind == 'terminal' && !(terminalFocus || terminalFocusInAny || terminalEditorFocus)"
   },
   {
     "key": "cmd+k",
