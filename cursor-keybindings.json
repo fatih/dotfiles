@@ -50,6 +50,10 @@
     "when": "editorTextFocus && vim.mode == 'Normal'"
   },
   {
+    "key": "cmd+i",
+    "command": "glass.togglePanel"
+  },
+  {
     "key": "cmd+j",
     "command": "-workbench.action.togglePanel"
   },
