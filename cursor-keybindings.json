@@ -60,12 +60,17 @@
   {
     "key": "cmd+j",
     "command": "glass.toggleTerminal",
-    "when": "!glassEditorPanelVisible || glassActiveTabKind != 'terminal'"
+    "when": "terminalFocus || terminalFocusInAny || terminalEditorFocus"
   },
   {
     "key": "cmd+j",
     "command": "glass.focusInTerminal",
     "when": "glassEditorPanelVisible && glassActiveTabKind == 'terminal' && !(terminalFocus || terminalFocusInAny || terminalEditorFocus)"
+  },
+  {
+    "key": "cmd+j",
+    "command": "glass.toggleTerminal",
+    "when": "!glassEditorPanelVisible || glassActiveTabKind != 'terminal'"
   },
   {
     "key": "cmd+k",
