@@ -84,8 +84,9 @@
   "cursor.composer.usageSummaryDisplay": "always",
   "cursor.general.glassShowWarningNotifications": true,
   "cursor.general.fontSmoothingAntialiased": true,
-  "update.releaseTrack": "dev",
   "update.mode": "silentlyApplyOnQuit",
   "cursor.general.reduceTransparency": true,
-  "cursor.composer.conversationDensity": "detailed"
+  "cursor.composer.conversationDensity": "detailed",
+  "extensions.installCooldownHours": 72,
+  "cursor.composer.codeBlockWordWrap": true
 }
