@@ -4,7 +4,7 @@
 
 ```
 # git clone forked qmk_userspace
-cd ~/Code
+cd ~/src
 git clone git@github.com:fatih/qmk_userspace.git
 
 # edit keymap

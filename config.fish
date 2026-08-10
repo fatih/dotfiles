@@ -48,14 +48,8 @@ fish_add_path --global "/usr/local/opt/mysql-client/bin"
 set -gx LDFLAGS "-L/opt/homebrew/opt/node@20/lib"
 set -gx CPPFLAGS "-I/opt/homebrew/opt/node@20/include"
 
-
 set -gx ATUIN_NOBIND "true"
 status --is-interactive; and atuin init fish | source
-
-# The next line updates PATH for the Google Cloud SDK.
-# if [ -f '/Users/fatih/Code/google-cloud-sdk/path.fish.inc' ]; . '/Users/fatih/Code/google-cloud-sdk/path.fish.inc'; end
-
-status --is-interactive; and command -q rbenv; and rbenv init - fish | source
 
 # Added by OrbStack: command-line tools and integration
 # This won't be added again if you remove it.

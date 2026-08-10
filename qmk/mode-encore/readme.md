@@ -10,8 +10,8 @@ brew install qmk/qmk/qmk
 # Clone qmk repository with 
 qmk setup
 
-# link keymap into the qmk folder (either inside ~ or ~/Code)
-ln -s ~/Code/dotfiles/qmk/mode-encore/ ~/Code/qmk_firmware/keyboards/mode/m256wh/keymaps/fatih
+# link keymap into the qmk folder (either inside ~ or ~/src)
+ln -s ~/src/dotfiles/qmk/mode-encore/ ~/src/qmk_firmware/keyboards/mode/m256wh/keymaps/fatih
 
 # compile the firmware
 qmk compile -kb mode/m256wh -km fatih

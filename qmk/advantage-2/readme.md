@@ -14,7 +14,7 @@ brew install qmk/qmk/qmk
 qmk setup
 
 # link keymap into the qmk folder
-ln -s ~/Code/dotfiles/qmk/advantage-2/ ~/qmk_firmware/keyboards/kinesis/keymaps/fatih
+ln -s ~/src/dotfiles/qmk/advantage-2/ ~/qmk_firmware/keyboards/kinesis/keymaps/fatih
 
 # compile the firmware
 qmk compile -kb kinesis/kint41 -km fatih

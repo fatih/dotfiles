@@ -2,9 +2,6 @@
 	name = Fatih Arslan
 	email = ftharsln@gmail.com
 
-[includeIf "gitdir:~/Code/ps/"]
-    	path = ~/Code/ps/gitconfig
-
 [alias]
 	st = status -sb
 	ci = commit
