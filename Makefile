@@ -6,7 +6,6 @@ sync:
 	mkdir -p ~/.config/ghostty
 	mkdir -p ~/.config/atuin
 	mkdir -p ~/.tmux/
-	mkdir -p ~/.config/amp
 	mkdir -p ~/Library/Application\ Support/Cursor/User
 
 

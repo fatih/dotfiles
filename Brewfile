@@ -184,8 +184,6 @@ brew "yq"
 brew "z"
 # E-books management software
 cask "calibre"
-# OpenAI's coding agent that runs in your terminal
-cask "codex"
 # Customise mouse behavior
 cask "linearmouse"
 # Replacement for Docker Desktop
@@ -234,13 +232,10 @@ go "github.com/twitchtv/twirp/protoc-gen-twirp"
 go "github.com/mgechev/revive"
 go "mvdan.cc/sh/v3/cmd/shfmt"
 go "honnef.co/go/tools/cmd/staticcheck"
-go "vitess.io/vitess/go/cmd/vtctlclient"
-go "vitess.io/vitess/go/cmd/vtctldclient"
 go "github.com/wal-g/wal-g/main/pg"
 go "github.com/wal-g/wal-g/cmd/daemonclient"
 go "github.com/google/yamlfmt/cmd/yamlfmt"
 cargo "fre"
 cargo "protobuf-codegen"
-npm "@sourcegraph/amp"
 npm "@tryghost/ghst"
 npm "vercel"

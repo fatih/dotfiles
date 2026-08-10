@@ -2,8 +2,8 @@
 #
 # Git can have multiple working directories for one repo (worktrees). Each
 # worktree is a separate folder with its own branch checked out — e.g. main at
-# ~/src/nkdb-operator and a Cursor agent branch at
-# ~/.cursor/worktrees/nkdb-operator/ogum. You cannot `git checkout` a branch
+# ~/src/my-repo and a Cursor agent branch at
+# ~/.cursor/worktrees/my-repo/ogum. You cannot `git checkout` a branch
 # that is already checked out elsewhere; you cd into that worktree instead.
 #
 # This function finds the right directory and cd's there. That is all it does,

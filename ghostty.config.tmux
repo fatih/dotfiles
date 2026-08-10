@@ -33,10 +33,8 @@ unfocused-split-opacity = 0.80
 unfocused-split-fill = #a33503
 split-divider-color = #FF4F00
 
-# in Claude you can now change the Plan with alt+p on the fly, and the thinking
-# mode via alt+t. But in macOS, we use option, and it's not exactly an alt key.
-# This makes sure we treat the alt key as option, but only the left Option key.
-# That way my left key is acting as Alt and my right key as Option.
+# Treat left Option as Alt so fish Alt+B/D/L bindings work; keep right Option
+# as the macOS Option/compose key (e.g. for Turkish input).
 macos-option-as-alt = left
 
 # Keybindings
@@ -79,7 +77,7 @@ keybind = super+digit7=text:\x06\x37
 keybind = super+digit8=text:\x06\x38
 keybind = super+digit9=text:\x06\x39
 
-# Claude Code shift+enter support
+# shift+enter inserts a newline instead of submitting
 keybind = shift+enter=text:\n
 
 # Hyper (cmd+ctrl+alt+shift) copy shortcuts → "\x1d (Ctrl+]) + letter",
