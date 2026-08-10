@@ -2,6 +2,11 @@
 	name = Fatih Arslan
 	email = ftharsln@gmail.com
 
+# Machine-local / private overrides (identity routing, etc.). Not tracked
+# here; git silently ignores this if the file is absent.
+[include]
+	path = ~/.config/git/local
+
 [alias]
 	st = status -sb
 	ci = commit
