@@ -53,8 +53,9 @@
 	smudge = git-media-smudge %f
 [push]
 	default = current
-[url "git@github.com:"]
-	insteadOf = https://github.com/
+# No URL rewrite here on purpose: insteadOf rules are additive, so a machine
+# that authenticates over HTTPS can't override an ssh rule set here. Each
+# machine picks its transport in ~/.config/git/local instead.
 [pull]
 	rebase = false
 [init]

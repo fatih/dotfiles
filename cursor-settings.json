@@ -85,6 +85,7 @@
   "cursor.general.glassShowWarningNotifications": true,
   "cursor.general.fontSmoothingAntialiased": true,
   "update.mode": "silentlyApplyOnQuit",
+  "update.releaseTrackOverride": "candidate",
   "cursor.general.reduceTransparency": true,
   "cursor.composer.conversationDensity": "detailed",
   "extensions.installCooldownHours": 72,
