@@ -68,7 +68,7 @@
     "**/.git/**": true
   },
   "cursor.composer.textSizeScale": 1.15,
-  "cursor.composer.shouldChimeAfterChatFinishes": true,
+  "cursor.composer.shouldChimeAfterChatFinishes": false,
   "files.associations": {
     "*.go": "go"
   },
@@ -78,7 +78,7 @@
     "editor.formatOnSave": true
   },
   "workbench.settings.openDefaultKeybindings": true,
-  "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
+  "workbench.preferredDarkColorTheme": "Cursor Dark",
   "editor.renderControlCharacters": false,
   "go.toolsManagement.autoUpdate": true,
   "cursor.composer.usageSummaryDisplay": "always",
@@ -86,12 +86,15 @@
   "cursor.general.fontSmoothingAntialiased": true,
   "update.mode": "silentlyApplyOnQuit",
   "cursor.general.reduceTransparency": true,
-  "cursor.composer.conversationDensity": "detailed",
   "extensions.installCooldownHours": 168,
   "cursor.composer.codeBlockWordWrap": true,
   "cursor.composer.suggestNextPrompt": true,
   "cursor.composer.queueMessageDefaultBehavior": "steer",
   "cursor.composer.showEmptyStateTips": false,
   "editor.accessibilitySupport": "on",
-  "update.releaseTrackOverride": "dogfood"
+  "update.releaseTrackOverride": "candidate",
+  "cursor.chatMaxWidth": 820,
+"cursor.composer.queueManualSendBehavior2": "steer",
+"workbench.preferredHighContrastLightColorTheme": "Cursor Light High Contrast",
+"workbench.preferredHighContrastColorTheme": "Cursor Dark High Contrast"
 }
