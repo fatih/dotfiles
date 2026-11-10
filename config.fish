@@ -10,6 +10,11 @@ set -gx EDITOR nvim
 set -gx FZF_CTRL_T_COMMAND nvim
 set -gx FZF_DEFAULT_COMMAND "fd --type f --hidden --follow --exclude .git"
 
+# Grok Build: use the terminal's colors instead of painting a gray background.
+# Set here, not in ~/.grok/config.toml, because Grok writes account data into
+# that file and this repo is public.
+set -gx GROK_THEME terminal
+
 # shell integration, if we don't set it, working directory features won't work
 set -gx GHOSTTY_SHELL_INTEGRATION_XDG_DIR /Applications/Ghostty.app/Contents/Resources/ghostty/shell-integration
 

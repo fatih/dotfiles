@@ -16,6 +16,7 @@ Notes for anyone (or any agent) changing this **dotfiles** repo: conventions we 
 
 ## Repo layout (high level)
 
-- **`Makefile` `sync`**: creates expected dirs and symlinks **fish**, **nvim**, **ghostty**, **tmux**, **Cursor** user JSON, etc. Run **`make sync`** on a new machine before expecting links to exist.
+- **`Makefile` `sync`**: creates expected dirs and symlinks **fish**, **nvim**, **ghostty**, **tmux**, **Cursor** user JSON, etc. Run **`make sync`** on a new machine before expecting links to exist. It replaces old or broken links and prints a `skip` line when a real file is in the way; move that file away and run it again. **`make clean`** removes only links.
+- **Grok Build** (the agent TUI): the theme comes from **`GROK_THEME`** in **`config.fish`**. Do not add **`~/.grok/config.toml`** to this public repo: Grok writes account data (login email, consent answers) into it.
 - **Fish**: **`config.fish`** and **`fish/functions/`** are symlinked into **`~/.config/fish/`**.
 - **Ghostty**: config symlinked to **`~/.config/ghostty/config`** from **`ghostty.config`**.
